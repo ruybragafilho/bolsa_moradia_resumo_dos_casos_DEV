@@ -17,11 +17,6 @@
     } else {
       document.getElementById( "tituloPagina" ).innerHTML = "EDIÇÃO DE CASO";
     }
-    
-
-    // Esconde os botões de gravação de novo caso
-    document.getElementById( "botaoGravarNovoCasoSuperior" ).style.display = "none";
-    document.getElementById( "botaoGravarNovoCasoInferior" ).style.display = "none";
 
     // Mostra os botões de gravação de edição caso apenas para trabalhadores da ponta e devs
     if( usuarioLogado.tipo == "2" ) {
@@ -33,7 +28,6 @@
       document.getElementById( "botaoGravarEdicaoDeCasoSuperior" ).style.display = "";
       document.getElementById( "botaoGravarEdicaoDeCasoInferior" ).style.display = "";    
     }    
-
 
     // Mostra Componentes não utilizados na inserção de novo caso
     document.getElementById( "dataUltimaResposta" ).style.display = "";

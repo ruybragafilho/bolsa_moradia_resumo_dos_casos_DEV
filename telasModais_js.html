@@ -10,10 +10,6 @@
   let conteudoModalErro;  
   let modalErro;
 
-  // Variáveis para controlar a exibição da janela modal de parâmetros
-  let conteudoModalParametrosCaso;
-  let modalParametrosCaso;
-
 
   /**
   * Função que inicializa as telas modais utilizadas no frontend
@@ -31,11 +27,6 @@
     // Instancia as variáveis para controlar a exibição da janela modal de erro
     conteudoModalErro = document.getElementById("conteudoModalErro");  
     modalErro = new bootstrap.Modal( document.getElementById("modalErro") );
-
-
-    // Instancia as variáveis para controlar a exibição da janela modal de parâmetros    
-    conteudoModalParametrosCaso = document.getElementById("listaParametrosCaso");
-    modalParametrosCaso = new bootstrap.Modal( document.getElementById("modalParametrosCaso") );   
 
   } // Fim da função inicializarModais
 
@@ -69,68 +60,6 @@
     modalErro.show();
 
   } // Fim da função modalErro
-
-
-  /**
-   * Abre modal para visualização das opções selecionadas para um caso específico
-   * 
-   * @param {string} id - id do caso que será visualizado
-   * @param {Array} dados - Tabela de resumos de casos
-   */    
-  function mostrarModalParametros( id, dados ) {     
-
-    // Atribui o texto apropriado ao botão, em função
-    // do tipo de trabalhador. 
-    // Para Gestores, mostra Visualizar Caso
-    // Para trabalhadores da ponta e devs, mostra Editar Caso 
-    if( usuarioLogado.tipo == "2" ) {
-      document.getElementById( "btnEditar" ).innerHTML = "Visualizar Caso";
-    } else {
-      document.getElementById( "btnEditar" ).innerHTML = "Editar Caso";
-    }
-  
-    // Localiza o caso na tabela dados
-    let indiceCasoNaTabelaResumo;
-    let numCasos = dados.length;
-    for( indiceCasoNaTabelaResumo=0; indiceCasoNaTabelaResumo<numCasos; ++indiceCasoNaTabelaResumo  ) {
-      if(dados[indiceCasoNaTabelaResumo].id == id) {
-        break;
-      }
-    }
-    const caso = dados[ indiceCasoNaTabelaResumo ];
-
-    // coloca o caso em cache, para poder ser utilizado se
-    // o usuário do sistema clicar no botão Editar Caso
-    cache_CasoEmAtualizacao = caso;
-  
-    // Se não houver opções selecionadas, mostra mensagem padrão
-    if( caso.nomesParametros == "" ) {  
-
-      conteudoModalParametrosCaso.innerHTML = "<p>Nenhum parâmetro selecionado.</p>";
-
-    } else {     
-      
-      // Obtém os parâmetros do caso
-      const parametros = caso.nomesParametros.split(";");
-  
-      // Modal onde será exibida a lista de opções      
-      conteudoModalParametrosCaso.innerHTML = ""; // Limpa conteúdo      
-        
-      // Cria uma lista não ordenada e adiciona cada opção selecionada como item
-      const ul = document.createElement('ul');        
-      parametros.forEach( parametro => {
-        const li = document.createElement('li');
-        li.textContent = parametro;
-        ul.appendChild(li);
-      });
-      conteudoModalParametrosCaso.appendChild(ul);  
-
-    } // Fim do teste parâmetros
-  
-    // Exibe o modal de parâmetros      
-    modalParametrosCaso.show();
-  
-  } // Fim da função mostrarModalParametros  
   
 
 </script>

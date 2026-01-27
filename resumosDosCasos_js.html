@@ -8,21 +8,12 @@
    */
   function configurarPaginaResumosDosCasos() {
 
-    // Não mostra o botão Inserir Novo Caso, na tela de resumos dos casos,    
-    // para trabalhadores da gestão
-    if( usuarioLogado.tipo == "2" ) {
-      document.getElementById("botaoInserirNovoCaso").style.display = "none";      
-    } else {
-      document.getElementById("botaoInserirNovoCaso").style.display = "";            
-    }
-
     // Não mostra o filtro por regionais, na tela de resumos dos casos,
     // para trabalhadores do CREAS
     if( usuarioLogado.regional != "0" ) {
       document.getElementById("checkboxRegionais").style.display = "none";
       document.getElementById("labelCheckboxRegionais").style.display = "none";                                
     }   
-
 
     // Obtém a tabela de resumos dos casos
     let tabelaResumoDosCasos = document.getElementById('resumosDosCasos');
@@ -80,7 +71,12 @@
         let idCaso = clickedElement.parentElement.id;          
 
         // Chama a função frontend para visualizar os parâmetros do caso
-        mostrarModalParametros( idCaso, cache_TabelaCasos);
+        //mostrarModalParametros( idCaso, cache_TabelaCasos);
+        // *** NESSE APP, AO CLICAR EM UM CASO, O SISTEMA DEVE ABRI-LO PARA VISUALIZAÇÃO
+
+        // Obter o ID do caso clicado e chamar visualizar
+
+        console.log( "Mostrar caso" );
 
       } // Fim teste target evento - tabela ou botão designar caso
         

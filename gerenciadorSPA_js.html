@@ -62,19 +62,7 @@
                               //filtrar();
                               gerarTabelaResumosCasos(cache_TabelaCasos);
 
-                              break;
-
-      case "inserirCaso": 
-                              // Carrega a página paginaCadastroCaso.html, armazenada no cache do frontend,
-                              // no elemento de id "conteudo" da página index.html (SPA)
-                              document.getElementById("conteudo").innerHTML = cache_PaginaCadastroCaso;
-
-                              // Configura a página de cadastro de caso para
-                              // ser utilizada para inserção de novo caso
-                              window.scrollTo(0, 0);
-                              configurarPaginaInserirCaso();                               
-
-                              break;     
+                              break;    
 
       case "atualizarCaso":    
                               // Carrega a página paginaCadastroCaso.html, armazenada no cache do frontend,
@@ -87,7 +75,7 @@
                               configurarPaginaAtualizarCaso();                              
 
                               // Carrega os dados do caso que será atualizado
-                              mostrarDadosDoCasoEmAtualizacao();
+                              //mostrarDadosDoCasoEmAtualizacao();
 
                               break;                                             
     } // Fim switch - case

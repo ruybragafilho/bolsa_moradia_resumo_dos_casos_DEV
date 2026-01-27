@@ -43,27 +43,6 @@
     <!-- Conteúdo Principal - Fim -->    
 
 
-    <!-- Modal para listar os parâmetros do caso - Início -->
-    <div id="modalParametrosCaso" class="modal fade" tabindex="-1" aria-labelledby="listaParametrosCasoLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="listaParametrosCasoLabel">Parâmetros do Caso</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-          </div>
-          <div class="modal-body" id="listaParametrosCaso">
-            <!-- Aqui a lista será inserida via JS -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btnEditar" onclick="exibirPagina('atualizarCaso')">Editar Caso</button> 
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Modal para listar os parâmetros do caso - Fim -->
-
-
     <!-- Modal de Erro - Início -->
     <div id="modalErro" class="modal fade" tabindex="-1" aria-labelledby="modalErroLabel" aria-hidden="true" style="display: none">
       <div class="modal-dialog">
@@ -101,8 +80,7 @@
     <?!= include("reativarCasoFE_js"); ?>  
     <?!= include("designarCasoFE_js"); ?>  
     
-    <?!= include("paginaCadastroCaso_js"); ?>     
-    <?!= include("inserirCasoFE_js"); ?>      
+    <?!= include("paginaCadastroCaso_js"); ?>         
     <?!= include("atualizarCasoFE_js"); ?>              
 
     <?!= include("index_js"); ?>
