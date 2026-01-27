@@ -1,0 +1,264 @@
+<script>
+
+  "use strict";
+
+
+  /**
+   * Função que configura a página de cadastro para Inserção de caso
+   */
+  function configurarPaginaInserirCaso() {
+
+    // Configura o Título da Página
+    document.getElementById( "tituloPagina" ).innerHTML = "INSERÇÃO DE NOVO CASO";
+    
+
+    // Mostra os botões de gravação de novo caso apenas para trabalhadores da ponta e devs
+    if( usuarioLogado.tipo == "2" ) {
+      // Não mostra os botões de gravação de novo caso para gestores
+      document.getElementById( "botaoGravarNovoCasoSuperior" ).style.display = "none";
+      document.getElementById( "botaoGravarNovoCasoInferior" ).style.display = "none";
+    } else {
+      // Mostra os botões de gravação de novo caso para trabalhadores da ponta e devs
+      document.getElementById( "botaoGravarNovoCasoSuperior" ).style.display = "";
+      document.getElementById( "botaoGravarNovoCasoInferior" ).style.display = "";
+    }
+
+    // Esconde os botões de gravação de edição de caso
+    document.getElementById( "botaoGravarEdicaoDeCasoSuperior" ).style.display = "none";
+    document.getElementById( "botaoGravarEdicaoDeCasoInferior" ).style.display = "none";
+
+
+    // Fixa o select de regionais, na tela de inserção de novo caso,
+    // com a regional do trabalhador
+    if( usuarioLogado.regional != "0" ) {
+      document.getElementById('selectRegionais').innerHTML = 
+      `<option selected value="${usuarioLogado.regional}">${cache_TabelaRegionais[usuarioLogado.regional-1][COLUNA_NOME]}</option>`;
+    }   
+
+    // Esconde Componentes não utilizados na inserção de novo caso
+    document.getElementById( "dataUltimaResposta" ).style.display = "none";
+    document.getElementById( "situacaoDoCaso" ).style.display = "none";    
+
+
+  } // Fim da função configurarPaginaInserirCaso
+
+
+
+  /**
+   * Função chamada quando o botão salvar é clicado para inserir um caso
+   */    
+  function inserirCasoFE() {
+
+    // RF
+    const referenciaFamiliar = document.getElementById('referenciaFamiliarInput').value;
+
+    // Validação RF: referencia familiar é campo obrigatório
+    if (!referenciaFamiliar) {      
+      mostrarModalErro( "Campo REFERÊNCIA FAMILIAR é obrigatório!" );
+      return;
+    } // Fim da validação de RF           
+
+
+    // Endereço
+    const tipoLogradouro = document.getElementById('tipoLogradouroInput').value;
+    const nomeLogradouro = document.getElementById('nomeLogradouroInput').value;
+    const numero = document.getElementById('numeroInput').value;
+    const complemento = document.getElementById('complementoInput').value;
+    const bairro = document.getElementById('bairroInput').value;
+
+    const idRegional = document.getElementById('selectRegionais').value;
+
+    // Validação Regional: Regional é campo obrigatório
+    if (!idRegional) {      
+      mostrarModalErro( "Campo REGIONAL é obrigatório!" );
+      return;
+    } // Fim da validação de RF           
+
+    const cep = document.getElementById('cepInput').value;     
+
+    // TPSA
+    const tpsa = document.getElementById('tpsaInput').value;
+
+
+    // Data de chegada no CREAS
+    let dataChegadaCREASInput = document.getElementById('dataChegadaCREASInput').value;
+    let auxDataChegadaCREAS;
+    let dataChegadaCREAS;
+
+    // Validação Data de Chegada no CREAS:       
+
+    // Se a data de chegada no CREAS tiver sido informada
+    if( dataChegadaCREASInput )  {
+
+      // Corrige e formata a data de chegada no CREAS
+      auxDataChegadaCREAS = new Date( dataChegadaCREASInput );  
+      auxDataChegadaCREAS.setDate( auxDataChegadaCREAS.getDate() + 1 );      
+      dataChegadaCREAS = auxDataChegadaCREAS.toLocaleString("pt-BR", {dateStyle: "short"});
+
+      // Impede data futura para data de chegada no CREAS
+      let dataHoje = new Date();            
+      auxDataChegadaCREAS.setHours( 1 );      
+      if( auxDataChegadaCREAS.getTime() > dataHoje.getTime() ) {
+        mostrarModalErro( "O campo DATA DE CHEGADA NO CREAS não aceita data futura!" );  
+        return;
+      }
+
+    // Se a data de chegada no CREAS NÃO tiver sido informada,
+    // utiliza a data do dia
+    } else {
+        
+      dataChegadaCREAS = new Date().toLocaleString("pt-BR", {dateStyle: "short"});  
+
+    } // Fim do tratamendo da data de chegada no CREAS
+
+
+    // Data prevista para resposta
+    let dataPrevistaRespostaInput = document.getElementById('dataPrevistaRespostaInput').value;
+    let auxDataPrevistaResposta;
+    let dataPrevistaResposta;
+
+    // Validação Data Prevista para Resposta: 
+
+    // Se a data prevista para resposta tiver sido informada
+    if( dataPrevistaRespostaInput )  {
+
+      // Corrige e formata a data prevista para resposta
+      auxDataPrevistaResposta = new Date( dataPrevistaRespostaInput );  
+      auxDataPrevistaResposta.setDate( auxDataPrevistaResposta.getDate() + 1 );
+      dataPrevistaResposta = auxDataPrevistaResposta.toLocaleString("pt-BR", {dateStyle: "short"});
+      
+      // Impede que a data prevista para resposta seja anterior à data
+      // de chegada no CREAS        
+      auxDataPrevistaResposta.setHours( 1 );      
+      if( auxDataPrevistaResposta.getTime() < auxDataChegadaCREAS.getTime() ) {
+        mostrarModalErro( "A DATA PREVISTA PARA RESPOSTA deve ser maior ou igual à DATA DE CHEGADA NO CREAS!" );          
+        return;
+      }        
+
+    // Se a data prevista para resposta NÃO tiver sido informada,
+    // utiliza null
+    } else {
+
+      dataPrevistaResposta = null;
+
+    } // Fim do tratamento da data prevista para resposta
+
+      
+    // Órgãos encaminhadores
+    const checkBoxIdsOrgaosEncaminhadores = document.querySelectorAll('input[name="checkboxOrgaosEncaminhadores"]:checked');
+    let arrayIdsOrgaosEncaminhadores;
+    let idsOrgaosEncaminhadores;
+
+    // Validação Órgãos Encaminhadores: Órgãos Encaminhadores é obrigatório
+    if( checkBoxIdsOrgaosEncaminhadores.length ) {
+ 
+      arrayIdsOrgaosEncaminhadores = Array.from(checkBoxIdsOrgaosEncaminhadores).map(chk => chk.value);
+      idsOrgaosEncaminhadores = arrayIdsOrgaosEncaminhadores.join(";");
+
+    } else {
+
+      mostrarModalErro( "Campo ÓRGÃOS ENCAMINHADORES é obrigatório!" );
+      return;
+
+    } // Fim da validação dos Órgãos Encaminhadores    
+    
+    
+    // Violacoes Caso
+    const checkBoxIdsViolacoesCaso = document.querySelectorAll('input[name="checkboxViolacoes"]:checked');
+    let arrayIdsViolacoesCaso;
+    let idsViolacoesCaso;
+
+    // Processamento das violações do caso
+    if( checkBoxIdsViolacoesCaso.length ) {
+ 
+      arrayIdsViolacoesCaso = Array.from(checkBoxIdsViolacoesCaso).map(chk => chk.value);
+      idsViolacoesCaso = arrayIdsViolacoesCaso.join(";");
+
+    } else {
+
+      idsViolacoesCaso = "";      
+
+    } // Fim do processamento das violações do caso
+
+
+    // Categorias Caso
+    const checkBoxIdsCategoriasCaso = document.querySelectorAll('input[name="checkboxCategorias"]:checked');
+    let arrayIdsCategoriasCaso;
+    let idsCategoriasCaso;
+
+    // Validação Categorias Caso: Categorias Caso é obrigatório
+    if( checkBoxIdsCategoriasCaso.length ) {
+ 
+      arrayIdsCategoriasCaso = Array.from(checkBoxIdsCategoriasCaso).map(chk => chk.value);
+      idsCategoriasCaso = arrayIdsCategoriasCaso.join(";");
+
+    } else {
+
+      mostrarModalErro( "Campo CATEGORIAS é obrigatório!" );
+      return;
+
+    } // Fim da validação das Categorias Caso
+
+
+    // Parametros Caso - Não obrigatório
+    const idsParametrosCaso = processarParametros();
+    
+      
+    // Observação
+    let observacao = document.getElementById('textAreaObservacao').value;
+    if( observacao.length > 200 ) {
+      observacao = observacao.substring(0, 200);
+    }
+
+
+    // mostra modal com mensagem de gravação de dados
+    mostrarModalMensagem( "Gravando os dados, por favor aguarde..." );   
+
+
+    // Chama função backend para inserir o novo caso
+    google.script.run
+                 .withSuccessHandler( () => {
+
+                   // Volta para a tela de resumos de casos
+                   console.log( "\ninserirCasoFE_js - INÍCIO" ); 
+                   redirecionarParaTelaResumosDosCasos( 1 );
+                   console.log( "inserirCasoFE_js - FIM" ); 
+
+                 })
+                 .withFailureHandler( erro => {
+
+                   // mostra modal com mensagem de erro 
+                   mostrarModalErro( "inserirCasoFE - " + erro.message );
+
+                 })
+                 // Chama a função backend que insere novo caso
+                 .inserirCasoBE( referenciaFamiliar,
+                                 tipoLogradouro,
+                                 nomeLogradouro,
+                                 numero,
+                                 complemento,
+                                 bairro,
+                                 idRegional,
+                                 cep,                          
+                                 tpsa,
+                                 dataChegadaCREAS,
+                                 idsOrgaosEncaminhadores,
+                                 dataPrevistaResposta,   
+                                 idsViolacoesCaso,                 
+                                 idsCategoriasCaso,
+                                 idsParametrosCaso,
+                                 observacao  );        
+           
+  } // Fim da função inserirCasoFE 
+
+
+</script>
+
+
+
+
+
+
+
+
+  

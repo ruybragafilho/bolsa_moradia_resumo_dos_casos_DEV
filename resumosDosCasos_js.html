@@ -1,0 +1,335 @@
+<script>
+
+  "use strict";
+
+
+  /**
+   * Função que configura a página de resumos dos casos
+   */
+  function configurarPaginaResumosDosCasos() {
+
+    // Não mostra o botão Inserir Novo Caso, na tela de resumos dos casos,    
+    // para trabalhadores da gestão
+    if( usuarioLogado.tipo == "2" ) {
+      document.getElementById("botaoInserirNovoCaso").style.display = "none";      
+    } else {
+      document.getElementById("botaoInserirNovoCaso").style.display = "";            
+    }
+
+    // Não mostra o filtro por regionais, na tela de resumos dos casos,
+    // para trabalhadores do CREAS
+    if( usuarioLogado.regional != "0" ) {
+      document.getElementById("checkboxRegionais").style.display = "none";
+      document.getElementById("labelCheckboxRegionais").style.display = "none";                                
+    }   
+
+
+    // Obtém a tabela de resumos dos casos
+    let tabelaResumoDosCasos = document.getElementById('resumosDosCasos');
+
+    // Exibe a tabela, caso estivesse oculta
+    tabelaResumoDosCasos.style.display = 'table';
+
+    // Adiciona o listener à tabela inteira - Delegação de eventos
+    tabelaResumoDosCasos.addEventListener( 'click', function(event) { 
+
+      let clickedElement = event.target;
+
+      // Trata evento de clique no botão, reativando o caso        
+      if( clickedElement.classList.contains('bt-reativar') ) {
+
+        // mostra modal com mensagem de designação de caso
+        mostrarModalMensagem( "Reativando o caso, por favor aguarde..." );                                       
+
+        // Obtém o id do caso
+        let idCaso = clickedElement.parentElement.parentElement.parentElement.id;
+       
+        // Chama a função front end para reativar o caso
+        reativarCasoFE( idCaso );          
+
+      // Trata evento de clique no botão, designando o caso        
+      } else if( clickedElement.classList.contains('bt-designar') ) {
+
+        // Obtém o id do caso e o valor do select
+        let idCaso = clickedElement.parentElement.parentElement.parentElement.id;
+        let idSelect ="selectMotivoDesiginacao_" + idCaso;
+        let valorSelect = document.getElementById(idSelect).value;          
+
+        // Se motivo de designação tiver sido informado,
+        // prossegue com a designação
+        if( valorSelect ) {
+
+          // mostra modal com mensagem de designação de caso
+          mostrarModalMensagem( "Designando o caso, por favor aguarde..." );                               
+  
+          // Chama a função front end para designar o caso
+          designarCasoFE( idCaso, valorSelect );          
+
+        // Se não, mostra modal de erro
+        } else {
+
+          // Exibe modal de erro caso motivo de designação não tenha sido selecionado
+          mostrarModalErro( "O campo MOTIVO DE DESIGNAÇÂO é obrigatório!" );                      
+        }
+
+      // Trata evento de clique sobre uma linha da tabela
+      // mostranto mais detalhes do caso        
+      } else if( clickedElement.classList.contains('clicavel') ) {
+
+        // Obtém o id do caso 
+        let idCaso = clickedElement.parentElement.id;          
+
+        // Chama a função frontend para visualizar os parâmetros do caso
+        mostrarModalParametros( idCaso, cache_TabelaCasos);
+
+      } // Fim teste target evento - tabela ou botão designar caso
+        
+    }); // Fim do tabelaResumoDosCasos.addEventListener    
+
+
+  } // Fim da função configurarPaginaResumosDosCasos
+
+
+
+  /**
+   * Gera a tabela com os resumos dos casos
+   *
+   * @param {Array} tabelaCasos - Tabela com os casos
+   */
+  function gerarTabelaResumosCasos( tabelaCasos ) {
+
+    // Se tabela vazia, mostra mensagem TABELA VAZIA e sai da função
+    if( !tabelaCasos ) {
+      document.getElementById("headerResumosDosCasos").innerHTML += '<br><h3 class="text-center mt-5 mb-4 text-danger">TABELA VAZIA</h3><br>';
+      return;   
+    }
+
+    // Seleciona o corpo da tabela onde os dados serão inseridos    
+    const tbody = document.getElementById("conteudoResumosDosCasos");
+
+    // Limpa o conteúdo da tabela
+    tbody.innerHTML = ''; 
+
+    // Para cada item nos resumosDosCasos, cria uma linha na tabela
+    tabelaCasos.forEach( item => {
+
+      // Cria uma linha da tabela
+      const tr = document.createElement('tr');
+
+      // Seta o id da linha com o id do caso
+      tr.id = item.id;
+
+      // Gera o select de designação ou o botão de reativação dessa linha
+      // Não mostra para trabalhadores da gestão
+      let designacao;
+      if( usuarioLogado.tipo != "2" ) {
+        designacao = item.ativo == "Sim" ? gerarSelectDesignacao( cache_TabelaMotivosDeDesignacao, item.id ) 
+                                         : gerarBotaoReativar( item.id );         
+      } else {
+        designacao = "";
+      }
+
+      // Preenche a linha com as células contendo os dados e o select de desiginação
+      tr.innerHTML =           
+       `<td class="clicavel align-middle">${item.posicaoNaFila}</td>
+        <td class="clicavel align-middle">${item.referenciaFamiliar}</td>
+        <td class="clicavel align-middle">${item.nomesCategorias.replaceAll(";", "<br>")}</td>
+        <td class="clicavel align-middle">${item.totalPontos}</td>        
+        <td class="clicavel align-middle">${item.ativo}</td>
+        <td class="clicavel align-middle">${item.dataPrevistaParaResposta}</td>
+        <td class="align-middle" style="width: 180px;">${designacao}</td>`;     
+
+      // Adiciona a linha na tabela
+      tbody.appendChild(tr);
+
+    }); // Fim do dados.forEach
+
+    // Mostra o total de casos
+    document.getElementById('totalizacaoResumosDosCasos').innerHTML = `TOTAL DE CASOS: ${tabelaCasos.length}`;
+
+  } // Fim da função gerarTabelaResumosCasos      
+
+
+
+  /**
+   * Gera o botão Reativar (Des designar caso)
+   *
+   */
+  function gerarBotaoReativar() {
+
+    let botaoReativar = `
+      <div class="d-flex flex-row-reverse" style="gap: 4px;">        
+        <button class="btn btn-sm btn-outline-secondary text-primary bt-reativar">Reativar</button>
+      </div>`;        
+
+    return botaoReativar;
+      
+  } // Fim da função gerarBotaoReativar 
+
+
+
+  /**
+   * Gera o Select de Designação de caso, que é utilizado na tabela de resumos de casos
+   *
+   * @param {Array} tabelaMotivosDesignacao - Tabela com os motivos de designacao
+   * @param {String} idCaso - Id do caso que será designado
+   */
+  function gerarSelectDesignacao( tabelaMotivosDesignacao, idCaso ) {
+
+    let idSelect ="selectMotivoDesiginacao_" + idCaso;
+
+    // Gera, dinamicamente, o select + botão de designação / encerramento que será usado em cada linha
+    let designacaoSelect = `
+      <div class="d-flex align-items-center" style="gap: 4px;">
+        <select id="${idSelect}" class="form-select form-select-sm py-0" style="width: 120px; height: 28px;">`;
+
+    designacaoSelect += gerarSelectFrontend( tabelaMotivosDesignacao );
+
+    designacaoSelect += ` 
+        </select>
+        <button class="btn btn-sm btn-primary bt-designar">Designar</button>
+      </div>`;        
+
+    return designacaoSelect;
+      
+  } // Fim da função gerarSelectDesignacao 
+
+
+
+  /**
+   * Função que processa os filtros os selecionados pelo usuário
+  */
+
+  // Referância que apontará para os casos filtrados
+  let casosFiltrados = cache_TabelaCasos;
+
+  function filtrar() {
+
+    // Obtém os checkbox selecionados dos filtros
+    const regionais = Array.from(document.getElementsByName("checkboxRegionais")).filter(c => c.checked).map(c => c.value);
+    const categorias = Array.from(document.getElementsByName("checkboxCategorias")).filter(c => c.checked).map(c => c.value);
+    const ativos = Array.from(document.getElementsByName("checkboxAtivos")).filter(c => c.checked).map(c => c.value);
+    const orgaosEncaminhadores = Array.from(document.getElementsByName("checkboxOrgaosEncaminhadores")).filter(c => c.checked).map(c => c.value);
+    const comPrazoParaResposta = Array.from(document.getElementsByName("checkboxPrazo")).filter(c => c.checked).map(c => c.value);      
+
+    // Se algum checkbox de filtro tiver sido marcado
+    if( regionais.length ||
+        categorias.length ||
+        ativos.length ||
+        orgaosEncaminhadores.length ||
+        comPrazoParaResposta.length ) {
+
+      // Reset nos casos filtrados
+      casosFiltrados = [];            
+
+      // Percorre todos os casos, selecionando os que atendem aos filtros
+      cache_TabelaCasos.forEach( caso => {                                                       
+
+        // Verifica as regras de cada filtro individualmente
+        // para o caso atual
+        const regra1 = ( (regionais.length == 0)            ||  
+                          regionais.includes( caso.idRegional ));
+
+        const regra2 = ((categorias.length == 0)            ||  
+                         categorias.filter(cat => caso.idsCategorias.split(";").includes(cat)).length > 0 );
+
+        const regra3 = ((ativos.length == 0)                ||  
+                         ativos.includes( caso.ativo ));
+
+        const regra4 = ((orgaosEncaminhadores.length == 0)  ||  
+                         orgaosEncaminhadores.filter(orgao => caso.idsOrgaosEncaminhadores.split(";").includes(orgao)).length > 0 );
+                           
+        const regra5 = ((comPrazoParaResposta.length == 0)  ||  
+                        (comPrazoParaResposta == "1" ? (caso.dataPrevistaParaResposta != "" ) : (caso.dataPrevistaParaResposta == "" )) );
+
+        // Se caso atual atende todas as regras,
+        // o insere na tabela de casos filtrados
+        if( regra1 && regra2 && regra3 && regra4 && regra5 ) {
+          casosFiltrados.push( caso );
+        }
+      }); 
+
+    } else { 
+      casosFiltrados = cache_TabelaCasos; 
+    } // Fim do if
+
+
+    // Aplica o filtro pelo nome da RF       
+    let nomeRFPesquisado = document.getElementById("inputTextPesquisaCaso").value.trim().toUpperCase();      
+    let casosPesquisados = casosFiltrados.filter( caso => { return caso.referenciaFamiliar.trim().toUpperCase().includes( nomeRFPesquisado ) } ) ;        
+
+
+    // Gera a tabela de casos filtrados
+    gerarTabelaResumosCasos( casosPesquisados );
+
+  } // Fim da função filtrar
+
+
+
+  /**
+   * Função que redireciona para a tela com os resumos dos casos
+   *
+   * @param {Integer} recarregarCasos - Flag para determinar se a tabela com os 
+   *                                    casos deve ser recarregada do servidor.
+   *                                      1: tabela deve ser recarregada
+   *                                      0: não deve
+   */  
+  function redirecionarParaTelaResumosDosCasos( recarregarCasos ) {
+
+    console.log( "redirecionarParaTelaResumosDosCasos - INÍCIO" );
+
+    // Se flag == 1, chama a função que recarrega a tabela de resumos dos casos
+    // e em seguida carrega a página de resumo de casos
+    if( recarregarCasos ) {
+
+      console.log( "redirecionarParaTelaResumosDosCasos - RECARREGAR == 1" );
+      // Sinaliza que a tabela de casos ainda não está na cache
+      flagCache_TabelaCasos = 0;
+      cache_TabelaCasos = [];
+
+      google.script.run
+                   .withSuccessHandler( dados => {
+
+                     console.log( "redirecionarParaTelaResumosDosCasos - SUCCESS HANDLER" );
+
+                     // mostra modal com mensagem de operação concluída                     
+                     mostrarModalMensagem( "Operação concluída! " );                    
+  
+                     // Atualiza o cache de resumos de casos com a tabela carregada do servidor
+                     cache_TabelaCasos = dados;   
+
+                     // Sinaliza que a tabela de casos já está na cache
+                     flagCache_TabelaCasos = 1;
+
+                     // Carrega a página de resumos de casos
+                     exibirPagina("resumosDosCasos");
+  
+                   })
+                   .withFailureHandler( erro => {       
+                    
+                     console.log( "redirecionarParaTelaResumosDosCasos - FAILURE HANDLER" );
+
+                     // mostra modal de erro
+                     mostrarModalErro( "redirecionarParaTelaResumosDosCasos - " + erro.message );
+                     
+                   })
+                   // Chama a função backend para gerar e retornar a tabela de resumos de casos
+                   .obterCasos( usuarioLogado.regional );
+
+    // Se flag == 0, apenas carrega a página de resumo de casos, sem recarregar a tabela
+    } else {
+
+      console.log( "redirecionarParaTelaResumosDosCasos - RECARREGAR == 0" );
+      // Carrega a página de resumos de casos
+      exibirPagina("resumosDosCasos");
+
+    }
+
+    console.log( "redirecionarParaTelaResumosDosCasos - FIM" );    
+
+  } // Fim da função redirecionarParaTelaResumosDosCasos
+
+
+
+</script>
+

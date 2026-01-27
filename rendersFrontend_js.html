@@ -1,0 +1,34 @@
+<script>
+
+  "use strict";
+
+
+  /**
+   * Gerador de Select
+   *
+   * @param {Array} tabela - Tabela de onde os ids e os nomes das opções serão lidos
+   *
+   */
+  function gerarSelectFrontend( tabela ) {
+ 
+    // Gera, dinamicamente, as opções do Check Box
+    let selectGerado = `<option selected value="">Selecione</option>`;
+
+    tabela.forEach( item => {
+
+      if( parseInt( item[COLUNA_ATIVO] ) ) {
+
+        selectGerado += `<option value="${item[COLUNA_ID]}">${item[COLUNA_NOME]}</option>`;
+
+      }
+
+    }); // Fim do tabela.forEach
+      
+    // Retorna o select gerado  
+    return selectGerado;
+
+  } // Fim da função gerarSelectFrontend    
+
+
+
+</script>

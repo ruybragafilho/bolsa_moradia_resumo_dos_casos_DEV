@@ -1,0 +1,203 @@
+<!-- Tela Edição de Caso - Início -->
+
+
+  <!-- Nav - Botões Superiores Gravar Edição de Caso e Fechar - Início -->
+  <nav class="navbar bg-body-tertiary mt-2">
+    <div class="container-fluid justify-content-start">
+      <button id="botaoGravarNovoCasoSuperior" class="btn btn-sm btn-outline-secondary me-4" type="button" onclick="inserirCasoFE()">GRAVAR NOVO CASO</button>      
+      <button id="botaoGravarEdicaoDeCasoSuperior" class="btn btn-sm btn-outline-secondary me-4" type="button" onclick="atualizarCasoFE()">GRAVAR EDIÇÃO DE CASO</button>
+      <button id="botaoFecharCasoSuperior" class="btn btn-sm btn-outline-secondary me-4" type="button" onclick="redirecionarParaTelaResumosDosCasos( 0 )">FECHAR</button>
+    </div>
+  </nav>
+  <!-- Nav - Botões Superiores Gravar Edição de Caso e Fechar - Fim -->
+
+
+
+
+  <!-- Main - Parte principal da tela de Edição de Caso - Início -->
+  <main id="telaEdicaoCasos" class="container">     
+
+    <!-- Cabeçalho -->
+    <section class="row">
+      <h3 class="text-center mt-4 mb-4" id="tituloPagina"></h3>    
+    </section>
+
+    <!-- RF -->
+    <section class="row">  
+      <div class="col-md-4 mb-3">
+        <label for="referenciaFamiliarInput" class="form-label fw-bold">REFERÊNCIA FAMILIAR</label>
+        <input type="text" class="form-control" id="referenciaFamiliarInput">
+      </div>
+    </section>  
+
+    <br><hr><br>          
+
+    <!-- Endereço parte 1 -->
+    <section class="row">          
+      <div class="col-md-2 mb-3">
+        <label for="tipoLogradouroInput" class="form-label fw-bold">TIPO DE LOGRADOURO</label>
+        <input type="text" class="form-control" id="tipoLogradouroInput">
+      </div>            
+
+      <div class="col-md-3 mb-3">
+        <label for="nomeLogradouroInput" class="form-label fw-bold">NOME DE LOGRADOURO</label>
+        <input type="text" class="form-control" id="nomeLogradouroInput">
+      </div>
+
+      <div class="col-md-2 mb-3">
+        <label for="numeroInput" class="form-label fw-bold">NÚMERO</label>
+        <input type="text" class="form-control" id="numeroInput">
+      </div>
+
+      <div class="col-md-2 mb-3">
+        <label for="complementoInput" class="form-label fw-bold">COMPLEMENTO</label>
+        <input type="text" class="form-control" id="complementoInput">
+      </div>                          
+
+      <div class="col-md-3 mb-3">
+        <label for="bairroInput" class="form-label fw-bold">BAIRRO</label>
+        <input type="text" class="form-control" id="bairroInput">
+      </div>                          
+    </section>    
+
+    <!-- Endereço parte 2 -->
+    <section class="row">  
+      <div class="col-md-2 mb-3">
+        <label for="selectRegionais" class="form-label fw-bold">REGIONAL</label>
+        <select class="form-select" id="selectRegionais">
+          <?!= gerarSelectBackend( BUFFER_REGIONAIS ); ?>
+        </select>
+      </div>             
+            
+      <div class="col-md-2 mb-3">
+        <label for="cepInput" class="form-label fw-bold">CEP</label>
+        <input type="text" class="form-control" id="cepInput">
+      </div>                                                  
+
+      <div class="col-md-2 mb-3">
+        <label for="tpsaInput" class="form-label fw-bold">TPSA</label>
+        <input type="text" class="form-control" id="tpsaInput">
+      </div>                                                              
+    </section>    
+
+    <br><hr><br>
+
+    <!-- Datas -->
+    <section class="row">
+      <div class="col-md-3 mb-3 me-3">
+        <label for="dataChegadaCREASInput" class="form-label fw-bold">DATA DE CHEGADA NO CREAS</label>
+        <input type="date" class="form-control" id="dataChegadaCREASInput">
+      </div>      
+
+      <div class="col-md-3 mb-3 me-3">
+        <label for="dataPrevistaRespostaInput" class="form-label fw-bold">DATA PREVISTA PARA RESPOSTA</label>
+        <input type="date" class="form-control" id="dataPrevistaRespostaInput">
+      </div>     
+
+      <div class="col-md-3 mb-3 me-3" id="dataUltimaResposta">
+        <label for="dataUltimaRespostaInput" class="form-label fw-bold">DATA DA ÚLTIMA RESPOSTA</label>
+        <input type="date" class="form-control" id="dataUltimaRespostaInput">
+      </div>
+    </section>    
+
+    <br>                                  
+
+    <!-- Órgãos Encaminhadores -->
+    <section class="row">
+      <p class="mt-3 fw-bold">ÓRGÃOS ENCAMINHADORES</p>
+      <div id="checkboxOrgaosEncaminhadores">
+        <!-- 1: checkbox inline   -->
+        <!-- 0: checkbox vertical -->
+        <?!= gerarCheckBox( BUFFER_ORGAOS_ENCAMINHADORES, "checkboxOrgaosEncaminhadores", 1 ); ?>
+      </div>    
+    </section>               
+
+    <br><hr><br>    
+
+    <!-- Dados da Designação -->
+    <section class="row" id="situacaoDoCaso">   
+      <div class="col-md-2 mb-3 me-3">
+        <label for="situacaoCasoInput" class="form-label fw-bold">SITUAÇÃO DO CASO</label>        
+        <input type="text" class="form-control" id="situacaoCasoInput" disabled>     
+      </div>
+
+      <div class="col-md-3 mb-3 me-3">
+        <label for="dataDesignacaoInput" class="form-label fw-bold">DATA DE DESIGNAÇÃO DO CASO</label>
+        <input type="date" class="form-control" id="dataDesignacaoInput" disabled>
+      </div>      
+
+      <div class="col-md-4 mb-3 me-3">
+        <label for="selectMotivoDesiginacao" class="form-label fw-bold">MOTIVO DE DESIGNAÇÃO DO CASO</label>
+        <select class="form-select" id="selectMotivoDesiginacao" disabled>
+          <?!= gerarSelectBackend( BUFFER_MOTIVOS_DE_DESIGNACAO ); ?>
+        </select>      
+      </div>  
+      
+      <br><br><hr><br>
+
+    </section>
+    
+
+    <!-- Violações Caso -->
+    <section class="row">
+      <p class="mt-3 fw-bold">VIOLAÇÕES DO CASO</p>
+      <div id="checkboxViolacoes">
+        <!-- 1: checkbox inline   -->
+        <!-- 0: checkbox vertical -->
+        <?!= gerarCheckBox( BUFFER_VIOLACOES, "checkboxViolacoes", 0 ); ?>
+      </div>    
+    </section>
+
+    <br><hr><br>        
+
+    <!-- Categorias Caso -->
+    <section class="row mb-5">
+      <p class="mt-3 fw-bold">CATEGORIAS DO CASO</p>
+      <div id="checkboxCategorias" onchange="mostrarAbasParametros()">
+        <!-- 1: checkbox inline   -->
+        <!-- 0: checkbox vertical -->
+        <?!= gerarCheckBox( BUFFER_CATEGORIAS, "checkboxCategorias", 1 ); ?>
+      </div>    
+    </section>                                
+
+
+    <!-- Parâmetros Caso -->
+    <section class="row">
+      <!-- Abas de Categorias contendo os parâmetros associados associados à elas -->
+      <nav>
+        <!-- 0: inicialmente invisível - display: none -->
+        <!-- 1: inicialmente visível - display padrão do bootstrap -->
+        <?!= gerarAbasCategorias( 0 ); ?>                
+      </nav>
+    </section>      
+
+
+    <br><hr><br>
+
+    <!-- Observação -->
+    <section class="row mb-3">      
+      <div class="col-md-6">
+        <label for="textAreaObservacao" class="form-label fw-bold">OBSERVAÇÃO</label>
+        <textarea class="form-control" id="textAreaObservacao" rows="4" cols="50" maxlength="200" placeholder="Digite aqui o sua observação"></textarea>
+      </div>
+    </section>          
+
+  </main> 
+  <!-- Main - Parte principal da tela Edição de Caso - Fim -->
+
+
+  <!-- Nav - Botões Inferiores Gravar Edição de Caso e Fechar - Início -->
+  <nav class="navbar bg-body-tertiary mt-2 mb-4">
+    <div class="container-fluid justify-content-start">
+      <button id="botaoGravarNovoCasoInferior" class="btn btn-sm btn-outline-secondary me-4" type="button" onclick="inserirCasoFE()">GRAVAR NOVO CASO</button>            
+      <button id="botaoGravarEdicaoDeCasoInferior" class="btn btn-sm btn-outline-secondary me-4" type="button" onclick="atualizarCasoFE()">GRAVAR EDIÇÃO DE CASO</button>
+      <button id="botaoFecharCasoInferior" class="btn btn-sm btn-outline-secondary me-4" type="button" onclick="redirecionarParaTelaResumosDosCasos( 0 )">FECHAR</button>
+    </div>
+  </nav>
+  <!-- Nav - Botões Inferiores Gravar Edição de Caso e Fechar - Fim -->  
+
+
+<!-- Tela Edição de Caso - Fim -->
+
+
+  

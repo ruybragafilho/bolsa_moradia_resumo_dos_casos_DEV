@@ -1,0 +1,412 @@
+<script>
+
+  "use strict";
+
+  // Cache do caso que está sendo atualizado
+  let cache_CasoEmAtualizacao;  
+
+
+  /**
+   * Função que configura a página de cadastro para Atualização de caso
+   */
+  function configurarPaginaAtualizarCaso() {
+
+    // Configura o Título da Página
+    if( usuarioLogado.tipo == "2" ) {
+      document.getElementById( "tituloPagina" ).innerHTML = "VISUALIZAÇÃO DE CASO";
+    } else {
+      document.getElementById( "tituloPagina" ).innerHTML = "EDIÇÃO DE CASO";
+    }
+    
+
+    // Esconde os botões de gravação de novo caso
+    document.getElementById( "botaoGravarNovoCasoSuperior" ).style.display = "none";
+    document.getElementById( "botaoGravarNovoCasoInferior" ).style.display = "none";
+
+    // Mostra os botões de gravação de edição caso apenas para trabalhadores da ponta e devs
+    if( usuarioLogado.tipo == "2" ) {
+      // Não mostra os botões de gravação de edição de caso para gestores
+      document.getElementById( "botaoGravarEdicaoDeCasoSuperior" ).style.display = "none";
+      document.getElementById( "botaoGravarEdicaoDeCasoInferior" ).style.display = "none";    
+    } else {
+      // Mostra os botões de gravação de edição de caso para trabalhadores da ponta e devs
+      document.getElementById( "botaoGravarEdicaoDeCasoSuperior" ).style.display = "";
+      document.getElementById( "botaoGravarEdicaoDeCasoInferior" ).style.display = "";    
+    }    
+
+
+    // Mostra Componentes não utilizados na inserção de novo caso
+    document.getElementById( "dataUltimaResposta" ).style.display = "";
+    document.getElementById( "situacaoDoCaso" ).style.display = "";    
+
+  } // Fim da função configurarPaginaAtualizarCaso
+
+
+ 
+  /**
+   * Função que mostra na tela os dados do caso em atualização
+   */
+  function mostrarDadosDoCasoEmAtualizacao() {
+
+    // Referência Familiar
+    document.getElementById('referenciaFamiliarInput').value = cache_CasoEmAtualizacao.referenciaFamiliar;
+
+
+    // Endereço
+    document.getElementById('tipoLogradouroInput').value = cache_CasoEmAtualizacao.tipoLogradouro;
+    document.getElementById('nomeLogradouroInput').value = cache_CasoEmAtualizacao.nomeLogradouro;
+    document.getElementById('numeroInput').value = cache_CasoEmAtualizacao.numero;
+    document.getElementById('complementoInput').value = cache_CasoEmAtualizacao.complemento;
+    document.getElementById('bairroInput').value = cache_CasoEmAtualizacao.bairro;
+
+    // Deixa a regional travada apenas se o usuário do sistema
+    // for um trabalhador de uma regional    
+    if( usuarioLogado.regional == "0" ) {
+      document.getElementById('selectRegionais').value = cache_CasoEmAtualizacao.idRegional;
+    } else {
+      document.getElementById('selectRegionais').innerHTML = 
+      `<option selected value="${cache_CasoEmAtualizacao.idRegional}">${cache_CasoEmAtualizacao.nomeRegional}</option>`;
+    }                                     
+
+    document.getElementById('cepInput').value = cache_CasoEmAtualizacao.cep;
+    document.getElementById('tpsaInput').value = cache_CasoEmAtualizacao.tpsa;
+
+
+    // Datas
+    let data = cache_CasoEmAtualizacao.dataDeChegadaNoCREAS.split("/");
+    document.getElementById('dataChegadaCREASInput').value = `${data[2]}-${data[1]}-${data[0]}`;
+
+    if( cache_CasoEmAtualizacao.dataPrevistaParaResposta != "" ) {
+      data = cache_CasoEmAtualizacao.dataPrevistaParaResposta.split("/");
+      document.getElementById('dataPrevistaRespostaInput').value = `${data[2]}-${data[1]}-${data[0]}`;
+    }
+
+    if( cache_CasoEmAtualizacao.dataDaUltimaResposta != "" ) {
+      data = cache_CasoEmAtualizacao.dataDaUltimaResposta.split("/");
+      document.getElementById('dataUltimaRespostaInput').value = `${data[2]}-${data[1]}-${data[0]}`;
+    }
+
+
+    // checkboxOrgaosEncaminhadores
+    let idsOrgaosEncaminhadores = cache_CasoEmAtualizacao.idsOrgaosEncaminhadores.split(";").filter( id => id != "" );
+    let idItem;
+    idsOrgaosEncaminhadores.forEach( id => {
+      idItem = 'checkboxOrgaosEncaminhadores' + id;
+      document.getElementById( idItem ).checked = true;
+    });
+
+
+    // Designação Caso
+    if( cache_CasoEmAtualizacao.ativo == "Sim" ) {
+      document.getElementById( "situacaoCasoInput" ).value = "Ativo";
+    } else {
+      document.getElementById( "situacaoCasoInput" ).value = "Inativo";
+
+      data = cache_CasoEmAtualizacao.dataDeDesignacao.split("/");
+      document.getElementById( "dataDesignacaoInput" ).value = `${data[2]}-${data[1]}-${data[0]}`;
+
+      document.getElementById('selectMotivoDesiginacao').innerHTML = 
+      `<option selected value="${cache_CasoEmAtualizacao.idMotivoDeDesignacao}">${cache_CasoEmAtualizacao.nomeMotivoDeDesignacao}</option>`;      
+    }
+
+
+    // checkboxViolacoes
+    let idsViolacoes;
+    if( cache_CasoEmAtualizacao.idsViolacoes != "" ) {
+      idsViolacoes = cache_CasoEmAtualizacao.idsViolacoes.split(";").filter( id => id != "" );    
+      idsViolacoes.forEach( id => {
+        idItem = 'checkboxViolacoes' + id;
+        document.getElementById( idItem ).checked = true;
+      });    
+    }
+    
+
+    // checkboxCategorias    
+    let idsCategorias;
+    if( cache_CasoEmAtualizacao.idsCategorias != "" ) {
+      idsCategorias = cache_CasoEmAtualizacao.idsCategorias.split(";").filter( id => id != "" );     
+      idsCategorias.forEach( id => {
+        idItem = 'checkboxCategorias' + id;
+        document.getElementById( idItem ).checked = true;
+      });
+
+
+      // Abas Parâmetros
+      mostrarAbasParametros();
+
+  
+      // Checkbox Parâmetros    
+      if( cache_CasoEmAtualizacao.idsParametros != "" ) { 
+  
+        let idsParametros = cache_CasoEmAtualizacao.idsParametros.split(";").filter( id => id != "" );    
+        let arrayIdsCategoriasDoParametro;
+  
+        idsParametros.forEach( idParametro => {  
+          arrayIdsCategoriasDoParametro = (cache_TabelaParametros[idParametro-1][COLUNA_CATEGORIAS_DO_PARAMETRO]).split(";").filter( id => id != "");    
+  
+          arrayIdsCategoriasDoParametro.forEach( idCategoria => {  
+            idItem =  "checkboxParametros_" + idCategoria + "_" + idParametro;
+            document.getElementById( idItem ).checked = true;  
+          });  
+        });
+
+      } // Fim if checkbox parâmetros
+
+    } // Fim if checkbox categorias  
+    
+
+    // Observação
+    document.getElementById('textAreaObservacao').value = cache_CasoEmAtualizacao.observacao;
+
+  } // Fim da função mostrarDadosDoCasoEmAtualizacao
+
+
+
+  /**
+   * Função chamada quando o botão editar é clicado para salvar uma atualização de caso
+   */    
+  function atualizarCasoFE() {
+
+    // RF
+    const referenciaFamiliar = document.getElementById('referenciaFamiliarInput').value;
+
+    // Validação RF: referencia familiar é campo obrigatório
+    if (!referenciaFamiliar) {      
+      mostrarModalErro( "Campo REFERÊNCIA FAMILIAR é obrigatório!" );
+      return;
+    } // Fim da validação de RF           
+
+
+    // Endereço
+    const tipoLogradouro = document.getElementById('tipoLogradouroInput').value;
+    const nomeLogradouro = document.getElementById('nomeLogradouroInput').value;
+    const numero = document.getElementById('numeroInput').value;
+    const complemento = document.getElementById('complementoInput').value;
+    const bairro = document.getElementById('bairroInput').value;
+
+    const idRegional = document.getElementById('selectRegionais').value;
+
+    // Validação Regional: Regional é campo obrigatório
+    if (!idRegional) {      
+      mostrarModalErro( "Campo REGIONAL é obrigatório!" );
+      return;
+    } // Fim da validação de RF           
+
+    const cep = document.getElementById('cepInput').value;     
+
+    // TPSA
+    const tpsa = document.getElementById('tpsaInput').value;
+
+
+    // Data de chegada no CREAS
+    let dataChegadaCREASInput = document.getElementById('dataChegadaCREASInput').value;
+    let auxDataChegadaCREAS;
+    let dataChegadaCREAS;
+
+    // Validação Data de Chegada no CREAS:       
+
+    // Se a data de chegada no CREAS tiver sido informada
+    if( dataChegadaCREASInput )  {
+
+      // Corrige e formata a data de chegada no CREAS
+      auxDataChegadaCREAS = new Date( dataChegadaCREASInput );  
+      auxDataChegadaCREAS.setDate( auxDataChegadaCREAS.getDate() + 1 );      
+      dataChegadaCREAS = auxDataChegadaCREAS.toLocaleString("pt-BR", {dateStyle: "short"});
+
+      // Impede data futura para data de chegada no CREAS
+      let dataHoje = new Date();            
+      auxDataChegadaCREAS.setHours( 1 );      
+      if( auxDataChegadaCREAS.getTime() > dataHoje.getTime() ) {
+        mostrarModalErro( "O campo DATA DE CHEGADA NO CREAS não aceita data futura!" );  
+        return;
+      }
+
+    // Se a data de chegada no CREAS NÃO tiver sido informada,
+    // utiliza a data do dia
+    } else {
+        
+      dataChegadaCREAS = cache_CasoEmAtualizacao.dataDeChegadaNoCREAS;  
+
+    } // Fim do tratamendo da data de chegada no CREAS
+
+
+    // Data prevista para resposta
+    let dataPrevistaRespostaInput = document.getElementById('dataPrevistaRespostaInput').value;
+    let auxDataPrevistaResposta;
+    let dataPrevistaResposta;
+
+    // Validação Data Prevista para Resposta: 
+
+    // Se a data prevista para resposta tiver sido informada
+    if( dataPrevistaRespostaInput )  {
+
+      // Corrige e formata a data prevista para resposta
+      auxDataPrevistaResposta = new Date( dataPrevistaRespostaInput );  
+      auxDataPrevistaResposta.setDate( auxDataPrevistaResposta.getDate() + 1 );
+      dataPrevistaResposta = auxDataPrevistaResposta.toLocaleString("pt-BR", {dateStyle: "short"});
+      
+      // Impede que a data prevista para resposta seja anterior à data
+      // de chegada no CREAS        
+      auxDataPrevistaResposta.setHours( 1 );      
+      if( auxDataPrevistaResposta.getTime() < auxDataChegadaCREAS.getTime() ) {
+        mostrarModalErro( "A DATA PREVISTA PARA RESPOSTA deve ser maior ou igual à DATA DE CHEGADA NO CREAS!" );          
+        return;
+      }        
+
+    // Se a data prevista para resposta NÃO tiver sido informada,
+    // utiliza null
+    } else {
+
+      dataPrevistaResposta = cache_CasoEmAtualizacao.dataPrevistaParaResposta;
+
+    } // Fim do tratamento da data prevista para resposta
+
+
+    // Data da última resposta
+    let dataUltimaRespostaInput = document.getElementById('dataUltimaRespostaInput').value;
+    let auxDataUltimaResposta;
+    let dataUltimaResposta;
+
+    // Validação Data da última Resposta: 
+
+    // Se a data da última resposta tiver sido informada
+    if( dataUltimaRespostaInput )  {
+
+      // Corrige e formata a data da última resposta
+      auxDataUltimaResposta = new Date( dataUltimaRespostaInput );  
+      auxDataUltimaResposta.setDate( auxDataUltimaResposta.getDate() + 1 );
+      dataUltimaResposta = auxDataUltimaResposta.toLocaleString("pt-BR", {dateStyle: "short"});
+      
+      // Impede que a data da última resposta seja anterior à data
+      // de prevista para resposta
+      auxDataUltimaResposta.setHours( 1 ); 
+      if( auxDataUltimaResposta.getTime() < auxDataChegadaCREAS.getTime() ) {
+        mostrarModalErro( "A DATA DA ÚLTIMA RESPOSTA deve ser maior ou igual à DATA DE CHEGADA NO CREAS!" );          
+        return;
+      }        
+
+    // Se a data da última resposta NÃO tiver sido informada,
+    // mantém a data que já estava
+    } else {
+
+      dataUltimaResposta = cache_CasoEmAtualizacao.dataDaUltimaResposta;
+
+    } // Fim do tratamento da data da última resposta
+
+      
+    // Órgãos encaminhadores
+    const checkBoxIdsOrgaosEncaminhadores = document.querySelectorAll('input[name="checkboxOrgaosEncaminhadores"]:checked');
+    let arrayIdsOrgaosEncaminhadores;
+    let idsOrgaosEncaminhadores;
+
+    // Validação Órgãos Encaminhadores: Órgãos Encaminhadores é obrigatório
+    if( checkBoxIdsOrgaosEncaminhadores.length ) {
+ 
+      arrayIdsOrgaosEncaminhadores = Array.from(checkBoxIdsOrgaosEncaminhadores).map(chk => chk.value);
+      idsOrgaosEncaminhadores = arrayIdsOrgaosEncaminhadores.join(";");
+
+    } else {
+
+      mostrarModalErro( "Campo ÓRGÃOS ENCAMINHADORES é obrigatório!" );
+      return;
+
+    } // Fim da validação dos Órgãos Encaminhadores   
+    
+    
+    // Violacoes Caso
+    const checkBoxIdsViolacoesCaso = document.querySelectorAll('input[name="checkboxViolacoes"]:checked');
+    let arrayIdsViolacoesCaso;
+    let idsViolacoesCaso;
+
+    // Processamento das violações do caso
+    if( checkBoxIdsViolacoesCaso.length ) {
+ 
+      arrayIdsViolacoesCaso = Array.from(checkBoxIdsViolacoesCaso).map(chk => chk.value);
+      idsViolacoesCaso = arrayIdsViolacoesCaso.join(";");
+
+    } else {
+
+      idsViolacoesCaso = "";      
+
+    } // Fim do processamento das violações do caso    
+
+
+    // Categorias Caso
+    const checkBoxIdsCategoriasCaso = document.querySelectorAll('input[name="checkboxCategorias"]:checked');
+    let arrayIdsCategoriasCaso;
+    let idsCategoriasCaso;
+
+    // Validação Categorias Caso: Categorias Caso é obrigatório
+    if( checkBoxIdsCategoriasCaso.length ) {
+ 
+      arrayIdsCategoriasCaso = Array.from(checkBoxIdsCategoriasCaso).map(chk => chk.value);
+      idsCategoriasCaso = arrayIdsCategoriasCaso.join(";");
+
+    } else {
+
+      mostrarModalErro( "Campo CATEGORIAS é obrigatório!" );
+      return;
+
+    } // Fim da validação das Categorias Caso
+
+
+    // Parametros Caso
+    const idsParametrosCaso = processarParametros();
+
+      
+    // Observação
+    let observacao = document.getElementById('textAreaObservacao').value;
+    if( observacao.length > 200 ) {
+      observacao = observacao.substring(0, 200);
+    }
+
+
+    // mostra modal com mensagem de gravação de dados
+    mostrarModalMensagem( "Gravando os dados, por favor aguarde..." );   
+
+
+    // Chama função backend para atualizar o caso
+    google.script.run
+                 .withSuccessHandler( () => {
+
+                   // Volta para a tela de resumos de casos
+                   console.log( "\natualizarCasoFE_js - INÍCIO" ); 
+                   redirecionarParaTelaResumosDosCasos( 1 );
+                   console.log( "atualizarCasoFE_js - FIM" ); 
+
+                 })
+                 .withFailureHandler( erro => {
+
+                   // mostra modal com mensagem de erro 
+                   mostrarModalErro( "atualizarCasoFE - " + erro.message );
+
+                 })
+                 // Chama a função backend que atualiza um caso
+                 .atualizarCasoBE( cache_CasoEmAtualizacao.id,
+                                   referenciaFamiliar,
+                                   tipoLogradouro,
+                                   nomeLogradouro,
+                                   numero,
+                                   complemento,
+                                   bairro,
+                                   idRegional,
+                                   cep,                          
+                                   tpsa,
+                                   dataChegadaCREAS,
+                                   idsOrgaosEncaminhadores,
+                                   dataPrevistaResposta, 
+                                   dataUltimaResposta, 
+                                   cache_CasoEmAtualizacao.dataDeDesignacao,   
+                                   cache_CasoEmAtualizacao.idMotivoDeDesignacao, 
+                                   idsViolacoesCaso,
+                                   idsCategoriasCaso,
+                                   idsParametrosCaso,
+                                   observacao );        
+
+
+  } // Fim da função atualizarCasoFE
+
+
+  </script>
+
+

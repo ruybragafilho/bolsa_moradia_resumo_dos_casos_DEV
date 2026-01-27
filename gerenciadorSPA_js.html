@@ -1,0 +1,102 @@
+<script>
+
+  "use strict";
+
+
+  /**
+  *  ###########################################################################################
+  *  #####                                                                                 #####
+  *  #####  Módulo:    gerenciadorSPA_js                                                   #####
+  *  #####  Objetivo:  Exibir as páginas do sistema, usando SPA (Single Page Application)  #####
+  *  #####                                                                                 #####
+  *  ###########################################################################################
+  */  
+
+
+  // Timer 
+  const esperar = (time) => new Promise( ( resolve, reject ) => setTimeout( resolve, time ) );
+
+
+  /**
+   * Carrega dinamicamente uma página HTML no contêiner principal da aplicação.
+   * 
+   * @param {string} nomePagina - Nome do arquivo/página a ser carregado.
+   *    
+   * O sistema utiliza o modelo SPA (Single Page Application), em que a navegação ocorre 
+   * dentro de uma única página base, carregando dinamicamente os conteúdos HTML
+   * conforme a interação do usuário.
+   * 
+   * Fluxo:
+   * 1. Substitui o conteúdo do elemento #conteudo pelo HTML informado.
+   * 2. Chama a função apropriada para gerar o conteúdo dinâmico da página carregada    
+   */   
+  async function exibirPagina(nomePagina) {
+
+    // Aguarda carregamento das páginas na cache de páginas
+    while( !paginasCarregadasNaCache() ) {
+      console.log( "Aguardando carregamento das páginas na cache" );
+      await esperar( 1000 );
+    }    
+
+    // Aguarda carregamento das tabelas na cache de tabelas
+    while( !tabelasCarregadasNaCache() ) {
+      console.log( "Aguardando carregamento das tabelas na cache" );
+      await esperar( 1000 );
+    }        
+
+    // Insere a página carregada no elemento de id Conteudo - SPA
+    // e chama a função apropriada para gerar o conteudo dinâmico da páginacarregada
+    switch( nomePagina ) {
+
+      case "resumosDosCasos": 
+                              // Carrega a página resumosDosCasos.html, armazenada no cache do frontend,
+                              // no elemento de id "conteudo" da página index.html (SPA)
+                              document.getElementById("conteudo").innerHTML = cache_PaginaResumosDosCasos;  
+
+                              // Configura a página de resumos dos casos
+                              window.scrollTo(0, 0);
+                              configurarPaginaResumosDosCasos();
+
+                              // Gera a tabela de resumo dos casos 
+                              //document.getElementById( "checkboxAtivos1" ).checked = true;
+                              //filtrar();
+                              gerarTabelaResumosCasos(cache_TabelaCasos);
+
+                              break;
+
+      case "inserirCaso": 
+                              // Carrega a página paginaCadastroCaso.html, armazenada no cache do frontend,
+                              // no elemento de id "conteudo" da página index.html (SPA)
+                              document.getElementById("conteudo").innerHTML = cache_PaginaCadastroCaso;
+
+                              // Configura a página de cadastro de caso para
+                              // ser utilizada para inserção de novo caso
+                              window.scrollTo(0, 0);
+                              configurarPaginaInserirCaso();                               
+
+                              break;     
+
+      case "atualizarCaso":    
+                              // Carrega a página paginaCadastroCaso.html, armazenada no cache do frontend,
+                              // no elemento de id "conteudo" da página index.html (SPA)                               
+                              document.getElementById("conteudo").innerHTML = cache_PaginaCadastroCaso;
+
+                              // Configura a página de cadastro de caso para
+                              // ser utilizada para atualização de caso
+                              window.scrollTo(0, 0);
+                              configurarPaginaAtualizarCaso();                              
+
+                              // Carrega os dados do caso que será atualizado
+                              mostrarDadosDoCasoEmAtualizacao();
+
+                              break;                                             
+    } // Fim switch - case
+
+    // Esconde modal de mensagem
+    modalMensagem.hide();   
+
+
+  } // Fim da função exibirPagina
+
+  
+</script>

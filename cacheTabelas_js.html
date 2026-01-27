@@ -1,0 +1,166 @@
+<script>
+
+  "use strict";
+
+  /**
+  *  #######################################################################################
+  *  #####                                                                             #####
+  *  #####  Módulo:    cacheTabelas_js                                                 #####
+  *  #####  Objetivo:  Gerenciar o cache das tabelas de dados carregadas do servidor   #####
+  *  #####                                                                             #####
+  *  #######################################################################################
+  */
+
+  // Cache da tabela Violacoes, carregados via chamada 
+  // da função backend obterTabelaCompleta( "VIOLACOES" )
+  //let cacheViolacoes = [];  
+  let cache_TabelaViolacoes = [];  
+
+  // Cache da tabela Categorias, carregados via chamada 
+  // da função backend obterTabelaCompleta( "CATEGORIAS" )
+  //let cacheCategorias = [];  
+  let cache_TabelaCategorias = [];  
+
+  // Cache da tabela Parâmetros, carregados via chamada 
+  // da função backend obterTabelaCompleta( "PARAMETROS" )
+  //let cacheParametros = [];    
+  let cache_TabelaParametros = [];      
+
+  // Cache da tabela Órgãos Encaminhadores, carregados via chamada 
+  // da função backend obterTabelaCompleta( "ORGAOS_ENCAMINHADORES" )
+  //let cacheOrgaosEncaminhadores = [];    
+  let cache_TabelaOrgaosEncaminhadores = [];    
+
+  // Cache da tabela Regionais, carregados via chamada 
+  // da função backend obterTabelaCompleta( "REGIONAIS" )
+  //let cacheRegionais = [];
+  let cache_TabelaRegionais = [];
+
+  // Cache da tabela Motivos de Designação, carregados via chamada 
+  // da função backend obterTabelaCompleta( "MOTIVOS_DE_DESIGNACAO" )
+  //let cacheMotivosDeDesignacao = [];
+  let cache_TabelaMotivosDeDesignacao = [];
+
+
+  // Cache da tabela com os casos, carregados via chamada 
+  // da função backend obterCasos
+  //let cacheCasos = [];
+  let cache_TabelaCasos = [];
+
+
+
+  // Flags que indicam se as tabelas foram carregadas no cache de tabelas
+  //    0: ainda não foi carregada
+  //    1: já foi carregada
+  let flagCache_TabelaViolacoes             = 0;
+  let flagCache_TabelaCategorias            = 0;
+  let flagCache_TabelaParametros            = 0;
+  let flagCache_TabelaOrgaosEncaminhadores  = 0;  
+  let flagCache_TabelaRegionais             = 0;
+  let flagCache_TabelaMotivosDeDesignacao   = 0;  
+  let flagCache_TabelaCasos                 = 0;
+
+
+
+  // Posições das colunas nas tabelas
+  const COLUNA_ID    = 0;
+  const COLUNA_NOME  = 1;
+  const COLUNA_ATIVO = 2;  
+  const COLUNA_CATEGORIAS_DO_PARAMETRO = 4;
+
+
+
+  /**
+  * Função que pré carrega todas as tabelas da base de dados CODIGOS para o cache de tabelas do frontend
+  */  
+  function preCarregarTabelasNaCache() {
+
+    carregarTabelaNaCache( "VIOLACOES" );    
+    carregarTabelaNaCache( "CATEGORIAS" );
+    carregarTabelaNaCache( "PARAMETROS" );
+    carregarTabelaNaCache( "ORGAOS_ENCAMINHADORES" );
+    carregarTabelaNaCache( "REGIONAIS" );    
+    carregarTabelaNaCache( "MOTIVOS_DE_DESIGNACAO" );
+
+  } // Fim da função preCarregarTabelasNaCache
+
+
+
+  /**
+  * Função que retorna true se as tabelas tiverem sido carregadas na cache de tabelas,
+  * ou false se ainda não tiverem sido carregadas na cache de tabelas
+  */  
+  function tabelasCarregadasNaCache() {
+    
+    if( flagCache_TabelaViolacoes    && 
+        flagCache_TabelaCategorias   &&
+        flagCache_TabelaParametros   &&
+        flagCache_TabelaOrgaosEncaminhadores &&
+        flagCache_TabelaRegionais    &&
+        flagCache_TabelaMotivosDeDesignacao ) {
+
+      return true;
+
+    } else {
+
+      return false;
+    }
+
+  } // Fim da função tabelasCarregadasNaCache  
+
+
+
+  /**
+  * Função que carrega uma tabela da base de dados CODIGOS para o cache do frontend
+  *
+  * @param {String} nomeTabela - Nome da tabela da base CODIGO que será carregada   
+  */
+  function carregarTabelaNaCache( nomeTabela ) {
+
+    google.script.run
+                 .withSuccessHandler( tabela => {                     
+
+                    // Atribui a tabela carregada ao cache apropriado
+                    switch( nomeTabela ) {
+                      case "VIOLACOES":                cache_TabelaViolacoes     = tabela;
+                                                       flagCache_TabelaViolacoes = 1;
+                                                       break;              
+
+                      case "CATEGORIAS":               cache_TabelaCategorias     = tabela;
+                                                       flagCache_TabelaCategorias = 1;
+                                                       break;
+
+                      case "PARAMETROS":               cache_TabelaParametros     = tabela;
+                                                       flagCache_TabelaParametros = 1;
+                                                       break;                   
+
+                      case "ORGAOS_ENCAMINHADORES":    cache_TabelaOrgaosEncaminhadores     = tabela;
+                                                       flagCache_TabelaOrgaosEncaminhadores = 1;  
+                                                       break;
+
+                      case "REGIONAIS":                cache_TabelaRegionais     = tabela;
+                                                       flagCache_TabelaRegionais = 1;
+                                                       break;            
+
+                      case "MOTIVOS_DE_DESIGNACAO":    cache_TabelaMotivosDeDesignacao     = tabela;
+                                                       flagCache_TabelaMotivosDeDesignacao = 1;  
+                                                       break;            
+
+                      default:                         throw( new Error( "Tabela Inválida" ) ); 
+
+                    }
+
+                 })
+                 .withFailureHandler( erro => {
+
+                   // Mostra modal de erro
+                   mostrarModalErro( "carregarTabelaNaCache - " + erro.message );
+
+                 })
+                 // Chama a função backend para carregar a tabela
+                 .obterTabelaCompleta( nomeTabela );                                          
+
+  } // Fim da função carregarTabelaNaCache
+
+
+</script>
