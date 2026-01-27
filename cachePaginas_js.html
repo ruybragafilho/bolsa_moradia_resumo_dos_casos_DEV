@@ -17,14 +17,14 @@
   // Cache das páginas do sistema, carregados via chamada 
   // da função backend include( "nomePagina" )
   let cache_PaginaResumosDosCasos;
-  let cache_PaginaCadastroCaso;
+  let cache_PaginaVisualizarCaso;
 
 
   // Flags que indicam se as páginas foram carregadas no cache de páginas
   //    0: ainda não foi carregada
   //    1: já foi carregada
   let flagCache_PaginaResumosDosCasos = 0;
-  let flagCache_PaginaCadastroCaso    = 0;
+  let flagCache_PaginaVisualizarCaso    = 0;
 
 
 
@@ -34,7 +34,7 @@
   function preCarregarPaginasNaCache() {
     
     carregarPaginaNaCache( "resumosDosCasos" );
-    carregarPaginaNaCache( "paginaCadastroCaso" );    
+    carregarPaginaNaCache( "visualizarCaso" );    
 
   } // Fim da função preCarregarPaginasNaCache
 
@@ -46,7 +46,7 @@
   */  
   function paginasCarregadasNaCache() {
     
-    if( flagCache_PaginaResumosDosCasos && flagCache_PaginaCadastroCaso ) {
+    if( flagCache_PaginaResumosDosCasos && flagCache_PaginaVisualizarCaso ) {
       return true;
     } else {
       return false;
@@ -69,15 +69,15 @@
                     // Atribui a página carregada ao cache apropriado
                     switch( nomePagina ) {
 
-                      case "resumosDosCasos":     cache_PaginaResumosDosCasos = pagina;
-                                                  flagCache_PaginaResumosDosCasos = 1;
-                                                  break;                      
+                      case "resumosDosCasos":   cache_PaginaResumosDosCasos = pagina;
+                                                flagCache_PaginaResumosDosCasos = 1;
+                                                break;                      
 
-                      case "paginaCadastroCaso":  cache_PaginaCadastroCaso = pagina;
-                                                  flagCache_PaginaCadastroCaso = 1;
-                                                  break;   
+                      case "visualizarCaso":    cache_PaginaVisualizarCaso = pagina;
+                                                flagCache_PaginaVisualizarCaso = 1;
+                                                break;   
 
-                      default:                    throw( new Error( "Página Inválida" ) ); 
+                      default:                  throw( new Error( "Página Inválida" ) ); 
                     }
 
                  })

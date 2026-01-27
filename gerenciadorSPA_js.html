@@ -64,15 +64,15 @@
 
                               break;    
 
-      case "atualizarCaso":    
+      case "visualizarCaso":    
                               // Carrega a página paginaCadastroCaso.html, armazenada no cache do frontend,
                               // no elemento de id "conteudo" da página index.html (SPA)                               
-                              document.getElementById("conteudo").innerHTML = cache_PaginaCadastroCaso;
+                              document.getElementById("conteudo").innerHTML = cache_PaginaVisualizarCaso;
 
                               // Configura a página de cadastro de caso para
                               // ser utilizada para atualização de caso
                               window.scrollTo(0, 0);
-                              configurarPaginaAtualizarCaso();                              
+                              configurarPaginaVisualizarCaso();                              
 
                               // Carrega os dados do caso que será atualizado
                               //mostrarDadosDoCasoEmAtualizacao();
