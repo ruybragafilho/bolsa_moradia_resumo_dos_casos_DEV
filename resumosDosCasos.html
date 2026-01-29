@@ -8,65 +8,35 @@
 
       <h3 class="text-center mt-4 mb-4">FILTROS</h3>     
 
-      <!-- Filtro para as regionais - Início -->
-      <p id="labelCheckboxRegionais" class="mt-3 fw-bold">REGIONAL</p>    
-      <div id="checkboxRegionais">
+      <!-- Filtro para os Serviços / Instituições - Início -->
+      <p id="label_OrgaosEncaminhadores" class="mt-3 fw-bold">SERVIÇO / INSTITUIÇÃO</p>    
+      <div id="checkbox_OrgaosEncaminhadores">
         <!-- 1: checkbox inline   -->
         <!-- 0: checkbox vertical -->        
-        <?!= gerarCheckBox( BUFFER_REGIONAIS, "checkboxRegionais", 1 ); ?>
+        <?!= gerarCheckBox( BUFFER_ORGAOS_ENCAMINHADORES, "checkbox_OrgaosEncaminhadores", 0 ); ?>
       </div>            
-      <!-- Filtro para as regionais - Fim -->        
+      <!-- Filtro para os Serviços / Instituições - Fim -->
 
 
-      <!-- Filtro para as categorias - Início -->
-      <p class="mt-3 fw-bold">CATEGORIAS</p>
-      <div id="checkboxCategorias">
+      <!-- Filtro para os Status das Convocações - Início -->
+      <p class="mt-3 fw-bold">STATUS DA CONVOCAÇÃO</p>
+      <div id="checkbox_StatusConvocacao">
         <!-- 1: checkbox inline   -->
         <!-- 0: checkbox vertical -->        
-        <?!= gerarCheckBox( BUFFER_CATEGORIAS, "checkboxCategorias", 1 ); ?>
+        <?!= gerarCheckBox( BUFFER_RESPOSTAS_SIMPLES, "checkbox_StatusConvocacao", 1 ); ?>
       </div>      
-      <!-- Filtro para as categorias - Fim -->              
+      <!-- Filtro para os Status das Convocações - Fim -->     
 
 
-      <!-- Filtro para casos ativos - Início -->
-      <p class="mt-3 fw-bold">CASOS ATIVOS</p>
-      <div id="checkboxAtivos">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="checkboxAtivos1" value="Sim" name="checkboxAtivos">
-          <label class="form-check-label" for="checkboxAtivos1">Ativos</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="checkboxAtivos2" value="Não" name="checkboxAtivos">
-          <label class="form-check-label" for="checkboxAtivos2">Inativos</label>
-        </div>        
-      </div>
-      <!-- Filtro paracasos ativos - Fim -->                      
-
-
-      <!-- Filtro para Órgãos Encaminhadores - Início -->
-      <p class="mt-3 fw-bold">ÓRGÃOS ENCAMINHADORES</p>
-      <div id="checkboxOrgaosEncaminhadores">
+      <!-- Filtro para Documentação Pendente - Início -->
+      <p class="mt-3 fw-bold">DOCUMENTAÇÃO PENDENTE</p>
+      <div id="checkbox_DocumentacaoPendente">
         <!-- 1: checkbox inline   -->
         <!-- 0: checkbox vertical -->        
-        <?!= gerarCheckBox( BUFFER_ORGAOS_ENCAMINHADORES, "checkboxOrgaosEncaminhadores", 1 ); ?>
+        <?!= gerarCheckBox( BUFFER_RESPOSTAS_SIMPLES, "checkbox_DocumentacaoPendente", 1 ); ?>
       </div>      
-      <!-- Filtro para Órgãos Encaminhadores - Fim -->   
+      <!-- Filtro para Documentação Pendente - Fim -->
 
-
-      <!-- Filtro para Prazo para resposta - Início -->
-      <p class="mt-3 fw-bold">PRAZO PARA RESPOSTA</p>
-
-      <div id="checkboxPrazo">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="checkboxPrazo1" value="1" name="checkboxPrazo">
-          <label class="form-check-label" for="checkboxPrazo1">Com prazo</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="checkboxPrazo2" value="2" name="checkboxPrazo">
-          <label class="form-check-label" for="checkboxPrazo2">Sem prazo</label>
-        </div>                
-      </div>      
-      <!-- Filtro paraPrazo para resposta - Fim -->                            
 
     </section>      
     <!-- Filtros para filtrar as linhas dos resumos dos casos - Fim -->
@@ -102,11 +72,11 @@
           <tr>                            
             <th scope="col">POSIÇÃO NA FILA</th>
             <th scope="col">REFERÊNCIA FAMILIAR</th>
-            <th scope="col">CATEGORIAS</th>
+            <th scope="col">SERVIÇO / INSTITUIÇÃO</th>
             <th scope="col">PONTUAÇÃO</th>            
-            <th scope="col">CASO ATIVO</th>
-            <th scope="col">PRAZO PARA RESPOSTA</th>
-            <th scope="col">DESIGNAR</th>
+            <th scope="col">STATUS DA CONVOCAÇÃO</th>
+            <th scope="col">EVOLUIR</th>
+            <th scope="col">DOCUMENTO PENDENTE</th>
           </tr>
         </thead>
       

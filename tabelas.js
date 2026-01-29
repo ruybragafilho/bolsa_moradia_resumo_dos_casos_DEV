@@ -8,36 +8,24 @@
 
 /**
  * Planilha CODIGOS contendo as tabelas 
- *     . VIOLACOES
- *     . CATEGORIAS
- *     . PARAMETROS
- *     . ORGAOS_ENCAMINHADORES
- *     . REGIONAIS
+ *     . RESPOSTAS_SIMPLES 
+ *     . ORGAOS_ENCAMINHADORES 
  *     . MOTIVOS_DE_DESIGNACAO  
  */
 const PLANILHA_CODIGOS_ID  =  "1kiunfkV_113EpaCKopb8NI75RneypnmvfwbcK1hyjt0";
 const PLANILHA_CODIGOS     =  SpreadsheetApp.openById(PLANILHA_CODIGOS_ID);
 
-const TABELA_VIOLACOES                 =  PLANILHA_CODIGOS.getSheetByName('VIOLACOES');
-const TABELA_CATEGORIAS                =  PLANILHA_CODIGOS.getSheetByName('CATEGORIAS');
-const TABELA_PARAMETROS                =  PLANILHA_CODIGOS.getSheetByName('PARAMETROS');
-const TABELA_ORGAOS_ENCAMINHADORES     =  PLANILHA_CODIGOS.getSheetByName('ORGAOS_ENCAMINHADORES');
-const TABELA_REGIONAIS                 =  PLANILHA_CODIGOS.getSheetByName('REGIONAIS');
-const TABELA_MOTIVOS_DE_DESIGNACAO     =  PLANILHA_CODIGOS.getSheetByName('MOTIVOS_DE_DESIGNACAO');
+const TABELA_RESPOSTAS_SIMPLES      =  PLANILHA_CODIGOS.getSheetByName('RESPOSTAS_SIMPLES');
+const TABELA_ORGAOS_ENCAMINHADORES  =  PLANILHA_CODIGOS.getSheetByName('ORGAOS_ENCAMINHADORES');
+const TABELA_MOTIVOS_DE_DESIGNACAO  =  PLANILHA_CODIGOS.getSheetByName('MOTIVOS_DE_DESIGNACAO');
 
-const BUFFER_VIOLACOES                 =  TABELA_VIOLACOES.getDataRange().getDisplayValues().splice(1);
-const BUFFER_CATEGORIAS                =  TABELA_CATEGORIAS.getDataRange().getDisplayValues().splice(1);
-const BUFFER_PARAMETROS                =  TABELA_PARAMETROS.getDataRange().getDisplayValues().splice(1);
-const BUFFER_ORGAOS_ENCAMINHADORES     =  TABELA_ORGAOS_ENCAMINHADORES.getDataRange().getDisplayValues().splice(1);
-const BUFFER_REGIONAIS                 =  TABELA_REGIONAIS.getDataRange().getDisplayValues().splice(1);
-const BUFFER_MOTIVOS_DE_DESIGNACAO     =  TABELA_MOTIVOS_DE_DESIGNACAO.getDataRange().getDisplayValues().splice(1);
+const BUFFER_RESPOSTAS_SIMPLES      =  TABELA_RESPOSTAS_SIMPLES.getDataRange().getDisplayValues().splice(1);
+const BUFFER_ORGAOS_ENCAMINHADORES  =  TABELA_ORGAOS_ENCAMINHADORES.getDataRange().getDisplayValues().splice(1);
+const BUFFER_MOTIVOS_DE_DESIGNACAO  =  TABELA_MOTIVOS_DE_DESIGNACAO.getDataRange().getDisplayValues().splice(1);
 
-const NUM_VIOLACOES                 = BUFFER_VIOLACOES.length;
-const NUM_CATEGORIAS                = BUFFER_CATEGORIAS.length;
-const NUM_PARAMETROS                = BUFFER_PARAMETROS.length;
-const NUM_ORGAOS_ENCAMINHADORES     = BUFFER_ORGAOS_ENCAMINHADORES.length;
-const NUM_REGIONAIS                 = BUFFER_REGIONAIS.length;
-const NUM_MOTIVOS_DE_DESIGNACAO     = BUFFER_MOTIVOS_DE_DESIGNACAO.length;
+const NUM_RESPOSTAS_SIMPLES      =  BUFFER_RESPOSTAS_SIMPLES.length;
+const NUM_ORGAOS_ENCAMINHADORES  =  BUFFER_ORGAOS_ENCAMINHADORES.length;
+const NUM_MOTIVOS_DE_DESIGNACAO  =  BUFFER_MOTIVOS_DE_DESIGNACAO.length;
 
 
 
@@ -49,7 +37,7 @@ const PLANILHA_CASOS           =  SpreadsheetApp.openById(PLANILHA_CASOS_ID);
 const TABELA_CASOS             =  PLANILHA_CASOS.getSheetByName('CASOS');
 let BUFFER_CASOS               =  TABELA_CASOS.getDataRange().getDisplayValues().splice(1);
 let NUM_CASOS                  =  BUFFER_CASOS.length;
-const NUM_COLUNAS_TABELA_CASOS =  24;
+const NUM_COLUNAS_TABELA_CASOS =  9;
 
 function refreshBufferCasos() {
   BUFFER_CASOS  =  TABELA_CASOS.getDataRange().getDisplayValues().splice(1);
@@ -84,18 +72,18 @@ const ATIVO = 2;
 
 // Posições das colunas na planilha PARAMETROS
 const PONTUACAO_PARAMETRO  = 3;
-const CATEGORIAS_PARAMETRO = 4;
 
 
 // Posições das colunas da planilha CASOS
 const REFERENCIA_FAMILIAR               = 1;
-const CPF_RF                            = 2
+const CPF_RF                            = 2;
 const ORGAO_ENCAMINHADOR                = 3;
 const STATUS_CONVOCACAO                 = 4;
-const STATUS_EVOLUCAO                   = 5;
-const DOC_PENDENTE                      = 6;
-const TEMPO_DE_ESPERA                   = 7;
-const PONTUACAO                         = 8;
+const DOC_PENDENTE                      = 5;
+const TEMPO_DE_ESPERA                   = 6;
+const PONTUACAO                         = 7;
+const MOTIVO_DE_DESIGNACAO              = 8;
+const DATA_DE_DESIGNACAO                = 9;
 
 
 
@@ -124,8 +112,7 @@ const TIPO_USUARIO      = 4;
  * serão mostradas na tela
  * 
  * @param {String} nomeTabela: Nome da tabela a qual os ids se referem. Pode ser
- *                             VIOLACOES, CATEGORIAS, PARAMETROS, ORGAOS_ENCAMINHADORES,
- *                             REGIONAIS ou MOTIVOS_DE_DESIGNACAO * 
+ *                             RESPOSTAS_SIMPLES, ORGAOS_ENCAMINHADORES OU MOTIVOS_DE_DESIGNACAO 
  * 
  * return Uma cópia da tabela
  */
@@ -134,16 +121,10 @@ function obterTabelaCompleta( nomeTabela ) {
   let bufferTabela;
 
   switch( nomeTabela ) {
-    case "VIOLACOES":                bufferTabela = BUFFER_VIOLACOES;
-                                     break;                                         
-    case "CATEGORIAS":               bufferTabela = BUFFER_CATEGORIAS;
-                                     break;
-    case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
+    case "RESPOSTAS_SIMPLES":        bufferTabela = BUFFER_RESPOSTAS_SIMPLES;
                                      break;                                                                  
     case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
                                      break;
-    case "REGIONAIS":                bufferTabela = BUFFER_REGIONAIS;
-                                     break;            
     case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
                                      break;            
     default:                         throw( new Error( "Tabela inválida" ) ); 
@@ -392,8 +373,7 @@ function calcularPontuacaoParametros( idsParametros ) {
  * @param {String} stringIds: string de ids separados por ponto e vírgula
  *                            Exemplo: 1;;3;;5
  * @param {String} nomeTabela: Nome da tabela a qual os ids se referem. Pode ser
- *                             VIOLACOES, CATEGORIAS, PARAMETROS, ORGAOS_ENCAMINHADORES,
- *                             REGIONAIS ou MOTIVOS_DE_DESIGNACAO
+ *                             RESPOSTAS_SIMPLES, ORGAOS_ENCAMINHADORES OU MOTIVOS_DE_DESIGNACAO 
  * 
  * return String com os nomes relacionados aos ids, separados por ponto e vírgula
  *        Exemplo: "Crianças e Adolescentes;PCD;Pessoas Adultas Vítimas de Violência"
@@ -405,16 +385,10 @@ function idsToNomes( stringIds, nomeTabela ) {
   let bufferTabela;
 
   switch( nomeTabela ) {
-    case "VIOLACOES":                bufferTabela = BUFFER_VIOLACOES;
-                                     break;                                                                              
-    case "CATEGORIAS":               bufferTabela = BUFFER_CATEGORIAS;
-                                     break;
-    case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
+    case "RESPOSTAS_SIMPLES":        bufferTabela = BUFFER_RESPOSTAS_SIMPLES;
                                      break;                                                        
     case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
-                                     break;
-    case "REGIONAIS":                bufferTabela = BUFFER_REGIONAIS;
-                                     break;                           
+                                     break;          
     case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
                                      break;               
     default:                         throw( new Error( "Tabela Inválida" ) ); 
@@ -433,49 +407,6 @@ function idsToNomes( stringIds, nomeTabela ) {
 
 
 
-/**
- * Função para formatar uma lista de ids. A função recebe, 
- * como parâmetros, uma string com os ids selecionados pelo 
- * trabalhador, separados por ponto e vírgula, e o número 
- * máximo de ids. Retorna uma string de ids no formato 
- * utilizado pela base de dados
- *  
- * @param {String} Uma string com os ids selecionados pelo 
- *                 trabalhador, separados por ponto e vírgula
- *                           Ex: 2;4
- * @param {Integer} Numero máximo de ids
- * 
- * @return Uma string no formato id1;id2;;...;;idn
- *         Ex: ;2;;4;  
- */
-function formatarListaIds( idsSelecionados, numMaximoDeIds ) {
-
-  if(idsSelecionados == "") return "";
-
-  // Array com os ids selecionados pelo trabalhador
-  const arrayIdsSelecionados = idsSelecionados.split(";");
-  
-  // Array auxiliar para gerar a string  
-  const arrayAuxiliar = new Array( numMaximoDeIds );
-
-
-  let j=0;
-  for( let i=0; i<numMaximoDeIds; ++i ) {
-    if( (i+1) == arrayIdsSelecionados[j]) {
-      arrayAuxiliar[i] = arrayIdsSelecionados[j];
-      ++j;
-    } else {
-      arrayAuxiliar[i] = "";
-    }
-  }
-
-  // Transforma o array em string, e o retorna
-  return arrayAuxiliar.join(";");
-
-} // Fim da função formatarListaIds
-
-
-
 /** 
  *  #################################################
  *  #####                                       ##### 
@@ -491,7 +422,7 @@ function formatarListaIds( idsSelecionados, numMaximoDeIds ) {
  */
 function teste_obterTabelaCompleta() {
   
-  const nomeTabela = "PARAMETROS";
+  const nomeTabela = "ORGAOS_ENCAMINHADORES";
 
   const retorno = obterTabelaCompleta( nomeTabela );
 
@@ -522,9 +453,6 @@ function teste_calcularPontuacaoParametros() {
  */
 function teste_idsToNomes() {
 
-  //const stringIds = "1;;3;;5";
-  //const nomeTabela = "PARAMETROS";
-
   const stringIds = "3";
   const nomeTabela = "MOTIVOS_DE_DESIGNACAO";  
 
@@ -550,9 +478,6 @@ function teste_formatarListaIds() {
   console.log(retorno);
 
 } // Fim da função teste_formatarListaIds
-
-
-
 
 
 

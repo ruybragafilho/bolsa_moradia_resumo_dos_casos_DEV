@@ -2,6 +2,10 @@
 
   "use strict";
 
+  // Cache do caso que está sendo visualizado
+  let id_CasoEmVisualizacao;  
+  let cache_CasoEmVisualizacao;  
+
 
   /**
    * Função que configura a página de visualização de caso
@@ -12,6 +16,30 @@
     document.getElementById( "tituloPagina" ).innerHTML = "VISUALIZAÇÃO DE CASO";
 
   } // Fim da função configurarPaginaVisualizarCaso
+
+
+
+  /**
+   * Função chamada quando o botão editar é clicado para salvar uma atualização de caso
+   */    
+  function visualizarCaso() {
+
+    // Localiza o caso na tabela dados
+    let indiceCasoNaTabelaResumo;
+    let numCasos = cache_TabelaCasos.length;
+    for( indiceCasoNaTabelaResumo=0; indiceCasoNaTabelaResumo<numCasos; ++indiceCasoNaTabelaResumo  ) {
+      if(cache_TabelaCasos[indiceCasoNaTabelaResumo].id == id_CasoEmVisualizacao) {
+        break;
+      }
+    }
+    cache_CasoEmVisualizacao = cache_TabelaCasos[ indiceCasoNaTabelaResumo ];
+
+    // Exibe os dados na página de visualização de caso
+    document.getElementById( "id_referenciaFamiliarInput" ).value   = cache_CasoEmVisualizacao.id;
+    document.getElementById( "nome_referenciaFamiliarInput" ).value = cache_CasoEmVisualizacao.referenciaFamiliar;
+    document.getElementById( "cpf_referenciaFamiliarInput" ).value  = cache_CasoEmVisualizacao.cpf_rf;
+
+  } // Fim da função visualizarCaso
 
 
 
