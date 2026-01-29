@@ -89,28 +89,14 @@ const CATEGORIAS_PARAMETRO = 4;
 
 // Posições das colunas da planilha CASOS
 const REFERENCIA_FAMILIAR               = 1;
-const TIPO_LOGRADOURO                   = 2;
-const NOME_LOGRADOURO                   = 3;
-const NUMERO                            = 4;
-const COMPLEMENTO                       = 5;
-const BAIRRO                            = 6;
-const REGIONAL                          = 7;
-const CEP                               = 8;
-const TPSA                              = 9;
-const DATA_DE_INSERCAO_NO_SISTEMA       = 10;
-const DATA_DE_CHEGADA_NO_CREAS          = 11;
-const ORGAOS_ENCAMINHADORES             = 12;
-const DATA_PREVISTA_PARA_RESPOSTA       = 13;
-const DATA_DA_ULTIMA_RESPOSTA           = 14;
-const DATA_DE_DESIGNACAO                = 15;
-const MOTIVO_DE_DESIGNACAO              = 16;
-const TOTAL_DE_PONTOS                   = 17;
-const TEMPO_DE_ESPERA                   = 18;
-const VIOLACOES_CASO                    = 19;
-const CATEGORIAS_CASO                   = 20;
-const PONTUACAO_PARAMETROS_CASO         = 21;
-const PARAMETROS_CASO                   = 22;
-const OBSERVACAO                        = 23;
+const CPF_RF                            = 2
+const ORGAO_ENCAMINHADOR                = 3;
+const STATUS_CONVOCACAO                 = 4;
+const STATUS_EVOLUCAO                   = 5;
+const DOC_PENDENTE                      = 6;
+const TEMPO_DE_ESPERA                   = 7;
+const PONTUACAO                         = 8;
+
 
 
 // Posições das colunas da planilha USUARIOS
@@ -199,6 +185,7 @@ function obterTabelaCompleta( nomeTabela ) {
  * @param {String} observacao: Observação do trabalhador - text de 200 caracteres
  * 
  */
+/*
 function gravarNaTabelaCasos( id,
                               referenciaFamiliar,
                               tipoLogradouro,
@@ -363,7 +350,7 @@ function gravarNaTabelaCasos( id,
 
 } // Fim da função gravarNaTabelaCasos
 
-
+*/
 
 /**
  * Função que calcula a pontuação da lista de parâmetros cujos ids estão contidos no array idsParametros.
@@ -372,6 +359,7 @@ function gravarNaTabelaCasos( id,
  * 
  * @return Um Integer contendo o somatório das pontuações
  */
+/*
 function calcularPontuacaoParametros( idsParametros ) {
   
   if(idsParametros == "") return 0;
@@ -393,7 +381,7 @@ function calcularPontuacaoParametros( idsParametros ) {
   return somaPontos;
 
 } // Fim da função calcularPontuacaoParametros
-
+*/
 
 
 /**
@@ -516,6 +504,7 @@ function teste_obterTabelaCompleta() {
 /**
  * Função para testar a função principal calcularPontuacaoParametros
  */
+/*
 function teste_calcularPontuacaoParametros() {
 
     const idsParametros = [1, 2, 3, 4, 5];    
@@ -526,7 +515,7 @@ function teste_calcularPontuacaoParametros() {
 
 } // Fim da função teste_calcularPontuacaoParametros
 
-
+*/
 
 /**
  * Função para testar a função idsToNomes
