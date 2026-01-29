@@ -2,7 +2,7 @@
 
 /**
  * Módulo:    tabelas.gs
- * Objetivo:  Armazenar referências a base de dados (planilhas) do sistema PAEFI - Inserção De Novos Casos
+ * Objetivo:  Armazenar referências a base de dados interna (planilhas) do sistema Bolsa Moradia - Resumos dos Casos
  */
 
 
