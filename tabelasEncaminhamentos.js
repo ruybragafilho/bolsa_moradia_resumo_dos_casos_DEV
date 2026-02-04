@@ -30,7 +30,7 @@ const NUM_LINHAS_TABELA_CASOS_PBH  =  BUFFER_CASOS_PBH.length;
 
 
 
-// Posições das colunas das planilhas externas de casos
+// Posições das colunas das planilhas de encaminhamentos
 const UNI_ID = 0;
 const UNI_CPF_RF = 1;
 const UNI_COD_PARENTESCO = 2;
@@ -172,6 +172,275 @@ function gravarTabelaControle() {
 
 
 
+
+
+let linhaTabela = 0;
+let caso = [];
+
+function obterCaso( tabela ) {
+
+  caso = [];
+
+  let numLinhas = tabela.length;
+
+  console.log( "\nnumLinhas: " + numLinhas);
+  console.log( "\nlinhaTabela: " + linhaTabela + "\n\n");
+
+  
+  caso.push( tabela[linhaTabela] );  
+  ++linhaTabela;
+
+  console.log( "\nlinhaTabela: " + linhaTabela);
+  console.log( "RF: " + caso[0] );
+  console.log( "CPF RF: " + caso[0][1] );
+  console.log( "CPF F: "  + tabela[linhaTabela][UNI_CPF_RF] + "\n");
+  
+  while(  ( linhaTabela < numLinhas ) &&
+          ( tabela[linhaTabela][UNI_CPF_RF] == caso[0][UNI_CPF_RF] ) ) {
+
+    console.log( "Entrou while" );
+    caso.push( tabela[linhaTabela] );
+    ++linhaTabela;
+  }
+  
+  console.log( "\n\n" + caso.join("\n\n") + "\n\n" );
+
+  return caso;
+
+}
+
+
+function mostrarCaso( casoi ) {
+  casoi.forEach( c => {  
+      console.log( c );  
+  });
+}
+
+
+
+function testeObterCaso() {
+
+  let teste = obterCaso( BUFFER_CASOS_EXTERNOS );
+  mostrarCaso( teste )
+}
+
+
+
+function calcularPontuacao( caso ) {
+
+  // Familiares do caso
+  let numeroFamiliares = caso.length;
+  
+  if( numeroFamiliares < 1 ) {    
+    return 0;
+  } 
+
+  let rf = caso[0];
+  let familiar = []; 
+
+
+  // Pontuação
+  let peso;
+  let pontuacaoCriterio;
+  let pontuacaoTotal = 0;
+
+
+  // 1) VULNERABILIDADE ASSOCIADA A CICLOS DE VIDA E PERTENCIMENTO IDENTITÁRIO
+  peso = 2;
+
+
+  // 1.1) Famílias com mulheres (cis ou trans)
+  console.log( "Parâmero 1.1" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_GENERO] == 3 || rf[UNI_GENERO] == 4 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_GENERO] == 3 || familiar[UNI_GENERO] == 4 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;
+
+
+  // 1.2) Famílias com indivíduos cuja identidade de gênero e orientação sexual sejam
+  //      diferentes da cisheterossexualidade
+  console.log( "Parâmero 1.2" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_GENERO] != 1 && rf[UNI_GENERO] != 3 && rf[UNI_ORIENTACAO_SEXUAL] != 3 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_GENERO] != 1 && familiar[UNI_GENERO] != 3 && familiar[UNI_ORIENTACAO_SEXUAL] != 3 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;
+
+
+  // 1.3) Famílias com indivíduos pretos, pardos ou indígenas
+  console.log( "Parâmero 1.3" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_RACA_COR] == 2 || rf[UNI_RACA_COR] == 4 || rf[UNI_RACA_COR] == 5 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_RACA_COR] == 2 || familiar[UNI_RACA_COR] == 4 || familiar[UNI_RACA_COR] == 5 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 1.4) Famílias com crianças e adolescentes (pontuar por criança e adolescente)
+  //      compondo o núcleo familiar
+  console.log( "Parâmero 1.4" );
+  pontuacaoCriterio = 0;
+
+  let tem_segundo_rf = false;
+  for( let i=1; i<numeroFamiliares; ++i ) {
+    familiar = caso[i];
+    if(familiar[UNI_RF_2] == "true") {
+      console.log( "SEGUNDO RF" );
+      tem_segundo_rf = true;      
+    }    
+    if( calcularIdade( familiar[UNI_DATA_NASCIMENTO] ) < 18 ) {
+      pontuacaoCriterio += peso*1;
+      console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+    }
+  }   
+  if( pontuacaoCriterio > 0 && 
+      !tem_segundo_rf &&
+      (rf[UNI_GENERO] == 1 || rf[UNI_GENERO] == 2) ) {
+    
+      pontuacaoCriterio += peso*1;
+      console.log( "Pontuação RF: " + pontuacaoCriterio );    
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 1.5) Idosos (acima de 60 anos, com maior prioridade para idosos com 80 anos ou
+  // mais, conforme Estatuto do Idoso)
+  console.log( "Parâmero 1.5" );
+  pontuacaoCriterio = 0;
+
+  let idadeRF = calcularIdade( rf[UNI_DATA_NASCIMENTO] );
+  let idadeFamiliar;
+  if( idadeRF >= 80 ) { 
+    pontuacaoCriterio = peso*4;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      idadeFamiliar = calcularIdade( familiar[UNI_DATA_NASCIMENTO] );
+      if( idadeFamiliar >= 80 ) {
+        pontuacaoCriterio = peso*3;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      }
+    } 
+  }
+  if( pontuacaoCriterio == 0 ) {
+    if( idadeRF >= 60 ) { 
+      pontuacaoCriterio = peso*2;
+      console.log( "Pontuação RF: " + pontuacaoCriterio );
+    } else {
+      for( let i=1; i<numeroFamiliares; ++i ) {
+        familiar = caso[i];
+        idadeFamiliar = calcularIdade( familiar[UNI_DATA_NASCIMENTO] );
+        if( idadeFamiliar >= 60 ) {
+          pontuacaoCriterio = peso*1;
+          console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        }
+      } 
+    }    
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+  
+  // 1.6) Famílias com pessoas com deficiência
+  console.log( "Parâmero 1.6" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_PCD] == 2 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_PCD] == 2 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 1.7) Famílias com mulheres em gestação ou em fase de 
+  // puerpério – até 6 meses após a gestação.
+  console.log( "Parâmero 1.7" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_GESTANTE] == 2 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_GESTANTE] == 2 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // Retorna a pontuação total
+  console.log( "Pontuação total: " + pontuacaoTotal );
+  return pontuacaoTotal;
+}
+
+
+
+function testeCalcularPontuacao() {
+
+  let caso = obterCaso( BUFFER_CASOS_EXTERNOS );
+
+  let pontuacaoCaso = calcularPontuacao( caso );
+
+  console.log( "\n\nPontuação caso: " + pontuacaoCaso );
+}
+
+
+
+
+
+
+
+
 /**
  * Função que importa os dados das tabelas de encaminhamentos 
  * para a tabela interna com os resumos dos casos.
@@ -180,6 +449,44 @@ function carregarTabelasEncaminhamentos() {
 
 } // Fim da função carregarTabelasEncaminhamentos
 
+
+
+
+function calcularIdade(dataNascimento) {
+
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    nascimento.setDate( nascimento.getDate() + 1 );
+
+    console.log( "Hoje: " + hoje );
+    console.log( "Data Nascimento: " + nascimento );
+    
+    // Calcula a diferença de anos
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    console.log( "Diferença Anos: " + idade );
+    
+    // Verifica se o aniversário já passou no ano atual
+    const mes = hoje.getMonth() - nascimento.getMonth();
+    if (mes < 0 || (mes == 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--; // Subtrai 1 se o aniversário ainda não ocorreu
+    }
+
+    console.log( "Diferença Anos considerando o mês e o dia: " + idade );
+    
+    return idade;
+
+}
+
+
+function testeVerificarMaioridade() {
+
+  let dataNascimento = "2008-02-04";
+
+  let idade = calcularIdade( dataNascimento );
+
+  console.log( "Maioridade: " + (idade>=18)  );
+
+}
 
 
 /**
