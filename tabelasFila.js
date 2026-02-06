@@ -2,7 +2,7 @@
 
 /**
  * Módulo:    tabelas.gs
- * Objetivo:  Armazenar referências a base de dados interna (planilhas) do sistema Bolsa Moradia - Resumos dos Casos
+ * Objetivo:  Armazenar Fila de casos do sistema Bolsa Moradia
  */
 
 
@@ -30,18 +30,18 @@ const NUM_MOTIVOS_DE_DESIGNACAO  =  BUFFER_MOTIVOS_DE_DESIGNACAO.length;
 
 
 /**
- * Planilha CASOS
+ * Planilha FILA
  */
-const PLANILHA_CASOS_ID        =  "1du1DlnwZBBAM8du3HNpA9Hpk70XtdSAGKlylGkZX2Nw";
-const PLANILHA_CASOS           =  SpreadsheetApp.openById(PLANILHA_CASOS_ID);
-const TABELA_CASOS             =  PLANILHA_CASOS.getSheetByName('CASOS');
-let BUFFER_CASOS               =  TABELA_CASOS.getDataRange().getDisplayValues().splice(1);
-let NUM_CASOS                  =  BUFFER_CASOS.length;
-const NUM_COLUNAS_TABELA_CASOS =  9;
+const PLANILHA_FILA_ID        =  "1du1DlnwZBBAM8du3HNpA9Hpk70XtdSAGKlylGkZX2Nw";
+const PLANILHA_FILA           =  SpreadsheetApp.openById(PLANILHA_FILA_ID);
+const TABELA_FILA             =  PLANILHA_FILA.getSheetByName('FILA');
+let BUFFER_FILA               =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
+let TAMANHO_FILA              =  BUFFER_FILA.length;
+const NUM_COLUNAS_TABELA_FILA =  14;
 
-function refreshBufferCasos() {
-  BUFFER_CASOS  =  TABELA_CASOS.getDataRange().getDisplayValues().splice(1);
-  NUM_CASOS = BUFFER_CASOS.length;
+function refreshBufferFila() {
+  BUFFER_FILA  =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
+  NUM_FILA = BUFFER_FILA.length;
 }
 
 
@@ -61,7 +61,7 @@ const NUM_USUARIOS                =  BUFFER_USUARIOS.length;
  * Constantes que armazenam as posições das colunas nas tabelas
  */
 
-// Posição da coluna ID nas planilhas CODIGOS, CASOS e USUARIOS
+// Posição da coluna ID nas planilhas CODIGOS, FILA e USUARIOS
 const ID = 0;
 
 
@@ -70,20 +70,20 @@ const NOME  = 1;
 const ATIVO = 2;
 
 
-// Posições das colunas na planilha PARAMETROS
-const PONTUACAO_PARAMETRO  = 3;
-
-
-// Posições das colunas da planilha CASOS
-const REFERENCIA_FAMILIAR               = 1;
-const CPF_RF                            = 2;
-const ORGAO_ENCAMINHADOR                = 3;
-const STATUS_CONVOCACAO                 = 4;
-const DOC_PENDENTE                      = 5;
-const TEMPO_DE_ESPERA                   = 6;
-const PONTUACAO                         = 7;
-const MOTIVO_DE_DESIGNACAO              = 8;
-const DATA_DE_DESIGNACAO                = 9;
+// Posições das colunas da planilha FILA
+const REFERENCIA_FAMILIAR     =  1;
+const CPF_RF                  =  2;
+const ORGAO_ENCAMINHADOR      =  3;
+const STATUS_CONVOCACAO       =  4;
+const TEMPO_DE_ESPERA         =  5;
+const PONTUACAO               =  6;
+const QUANTIDADE_CEA          =  7;
+const PROBLEMAS_SAUDE         =  8;
+const IDADE_RF                =  9;
+const TEMPO_SITUACAO_DE_RUA   = 10;
+const MOTIVO_DE_DESIGNACAO    = 11;
+const DATA_DE_DESIGNACAO      = 12;
+const DOC_PENDENTE            = 13;
 
 
 
@@ -141,184 +141,32 @@ function obterTabelaCompleta( nomeTabela ) {
 
 
 /**
- * Função que grava um caso na tabela CASOS
- *  
- * @param {String} id: O id do, caso no sistema
- * @param {String} referenciaFamiliar: O nome da referência familiar
- * @param {String} tipoLogradouro: Tipo do logradouro do endereço da família
- * @param {String} nomeLogradouro: Nome do logradouro do endereço da família
- * @param {String} numero: Número do endereço da família
- * @param {String} complemento: Complemento do endereço da família
- * @param {String} bairro: Bairro do endereço da família
- * @param {String} idRegional: id da regional do endereço da família
- * @param {String} cep: CEP do endereço da família
- * @param {String} TPSA: 
- * @param {Date}   dataInsercaoNoSistema: Data de inserção do caso no sistema
- * @param {Date}   dataChegadaNoCREAS: Data de chegada no CREAS
- * @param {String} idsOrgaosEncaminhadores: ids dos órgãos encaminhadores
- * @param {Date}   dataPrevistaResposta: Data prevista para a resposta
- * @param {Date}   dataDaUltimaResposta: Data da última resposta
- * @param {Date}   dataDeDesignacao: Data de designação do caso
- * @param {String} idMotivoDeDesignacao: id do motivo de designação do caso
- * @param {String} idsViolacoesCaso: ids das violações
- * @param {String} idsCategoriasCaso: ids das categorias
- * @param {String} idsParametrosCaso: ids dos parâmetros selecionados
- * @param {String} observacao: Observação do trabalhador - text de 200 caracteres
- * 
+ * Função que grava um caso na fila
+ *   
  */
-/*
-function gravarNaTabelaCasos( id,
-                              referenciaFamiliar,
-                              tipoLogradouro,
-                              nomeLogradouro,
-                              numero,
-                              complemento,
-                              bairro,
-                              idRegional,
-                              cep,                          
-                              tpsa, 
-                              dataInsercaoNoSistema, 
-                              dataChegadaNoCREAS,
-                              idsOrgaosEncaminhadores,
-                              dataPrevistaResposta, 
-                              dataDaUltimaResposta,
-                              dataDeDesignacao,
-                              idMotivoDeDesignacao,  
-                              idsViolacoesCaso,                                             
-                              idsCategoriasCaso,
-                              idsParametrosCaso,
-                              observacao ) {
-    
+
+function gravarCasoNaFila( caso ) {
+
+  // Determina em qual linha da tabela o caso será gravado
+  let posicaoTabela = caso[ID] + 1;
+
   // TENTA PEGAR O LOCK
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);  
 
   // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
-  if( lock.hasLock() ) {
+  if( lock.hasLock() ) {    
 
-    // Cria o Array que conterá o caso que será atualizado na tabela CASOS
-    const caso = new Array( NUM_COLUNAS_TABELA_CASOS );    
-  
-    // Converte o id para Integer
-    const idCaso = parseInt(id);
-
-    // insere o id do caso    
-    caso[ID] = idCaso;    
-  
-    // Insere o nome da referência familiar no array
-    caso[REFERENCIA_FAMILIAR] = referenciaFamiliar.trim().toUpperCase();
-      
-    // Insere o endereço no array
-    caso[TIPO_LOGRADOURO] = tipoLogradouro.trim().toUpperCase();
-    caso[NOME_LOGRADOURO] = nomeLogradouro.trim().toUpperCase();
-    caso[NUMERO] = numero.trim();
-    caso[COMPLEMENTO] = complemento.trim().toUpperCase();
-    caso[BAIRRO] = bairro.trim().toUpperCase();
-    caso[REGIONAL] = idRegional;
-    caso[CEP] = cep.trim();
-      
-    // Insere o tpsa no array
-    caso[TPSA] = tpsa.trim();    
-  
-    // Insere a data de insercao do caso no sistema, no array
-    caso[DATA_DE_INSERCAO_NO_SISTEMA] = dataInsercaoNoSistema;
-      
-    // Insere a data de chegada no CREAS, no array    
-    caso[DATA_DE_CHEGADA_NO_CREAS] = dataChegadaNoCREAS;
-        
-    // Processa e insere os orgãos encaminhadores no array
-    caso[ORGAOS_ENCAMINHADORES] = formatarListaIds( idsOrgaosEncaminhadores, NUM_ORGAOS_ENCAMINHADORES );
-      
-    // Insere a data prevista para resposta no array
-    caso[DATA_PREVISTA_PARA_RESPOSTA] = dataPrevistaResposta;
-  
-    // Insere a data da ultima resposta no array - ATUALIZAVEL
-    caso[DATA_DA_ULTIMA_RESPOSTA] = dataDaUltimaResposta;
-      
-    // Insere a data de designação do caso, no array - null
-    caso[DATA_DE_DESIGNACAO] = dataDeDesignacao;
-      
-    // Insere o motivo de designação do caso, no array - null
-    caso[MOTIVO_DE_DESIGNACAO] = idMotivoDeDesignacao
-      
-    // Insere um TOTAL DE PONTOS temporario no array (será calculado a seguir via fórmula do Planilhas Google)
-    caso[TOTAL_DE_PONTOS] = null;
-      
-    // Insere um TEMPO DE ESPERA temporario no array (será calculado a seguir via fórmula do Planilhas Google)
-    caso[TEMPO_DE_ESPERA] = null;    
-
-    // Processa e insere as violações do caso no array
-    caso[VIOLACOES_CASO] = formatarListaIds( idsViolacoesCaso, NUM_VIOLACOES );    
-  
-    // Processa e insere as categorias do caso no array
-    caso[CATEGORIAS_CASO] = formatarListaIds( idsCategoriasCaso, NUM_CATEGORIAS );
-      
-    // Calcula e insere a pontuação dos parâmetros selecioados
-    caso[PONTUACAO_PARAMETROS_CASO] = (idsParametrosCaso != "") ? calcularPontuacaoParametros( idsParametrosCaso.split(";") ) : 0;
-        
-    // Processa e insere os parâmetros no array
-    caso[PARAMETROS_CASO] = formatarListaIds( idsParametrosCaso, NUM_PARAMETROS );
-      
-    // Insere a observacao no array
-    caso[OBSERVACAO] = observacao.trim().toUpperCase();
-      
-    // Insere o novo caso na tabela (planilha)  **** Alterar para inserção e update      
-    try {
-      // Testa se é a inserção de um novo caso ou a atualização de um já existente
-      if( idCaso > NUM_CASOS ) {        
-        // Inserção de um novo caso
-        TABELA_CASOS.appendRow( caso );
-      } else {
-        // Atualização de um caso já existente
-        //                         getRange(row, column, numRows, numColumns)
-        const range = TABELA_CASOS.getRange( idCaso+1, 1, 1, NUM_COLUNAS_TABELA_CASOS );
-        range.setValues([caso]);
-      }
-    } catch( error ) {
-      throw( error.message );
-    }
-
-    // Flush na planilha
-    try {
-      SpreadsheetApp.flush();
-      PLANILHA_CASOS.waitForAllDataExecutionsCompletion(2);
-    } catch( error ) {
-      throw( error.message );
-    }
-     
-
-    // Calcula e insere, na tabela, o tempo de espera em meses  
-    // A função getRange endereça as linhas e colunas começando do indice 1
-    // Por isso os +1 na linha e na coluna  
-    try {
-      const dataDeChegadaNoCREAS = TABELA_CASOS.getRange( idCaso+1, DATA_DE_CHEGADA_NO_CREAS+1 ).getA1Notation();  
-      TABELA_CASOS.getRange( idCaso+1, TEMPO_DE_ESPERA+1 ).setFormula(`=DATEDIF(${dataDeChegadaNoCREAS};Today();"M")`);
-    } catch( error ) {
-      throw( error.message );
-    }
-  
-    // Calcula e insere, na tabela, a pontuação final do caso = Tempo de Espera em meses + pontuação parâmetros selecionados
-    // A função getRange endereça as linhas e colunas começando do indice 1
-    // Por isso os +1 na linha e na coluna  
-    try {
-      const tempoDeEsperaEmMeses = TABELA_CASOS.getRange( idCaso+1, TEMPO_DE_ESPERA+1 ).getA1Notation();    
-      const pontuacaoParametrosCaso = TABELA_CASOS.getRange( idCaso+1, PONTUACAO_PARAMETROS_CASO+1 ).getA1Notation();    
-      TABELA_CASOS.getRange( idCaso+1, TOTAL_DE_PONTOS+1 ).setFormula(`=${tempoDeEsperaEmMeses}+${pontuacaoParametrosCaso}`);
-    } catch( error ) {
-      throw( error.message );
-    }
+    let range = TABELA_FILA.getRange( posicaoTabela, 1, 1, NUM_COLUNAS_TABELA_FILA );
+    range.setValues([caso]);
   
     // Flush na planilha
     try {
       SpreadsheetApp.flush();
-      PLANILHA_CASOS.waitForAllDataExecutionsCompletion(2);      
+      PLANILHA_FILA.waitForAllDataExecutionsCompletion(2);      
     } catch( error ) {
       throw( error.message );
     }
-
-    //  Refresh no buffer casos
-    refreshBufferCasos();
-      
   
     // SOLTA O LOCK
     lock.releaseLock();
@@ -327,42 +175,54 @@ function gravarNaTabelaCasos( id,
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
     throw( new Error( "Nao foi possivel pegar o LOCK" ) );
-  }
+  }    
 
-} // Fim da função gravarNaTabelaCasos
+} // Fim da função gravarNaTabelaFila
 
-*/
 
-/**
- * Função que calcula a pontuação da lista de parâmetros cujos ids estão contidos no array idsParametros.
- *  
- * @param {Array of Integers} idsParametros: ids dos parâmetros cujas pontuações serão somadas.
- * 
- * @return Um Integer contendo o somatório das pontuações
- */
-/*
-function calcularPontuacaoParametros( idsParametros ) {
+function limparFila() {
+
+  let casoNulo = new Array(NUM_COLUNAS_TABELA_FILA-3).fill("");
+
+  // TENTA PEGAR O LOCK
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);  
+
+  // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
+  if( lock.hasLock() ) {    
+
+    let range;
+
+    for( let linha=2; linha<=TAMANHO_FILA+1; ++linha ) {
+
+      range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA-3 );
+      range.setValues([casoNulo]);
+    }
+
+    // Flush na planilha
+    try {
+      SpreadsheetApp.flush();
+      PLANILHA_FILA.waitForAllDataExecutionsCompletion(2);      
+    } catch( error ) {
+      throw( error.message );
+    }
   
-  if(idsParametros == "") return 0;
+    // SOLTA O LOCK
+    lock.releaseLock();
 
-  // Somatório das pontuações dos parâmetros 
-  let somaPontos = 0;
+  } else {
 
-  // Acessa a tabela de parâmetros, contabilizando os pontos dos parametros
-  // cujos ids estão no array idsParametros
-  let id;
-  const numParametros = idsParametros.length;
-  for( let i=0; i<numParametros; ++i) {
+    // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
+    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+  }    
 
-    id = idsParametros[i];
-    somaPontos += parseInt( BUFFER_PARAMETROS[id-1][PONTUACAO_PARAMETRO] );
-  }
+}
 
-  // Retorna o somatório das pontuações dos parâmetros 
-  return somaPontos;
 
-} // Fim da função calcularPontuacaoParametros
-*/
+
+
+
+
 
 
 /**
@@ -404,6 +264,564 @@ function idsToNomes( stringIds, nomeTabela ) {
   return arrayNomes.join(";");
 
 } // Fim da função idsToNomes
+
+
+
+
+
+
+
+
+let linhaTabela = 19;
+
+function obterCaso( tabela ) {
+
+  let caso = [];
+
+  let numLinhas = tabela.length;
+
+  console.log( "\nnumLinhas: " + numLinhas);
+  console.log( "\nlinhaTabela: " + linhaTabela + "\n\n");
+
+  
+  caso.push( tabela[linhaTabela] );  
+  ++linhaTabela;
+
+  console.log( "\nlinhaTabela: " + linhaTabela);
+  console.log( "RF: " + caso[0] );
+  console.log( "CPF RF: " + caso[0][1] );
+  console.log( "CPF F: "  + tabela[linhaTabela][UNI_CPF_RF] + "\n");
+  
+  while(  ( linhaTabela < numLinhas ) &&
+          ( tabela[linhaTabela][UNI_CPF_RF] == caso[0][UNI_CPF_RF] ) ) {
+
+    console.log( "Entrou while" );
+    caso.push( tabela[linhaTabela] );
+    ++linhaTabela;
+  }
+  
+  console.log( "\n\n" + caso.join("\n\n") + "\n\n" );
+
+  return caso;
+
+}
+
+
+function mostrarCaso( caso ) {
+  caso.forEach( c => {  
+      console.log( c );  
+  });
+}
+
+
+
+function testeObterCaso() {
+
+  let teste = obterCaso( BUFFER_CASOS_EXTERNOS );
+  mostrarCaso( teste )
+}
+
+
+
+function calcularPontuacao( caso ) {
+
+  // Familiares do caso
+  let numeroFamiliares = caso.length;
+  
+  if( numeroFamiliares < 1 ) {    
+    return 0;
+  } 
+
+  let rf = caso[0];
+  let familiar = []; 
+
+
+  // Pontuação
+  let peso;
+  let pontuacaoCriterio;
+  let pontuacaoTotal = 0;
+
+
+  // 1) VULNERABILIDADE ASSOCIADA A CICLOS DE VIDA E PERTENCIMENTO IDENTITÁRIO
+  peso = 2;
+
+
+  // 1.1) Famílias com mulheres (cis ou trans)
+  console.log( "Parâmero 1.1" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_GENERO] == 3 || rf[UNI_GENERO] == 4 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_GENERO] == 3 || familiar[UNI_GENERO] == 4 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;
+
+
+  // 1.2) Famílias com indivíduos cuja identidade de gênero e orientação sexual sejam
+  //      diferentes da cisheterossexualidade
+  console.log( "Parâmero 1.2" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_GENERO] != 1 && rf[UNI_GENERO] != 3 && rf[UNI_ORIENTACAO_SEXUAL] != 3 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_GENERO] != 1 && familiar[UNI_GENERO] != 3 && familiar[UNI_ORIENTACAO_SEXUAL] != 3 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;
+
+
+  // 1.3) Famílias com indivíduos pretos, pardos ou indígenas
+  console.log( "Parâmero 1.3" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_RACA_COR] == 2 || rf[UNI_RACA_COR] == 4 || rf[UNI_RACA_COR] == 5 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_RACA_COR] == 2 || familiar[UNI_RACA_COR] == 4 || familiar[UNI_RACA_COR] == 5 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 1.4) Famílias com crianças e adolescentes (pontuar por criança e adolescente)
+  //      compondo o núcleo familiar
+  console.log( "Parâmero 1.4" );
+  pontuacaoCriterio = 0;
+
+  let tem_segundo_rf = false;
+  for( let i=1; i<numeroFamiliares; ++i ) {
+    familiar = caso[i];
+    if(familiar[UNI_RF_2] == "true") {
+      console.log( "SEGUNDO RF" );
+      tem_segundo_rf = true;      
+    }    
+    if( calcularIdade( familiar[UNI_DATA_NASCIMENTO] ) < 18 ) {
+      pontuacaoCriterio += peso*1;
+      console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+    }
+  }   
+  if( pontuacaoCriterio > 0 && 
+      !tem_segundo_rf &&
+      (rf[UNI_GENERO] == 1 || rf[UNI_GENERO] == 2) ) {
+    
+      pontuacaoCriterio += peso*1;
+      console.log( "Pontuação RF: " + pontuacaoCriterio );    
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 1.5) Idosos (acima de 60 anos, com maior prioridade para idosos com 80 anos ou
+  // mais, conforme Estatuto do Idoso)
+  console.log( "Parâmero 1.5" );
+  pontuacaoCriterio = 0;
+
+  let idadeRF = calcularIdade( rf[UNI_DATA_NASCIMENTO] );
+  let idadeFamiliar;
+  if( idadeRF >= 80 ) { 
+    pontuacaoCriterio = peso*4;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      idadeFamiliar = calcularIdade( familiar[UNI_DATA_NASCIMENTO] );
+      if( idadeFamiliar >= 80 ) {
+        pontuacaoCriterio = peso*3;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+  if( pontuacaoCriterio == 0 ) {
+    if( idadeRF >= 60 ) { 
+      pontuacaoCriterio = peso*2;
+      console.log( "Pontuação RF: " + pontuacaoCriterio );
+    } else {
+      for( let i=1; i<numeroFamiliares; ++i ) {
+        familiar = caso[i];
+        idadeFamiliar = calcularIdade( familiar[UNI_DATA_NASCIMENTO] );
+        if( idadeFamiliar >= 60 ) {
+          pontuacaoCriterio = peso*1;
+          console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+          break;
+        }
+      } 
+    }    
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+  
+  // 1.6) Famílias com pessoas com deficiência
+  console.log( "Parâmero 1.6" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_PCD] == 2 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_PCD] == 2 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 1.7) Famílias com mulheres em gestação ou em fase de 
+  // puerpério – até 6 meses após a gestação.
+  console.log( "Parâmero 1.7" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_GESTANTE] == 2 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_GESTANTE] == 2 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+
+  // 2) VULNERABILIDADE RELACIONADA À VIOLAÇÃO DE DIREITOS
+  peso = 1;
+
+
+  // 2.1) Famílias em situação de rua com crianças e/ou adolescentes com
+  //      medida protetiva de acolhimento ou em processo de acolhimento, e
+  //      famílias que tiveram crianças e/ou adolescentes privadas do convívio
+  //      familiar em decorrência da vida nas ruas dos responsáveis
+  console.log( "Parâmero 2.1" );
+  pontuacaoCriterio = 0;
+  
+  if( rf[UNI_CEA_ACOLHIMENTO_INSTITUCIONAL] == 2 ||
+      rf[UNI_CEA_PRIVACAO_CONVIVIO] == 2   ) {
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;
+
+
+  // 2.2) Família em situação de rua com membros em situação de trabalho infantil
+  //      e/ou exploração sexual de crianças/adolescentes
+  console.log( "Parâmero 2.2" );
+  pontuacaoCriterio = 0;
+  
+  if( rf[UNI_CEA_TRABALHO_INFANTIL_EXPLORACAO_SEXUAL] == 2 ) {
+    pontuacaoCriterio = peso*6;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 2.3) Família em situação de rua com membros em situação de prostituição
+  console.log( "Parâmero 2.3" );
+  pontuacaoCriterio = 0;
+  
+  if( rf[UNI_PROSTITUICAO] == 2 ) {
+    pontuacaoCriterio = peso*1;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+
+  // 3) VULNERABILIDADE DE SAÚDE DA FAMÍLIA  
+  peso = 1;
+
+
+  // 3.1) Presença de condições de saúde que necessitem de cuidado contínuo
+  console.log( "Parâmero 3.1" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_PROBLEMAS_SAUDE] == 3 ) { 
+    pontuacaoCriterio = peso*3;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else if( rf[UNI_PROBLEMAS_SAUDE] == 2 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
+        pontuacaoCriterio += peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+    
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
+        pontuacaoCriterio = peso*2;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      } else if( familiar[UNI_PROBLEMAS_SAUDE] == 2 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );        
+      }
+    } 
+  }  
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+  // 3.2) Famílias com pessoas que possuem diagnóstico de sofrimento mental, uso prejudicial
+  //      de álcool e drogas e/ou membros dependentes de cuidados para a vida diária
+  console.log( "Parâmero 3.2" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_DIAGNOSTICO] == 2 ) {
+    pontuacaoCriterio = peso*1;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+
+  // 4) VULNERABILIDADE EM DECORRÊNCIA DE VIDA NAS RUAS
+  peso = 1;
+
+
+  // 4.1) Tempo de vida nas ruas e/ou de acolhimento institucional
+  console.log( "Parâmero 4.1" );
+  pontuacaoCriterio = 0;
+  
+  switch( rf[UNI_TEMPO_SITUACAO_DE_RUA] ) {
+    case "6":   pontuacaoCriterio = peso*6;
+                break;    
+    case "5":   pontuacaoCriterio = peso*5;
+                break;    
+    case "4":   pontuacaoCriterio = peso*4;
+                break;    
+    case "3":   pontuacaoCriterio = peso*3;
+                break;    
+    case "2":   pontuacaoCriterio = peso*2;
+                break;    
+    case "1":   pontuacaoCriterio = peso*1;
+                break;
+    default:    pontuacaoCriterio = peso*0;
+                break;
+  }
+  console.log( "Pontuação RF: " + pontuacaoCriterio );
+
+  pontuacaoTotal += pontuacaoCriterio;    
+  
+
+  // 4.2) Histórico de institucionalização (Clínicas psiquiátricas, comunidades terapêuticas, 
+  //      sistema prisional, sistema socioeducativo, instituições asilares)
+  console.log( "Parâmero 4.2" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_INSTITUCIONALIZACAO] != 1 ) {
+    pontuacaoCriterio = peso*1;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  }
+
+  pontuacaoTotal += pontuacaoCriterio; 
+  
+
+  // 4.3) Famílias ou indivíduos em situação de ameaça, conflito 
+  //      territorial ou outras violências
+  console.log( "Parâmero 4.3" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 2 ) {
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 3 ||
+             rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 4   ) {
+    pontuacaoCriterio = peso*1;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+
+  // 5) ARTICULAÇÃO ENTRE MORADIA E TRABALHO
+  peso = 1;
+
+  
+  // 5.1) Pessoas em situação vinculadas ao trabalho formal ou informal, 
+  //      grupos produtivos, associações e cooperativas
+  console.log( "Parâmero 5.1" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_TRABALHO_FORMAL] != 1 || rf[UNI_TRABALHO_OUTROS] != 1 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_TRABALHO_FORMAL] != 1 || familiar[UNI_TRABALHO_OUTROS] != 1  ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;
+
+
+  // 5.2) Participante do Programa Estamos Juntos, inseridos 
+  //      nas frentes de trabalho ou oportunidade CLT
+  console.log( "Parâmero 5.2" );
+  pontuacaoCriterio = 0;
+
+  if( rf[UNI_ESTAMOS_JUNTOS] == 2 ) { 
+    pontuacaoCriterio = peso*2;
+    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else {
+    for( let i=1; i<numeroFamiliares; ++i ) {
+      familiar = caso[i];
+      if( familiar[UNI_ESTAMOS_JUNTOS] == 2 ) {
+        pontuacaoCriterio = peso*1;
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        break;
+      }
+    } 
+  }
+
+  pontuacaoTotal += pontuacaoCriterio;  
+
+
+
+  // Retorna a pontuação total
+  console.log( "Pontuação total: " + pontuacaoTotal );
+  return pontuacaoTotal;
+}
+
+
+
+function testeCalcularPontuacaoCaso() {
+
+  let caso = obterCaso( BUFFER_CASOS_EXTERNOS );
+
+  let pontuacaoCaso = calcularPontuacao( caso );
+
+  console.log( "\n\nPontuação caso: " + pontuacaoCaso );
+}
+
+
+
+
+
+
+
+
+/**
+ * Função que importa os dados das tabelas de encaminhamentos 
+ * para a tabela interna com os resumos dos casos.
+ */
+function carregarTabelasEncaminhamentos() {
+
+} // Fim da função carregarTabelasEncaminhamentos
+
+
+
+
+function calcularIdade(dataNascimento) {
+
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    nascimento.setDate( nascimento.getDate() + 1 );
+
+    console.log( "Hoje: " + hoje );
+    console.log( "Data Nascimento: " + nascimento );
+    
+    // Calcula a diferença de anos
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    console.log( "Diferença Anos: " + idade );
+    
+    // Verifica se o aniversário já passou no ano atual
+    const mes = hoje.getMonth() - nascimento.getMonth();
+    if (mes < 0 || (mes == 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--; // Subtrai 1 se o aniversário ainda não ocorreu
+    }
+
+    console.log( "Diferença Anos considerando o mês e o dia: " + idade );
+    
+    return idade;
+
+}
+
+
+function testeVerificarMaioridade() {
+
+  let dataNascimento = "2008-02-04";
+
+  let idade = calcularIdade( dataNascimento );
+
+  console.log( "Maioridade: " + (idade>=18)  );
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -485,12 +903,6 @@ function teste_formatarListaIds() {
 /**
  * ##### FIM DO MÓDULO tabelas.gs #####
  */
-
-
-
-
-
-
 
 
 
