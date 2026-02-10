@@ -41,9 +41,10 @@ const NUM_COLUNAS_TABELA_FILA =  14;
 
 function refreshBufferFila() {
   BUFFER_FILA  =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
-  NUM_FILA = BUFFER_FILA.length;
+  TAMANHO_FILA = BUFFER_FILA.length;
 }
 
+let flag_fila_carregada = 1;
 
 
 /**
@@ -74,13 +75,14 @@ const ATIVO = 2;
 const REFERENCIA_FAMILIAR     =  1;
 const CPF_RF                  =  2;
 const ORGAO_ENCAMINHADOR      =  3;
-const STATUS_CONVOCACAO       =  4;
-const TEMPO_DE_ESPERA         =  5;
-const PONTUACAO               =  6;
-const QUANTIDADE_CEA          =  7;
-const PROBLEMAS_SAUDE         =  8;
-const IDADE_RF                =  9;
-const TEMPO_SITUACAO_DE_RUA   = 10;
+const DATA_ENCAMINHAMENTO     =  4;
+const PONTUACAO               =  5;
+const QUANTIDADE_CEA          =  6;
+const PROBLEMAS_SAUDE         =  7;
+const DATA_NASCIMENTO_RF      =  8;
+const TEMPO_SITUACAO_DE_RUA   =  9;
+
+const STATUS_CONVOCACAO       = 10;
 const MOTIVO_DE_DESIGNACAO    = 11;
 const DATA_DE_DESIGNACAO      = 12;
 const DOC_PENDENTE            = 13;
@@ -93,6 +95,9 @@ const REGIONAL_USUARIO  = 3;
 const TIPO_USUARIO      = 4;
 
 
+let linhaTabela = 0;
+
+//carregarFila();
 
 
 /** 
@@ -157,7 +162,7 @@ function gravarCasoNaFila( caso ) {
   // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
   if( lock.hasLock() ) {    
 
-    let range = TABELA_FILA.getRange( posicaoTabela, 1, 1, NUM_COLUNAS_TABELA_FILA );
+    let range = TABELA_FILA.getRange( posicaoTabela, 1, 1, NUM_COLUNAS_TABELA_FILA-4 );
     range.setValues([caso]);
   
     // Flush na planilha
@@ -180,9 +185,10 @@ function gravarCasoNaFila( caso ) {
 } // Fim da função gravarNaTabelaFila
 
 
+
 function limparFila() {
 
-  let casoNulo = new Array(NUM_COLUNAS_TABELA_FILA-3).fill("");
+  let casoNulo = new Array(NUM_COLUNAS_TABELA_FILA-4).fill("");
 
   // TENTA PEGAR O LOCK
   const lock = LockService.getScriptLock();
@@ -195,7 +201,7 @@ function limparFila() {
 
     for( let linha=2; linha<=TAMANHO_FILA+1; ++linha ) {
 
-      range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA-3 );
+      range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA-4 );
       range.setValues([casoNulo]);
     }
 
@@ -226,53 +232,40 @@ function limparFila() {
 
 
 /**
- * Função que recebe um string com ids separados por ponto e vírgula
- * e e o nome da tabela a qual os ids se referem, e retorna um array 
- * com os nomes referentes aos ids
- * 
- * @param {String} stringIds: string de ids separados por ponto e vírgula
- *                            Exemplo: 1;;3;;5
- * @param {String} nomeTabela: Nome da tabela a qual os ids se referem. Pode ser
- *                             RESPOSTAS_SIMPLES, ORGAOS_ENCAMINHADORES OU MOTIVOS_DE_DESIGNACAO 
- * 
- * return String com os nomes relacionados aos ids, separados por ponto e vírgula
- *        Exemplo: "Crianças e Adolescentes;PCD;Pessoas Adultas Vítimas de Violência"
+ * Função que recebe um id e o nome da tabela a qual o id se refere, 
+ * e retorna o nome relacionado ao ID. 
  */
-function idsToNomes( stringIds, nomeTabela ) {
+function idToNome( id, nomeTabela ) {
 
-  if(stringIds == "") return "";
+  if( id == "" ) {
+    return "";
+  }
 
   let bufferTabela;
+  let tamanhoTabela;
 
   switch( nomeTabela ) {
     case "RESPOSTAS_SIMPLES":        bufferTabela = BUFFER_RESPOSTAS_SIMPLES;
+                                     tamanhoTabela = NUM_RESPOSTAS_SIMPLES;
                                      break;                                                        
     case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
+                                     tamanhoTabela = NUM_ORGAOS_ENCAMINHADORES;
                                      break;          
     case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
+                                     tamanhoTabela = NUM_MOTIVOS_DE_DESIGNACAO;
                                      break;               
-    default:                         throw( new Error( "Tabela Inválida" ) ); 
+    default:                         throw( new Error( "idToNome - Tabela Inválida" ) );    
   }
 
-  let arrayIDs = stringIds.split(";");
-  let arrayNomes = [];
+  if( id < 1  ||  id > tamanhoTabela ) {
+    throw( new Error( "idToNome - ID Inválido - " + id + " - " + tamanhoTabela ) );      
+  }
 
-  arrayIDs.forEach( id => {
-    if( id ) arrayNomes.push( bufferTabela[id-1][NOME] );
-  } );
+  return bufferTabela[id-1][NOME];  
 
-  return arrayNomes.join(";");
-
-} // Fim da função idsToNomes
+} // Fim da função idToNome
 
 
-
-
-
-
-
-
-let linhaTabela = 19;
 
 function obterCaso( tabela ) {
 
@@ -280,27 +273,17 @@ function obterCaso( tabela ) {
 
   let numLinhas = tabela.length;
 
-  console.log( "\nnumLinhas: " + numLinhas);
-  console.log( "\nlinhaTabela: " + linhaTabela + "\n\n");
-
   
   caso.push( tabela[linhaTabela] );  
   ++linhaTabela;
 
-  console.log( "\nlinhaTabela: " + linhaTabela);
-  console.log( "RF: " + caso[0] );
-  console.log( "CPF RF: " + caso[0][1] );
-  console.log( "CPF F: "  + tabela[linhaTabela][UNI_CPF_RF] + "\n");
   
   while(  ( linhaTabela < numLinhas ) &&
           ( tabela[linhaTabela][UNI_CPF_RF] == caso[0][UNI_CPF_RF] ) ) {
 
-    console.log( "Entrou while" );
     caso.push( tabela[linhaTabela] );
     ++linhaTabela;
   }
-  
-  console.log( "\n\n" + caso.join("\n\n") + "\n\n" );
 
   return caso;
 
@@ -308,7 +291,8 @@ function obterCaso( tabela ) {
 
 
 function mostrarCaso( caso ) {
-  caso.forEach( c => {  
+  console.log( "CASO" );
+  caso.forEach( c => {        
       console.log( c );  
   });
 }
@@ -754,19 +738,6 @@ function testeCalcularPontuacaoCaso() {
 
 
 
-
-
-/**
- * Função que importa os dados das tabelas de encaminhamentos 
- * para a tabela interna com os resumos dos casos.
- */
-function carregarTabelasEncaminhamentos() {
-
-} // Fim da função carregarTabelasEncaminhamentos
-
-
-
-
 function calcularIdade(dataNascimento) {
 
     const hoje = new Date();
@@ -805,11 +776,183 @@ function testeVerificarMaioridade() {
 
 
 
+function calcularIntervaloEmDias( data ) {
+
+    const hoje = new Date();
+    hoje.setHours( 1 );
+
+    const dataReferencia = new Date(data);
+    dataReferencia.setDate( dataReferencia.getDate() + 1 );
+    dataReferencia.setHours( 1 );
+
+    let intervaloEmMilisegundos = hoje.getTime() - dataReferencia.getTime();
+    let intervaloEmDias = intervaloEmMilisegundos / (1000 * 60 * 60 * 24);
+
+    return Math.floor( intervaloEmDias );
+}
+
+function testeCalcularIntervaloEmDias() {
+
+  let dataTeste = "2026-02-05";
+
+  let intevalo = calcularIntervaloEmDias( dataTeste );
+
+  console.log( "Intervalo: " + intevalo );
+}
+
+
+
+function numeroDeCEAs( caso ) {
+
+  // Número de crianças e adolescentes na família
+  let numCEA = 0;
+
+  // Familiares do caso
+  let numeroFamiliares = caso.length;
+  
+  if( numeroFamiliares < 1 ) {    
+    return 0;
+  } 
+
+  let familiar = []; 
+
+  for( let i=1; i<numeroFamiliares; ++i ) {
+    familiar = caso[i];
+    if( calcularIdade( familiar[UNI_DATA_NASCIMENTO] ) < 18 ) {
+      ++numCEA;
+    }
+  } 
+    
+  return numCEA;
+}
+
+
+function numeroDeProblemasDeSaude( caso ) {
+
+  // Familiares do caso
+  let numeroFamiliares = caso.length;
+  
+  if( numeroFamiliares < 1 ) {    
+    return 0;
+  } 
+
+  // Número de crianças e adolescentes na família
+  let numProbSaude = parseInt(caso[0][UNI_PROBLEMAS_SAUDE]);
+
+  let familiar = []; 
+
+  for( let i=1; i<numeroFamiliares; ++i ) {
+    familiar = caso[i];
+    numProbSaude += parseInt(familiar[UNI_PROBLEMAS_SAUDE]);
+  } 
+    
+  return numProbSaude;
+}
 
 
 
 
 
+
+
+function carregarFila() {
+
+  let caso;
+  let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA-4).fill("");
+  let id = 0;
+
+
+  limparFila();
+
+  
+  console.log( "\n\nCASOS EXTERNOS" );
+  linhaTabela = 0;
+  while( linhaTabela < NUM_LINHAS_TABELA_CASOS_EXTERNOS ) {
+
+    caso = obterCaso( BUFFER_CASOS_EXTERNOS );
+    mostrarCaso( caso );
+
+    ++id;
+    resumoCaso[ID] = id;
+    resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
+    resumoCaso[CPF_RF] = caso[0][UNI_CPF_RF];
+    resumoCaso[ORGAO_ENCAMINHADOR] = caso[0][UNI_ORGAO_ENCAMINHADOR];
+    
+    resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
+    resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+    resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
+    resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
+    resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
+    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
+    
+    gravarCaso( id, resumoCaso );
+  }  
+
+
+  
+  console.log( "\n\nCASOS PBH" );
+  linhaTabela = 0;
+  while( linhaTabela < NUM_LINHAS_TABELA_CASOS_PBH ) {
+
+    caso = obterCaso( BUFFER_CASOS_PBH );
+    mostrarCaso( caso );
+
+    ++id;
+    resumoCaso[ID] = id;
+    resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
+    resumoCaso[CPF_RF] = caso[0][UNI_CPF_RF];
+    resumoCaso[ORGAO_ENCAMINHADOR] = caso[0][UNI_ORGAO_ENCAMINHADOR];
+    
+    resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
+    resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+    resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
+    resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
+    resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
+    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
+
+    gravarCaso( id, resumoCaso );
+    
+  }
+
+  refreshBufferFila();
+
+  flag_fila_carregada = 1;
+
+}
+
+
+
+function gravarCaso( idCaso, caso ) {
+
+
+  // TENTA PEGAR O LOCK
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);  
+
+  // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
+  if( lock.hasLock() ) {    
+
+    let range = TABELA_FILA.getRange( idCaso+1, 1, 1, NUM_COLUNAS_TABELA_FILA-4 );
+    range.setValues( [caso] );
+
+    // Flush na planilha
+    try {
+      SpreadsheetApp.flush();
+      PLANILHA_FILA.waitForAllDataExecutionsCompletion(2);      
+    } catch( error ) {
+      throw( error.message );
+    }
+  
+    // SOLTA O LOCK
+    lock.releaseLock();
+
+  } else {
+
+    // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
+    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+  }    
+
+}
 
 
 
@@ -867,18 +1010,18 @@ function teste_calcularPontuacaoParametros() {
 */
 
 /**
- * Função para testar a função idsToNomes
+ * Função para testar a função idToNome
  */
-function teste_idsToNomes() {
+function teste_idToNome() {
 
-  const stringIds = "3";
+  const id = "3";
   const nomeTabela = "MOTIVOS_DE_DESIGNACAO";  
 
-  const retorno = idsToNomes( stringIds, nomeTabela );
+  const retorno = idToNome( id, nomeTabela );
 
   console.log( retorno );
 
-} // Fim da função teste_idsToNomes
+} // Fim da função teste_idToNome
 
 
 

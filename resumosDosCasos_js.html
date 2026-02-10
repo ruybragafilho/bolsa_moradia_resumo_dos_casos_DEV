@@ -113,7 +113,7 @@
       // Preenche a linha com as células contendo os dados e o select de desiginação
       tr.innerHTML =           
        `<td class="clicavel align-middle">${item.posicaoNaFila}</td>
-        <td class="clicavel align-middle">${item.referenciaFamiliar}</td>
+        <td class="clicavel align-middle">${item.referencia_familiar}</td>
         <td class="clicavel align-middle">${item.nome_orgao_encaminhador}</td>
         <td class="clicavel align-middle">${item.pontuacao}</td>        
         <td class="clicavel align-middle">${item.status_convocacao}</td>        
@@ -259,7 +259,7 @@
       cache_TabelaCasos = [];
 
       google.script.run
-                   .withSuccessHandler( dados => {
+                   .withSuccessHandler( fila => {
 
                      console.log( "redirecionarParaTelaResumosDosCasos - SUCCESS HANDLER" );
 
@@ -267,7 +267,7 @@
                      mostrarModalMensagem( "Operação concluída! " );                    
   
                      // Atualiza o cache de resumos de casos com a tabela carregada do servidor
-                     cache_TabelaCasos = dados;   
+                     cache_TabelaCasos = fila;   
 
                      // Sinaliza que a tabela de casos já está na cache
                      flagCache_TabelaCasos = 1;
