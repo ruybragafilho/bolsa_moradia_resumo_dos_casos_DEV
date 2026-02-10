@@ -45,11 +45,11 @@ async function obterFila() {
         
       tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
 
-      pontuacao: caso[PONTUACAO],
+      pontuacao: parseInt(caso[PONTUACAO]),
 
-      quantidade_CEA: caso[QUANTIDADE_CEA],
+      quantidade_CEA: parseInt(caso[QUANTIDADE_CEA]),
 
-      quantidade_problemas_saude: caso[PROBLEMAS_SAUDE],
+      quantidade_problemas_saude: parseInt(caso[PROBLEMAS_SAUDE]),
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
 
@@ -73,7 +73,48 @@ async function obterFila() {
 
 
   // Ordena os casos pelos pontos, em ordem decrescente  
-  fila.sort( (a,b) => b.pontuacao - a.pontuacao );
+  //fila.sort( (a,b) => b.pontuacao - a.pontuacao );
+  fila.sort( function(a,b) { 
+
+    // Primeiro critério - Pontuação
+    if( b.pontuacao > a.pontuacao ) {
+      return 1;
+    } else if(b.pontuacao < a.pontuacao) {
+      return -1;
+    } 
+
+    // Segundo critétio - Quantidade C&A
+    if( b.quantidade_CEA > a.quantidade_CEA ) {
+      return 1;
+    } else if(b.quantidade_CEA < a.quantidade_CEA) {
+      return -1;
+    }     
+
+    // Terceiro critétio - Quantidade Problemas de Saúde
+    if( b.quantidade_problemas_saude > a.quantidade_problemas_saude ) {
+      return 1;
+    } else if(b.quantidade_problemas_saude < a.quantidade_problemas_saude) {
+      return -1;
+    }         
+
+    // Quarto critétio - Idade RF
+    if( b.idade_RF > a.idade_RF ) {
+      return 1;
+    } else if(b.idade_RF < a.idade_RF) {
+      return -1;
+    }             
+    
+    // Quinto critétio - Tempo nas Ruas
+    if( b.tempo_nas_ruas > a.tempo_nas_ruas ) {
+      return 1;
+    } else if(b.tempo_nas_ruas < a.tempo_nas_ruas) {
+      return -1;
+    }                 
+
+    // Retorno Padrão
+    return 0;
+
+  });
 
   
   // Determina a posicao na fila da regional / fila geral

@@ -25,10 +25,10 @@ function autenticarUsuario() {
   }  
 
   let resultadoAutenticacao = {
-    id:         0,
-    email:     "",
-    regional:  "",
-    tipo:      ""
+    id:            0,
+    email:        "",
+    instituicao:  "",
+    tipo:         ""
   };
 
   // Percorre a tabela tentando localizar o email informado
@@ -41,7 +41,7 @@ function autenticarUsuario() {
 
         id:        usuario[ID],
         email:     usuario[EMAIL],
-        regional:  usuario[REGIONAL_USUARIO],
+        regional:  usuario[ID_INSTITUICAO],
         tipo:      usuario[TIPO_USUARIO]
 
       };

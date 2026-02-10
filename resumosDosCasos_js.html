@@ -116,6 +116,12 @@
         <td class="clicavel align-middle">${item.referencia_familiar}</td>
         <td class="clicavel align-middle">${item.nome_orgao_encaminhador}</td>
         <td class="clicavel align-middle">${item.pontuacao}</td>        
+
+        <td class="clicavel align-middle">${item.quantidade_CEA}</td>        
+        <td class="clicavel align-middle">${item.quantidade_problemas_saude}</td>        
+        <td class="clicavel align-middle">${item.idade_RF}</td>        
+        <td class="clicavel align-middle">${item.tempo_nas_ruas}</td>        
+
         <td class="clicavel align-middle">${item.status_convocacao}</td>        
         <td class="align-middle" style="width: 180px;">${designacao}</td>
         <td class="clicavel align-middle">${item.doc_pendente}</td>`;   
@@ -227,7 +233,7 @@
 
     // Aplica o filtro pelo nome da RF       
     let nomeRFPesquisado = document.getElementById("inputTextPesquisaCaso").value.trim().toUpperCase();      
-    let casosPesquisados = casosFiltrados.filter( caso => { return caso.referenciaFamiliar.trim().toUpperCase().includes( nomeRFPesquisado ) } ) ;        
+    let casosPesquisados = casosFiltrados.filter( caso => { return caso.referencia_familiar.trim().toUpperCase().includes( nomeRFPesquisado ) } ) ;        
 
 
     // Gera a tabela de casos filtrados

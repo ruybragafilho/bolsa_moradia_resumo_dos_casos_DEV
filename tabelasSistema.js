@@ -1,0 +1,192 @@
+"use strict";
+
+/**
+ * Módulo:    tabelasSistema.gs
+ * Objetivo:  Armazenar as tabelas do sistema Bolsa Moradia
+ */
+
+
+/**
+ * Planilha CODIGOS contendo as tabelas 
+ *     . RESPOSTAS_SIMPLES 
+ *     . ORGAOS_ENCAMINHADORES 
+ *     . MOTIVOS_DE_DESIGNACAO  
+ */
+const PLANILHA_CODIGOS_ID  =  "1kiunfkV_113EpaCKopb8NI75RneypnmvfwbcK1hyjt0";
+const PLANILHA_CODIGOS     =  SpreadsheetApp.openById(PLANILHA_CODIGOS_ID);
+
+const TABELA_RESPOSTAS_SIMPLES      =  PLANILHA_CODIGOS.getSheetByName('RESPOSTAS_SIMPLES');
+const TABELA_ORGAOS_ENCAMINHADORES  =  PLANILHA_CODIGOS.getSheetByName('ORGAOS_ENCAMINHADORES');
+const TABELA_MOTIVOS_DE_DESIGNACAO  =  PLANILHA_CODIGOS.getSheetByName('MOTIVOS_DE_DESIGNACAO');
+
+const BUFFER_RESPOSTAS_SIMPLES      =  TABELA_RESPOSTAS_SIMPLES.getDataRange().getDisplayValues().splice(1);
+const BUFFER_ORGAOS_ENCAMINHADORES  =  TABELA_ORGAOS_ENCAMINHADORES.getDataRange().getDisplayValues().splice(1);
+const BUFFER_MOTIVOS_DE_DESIGNACAO  =  TABELA_MOTIVOS_DE_DESIGNACAO.getDataRange().getDisplayValues().splice(1);
+
+const NUM_RESPOSTAS_SIMPLES      =  BUFFER_RESPOSTAS_SIMPLES.length;
+const NUM_ORGAOS_ENCAMINHADORES  =  BUFFER_ORGAOS_ENCAMINHADORES.length;
+const NUM_MOTIVOS_DE_DESIGNACAO  =  BUFFER_MOTIVOS_DE_DESIGNACAO.length;
+
+
+
+/**
+ * Planilha USUARIOS
+ */
+const PLANILHA_USUARIOS_ID        =  "14945tdk0asP0ySI2CxLvyflIPbIM569myEpK8nTUqcg";
+const PLANILHA_USUARIOS           =  SpreadsheetApp.openById(PLANILHA_USUARIOS_ID);
+const TABELA_USUARIOS             =  PLANILHA_USUARIOS.getSheetByName('USUARIOS');
+const BUFFER_USUARIOS             =  TABELA_USUARIOS.getDataRange().getDisplayValues().splice(1);
+const NUM_USUARIOS                =  BUFFER_USUARIOS.length;
+
+
+
+/**
+ * Constantes que armazenam as posições das colunas nas tabelas
+ */
+
+// Posição da coluna ID nas planilhas CODIGOS, FILA e USUARIOS
+const ID = 0;
+
+
+// Posições das colunas NOME e ATIVO nas tabelas da planilha CODIGOS e USUARIOS
+const NOME  = 1;
+const ATIVO = 2;
+
+
+// Posições das colunas da planilha USUARIOS
+const EMAIL             = 1;
+const NOME_USUARIO      = 3;
+const ID_INSTITUICAO    = 4;
+const TIPO_USUARIO      = 5;
+
+
+
+
+/** 
+ *  ####################################################
+ *  #####                                          ##### 
+ *  #####  IMPLEMENTAÇÃO DAS FUNÇÕES DESSE MÓDULO  #####
+ *  #####                                          ##### 
+ *  ####################################################
+ */
+
+
+
+
+/**
+ * Função que retorna uma cópia da tabela cujo nome é passado como parâmetro.
+ * É chamada pelo front-end para obter os ids e nomes das informações que
+ * serão mostradas na tela
+ * 
+ * @param {String} nomeTabela: Nome da tabela a qual os ids se referem. Pode ser
+ *                             RESPOSTAS_SIMPLES, ORGAOS_ENCAMINHADORES OU MOTIVOS_DE_DESIGNACAO 
+ * 
+ * return Uma cópia da tabela
+ */
+function obterTabelaCompleta( nomeTabela ) {
+
+  let bufferTabela;
+
+  switch( nomeTabela ) {
+    case "RESPOSTAS_SIMPLES":        bufferTabela = BUFFER_RESPOSTAS_SIMPLES;
+                                     break;                                                                  
+    case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
+                                     break;
+    case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
+                                     break;            
+    default:                         throw( new Error( "Tabela inválida" ) ); 
+  }
+
+  let tabela = [];
+  
+  bufferTabela.forEach( linha => tabela.push( linha ) );
+
+  return tabela;
+
+} // Fim da função obterTabelaCompleta
+
+
+
+/**
+ * Função que recebe um id e o nome da tabela a qual o id se refere, 
+ * e retorna o nome relacionado ao ID. 
+ */
+function idToNome( id, nomeTabela ) {
+
+  if( id == "" ) {
+    return "";
+  }
+
+  let bufferTabela;
+  let tamanhoTabela;
+
+  switch( nomeTabela ) {
+    case "RESPOSTAS_SIMPLES":        bufferTabela = BUFFER_RESPOSTAS_SIMPLES;
+                                     tamanhoTabela = NUM_RESPOSTAS_SIMPLES;
+                                     break;                                                        
+    case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
+                                     tamanhoTabela = NUM_ORGAOS_ENCAMINHADORES;
+                                     break;          
+    case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
+                                     tamanhoTabela = NUM_MOTIVOS_DE_DESIGNACAO;
+                                     break;               
+    default:                         throw( new Error( "idToNome - Tabela Inválida" ) );    
+  }
+
+  if( id < 1  ||  id > tamanhoTabela ) {
+    throw( new Error( "idToNome - ID Inválido - " + id + " - " + tamanhoTabela ) );      
+  }
+
+  return bufferTabela[id-1][NOME];  
+
+} // Fim da função idToNome
+
+
+
+
+/** 
+ *  #################################################
+ *  #####                                       ##### 
+ *  #####  TESTES PARA AS FUNÇÕES DESSE MÓDULO  #####
+ *  #####                                       ##### 
+ *  #################################################
+ */
+
+
+
+
+/**
+ * Função para testar a função obterTabelaCompleta
+ */
+function teste_obterTabelaCompleta() {
+  
+  const nomeTabela = "ORGAOS_ENCAMINHADORES";
+
+  const retorno = obterTabelaCompleta( nomeTabela );
+
+  console.log( retorno );
+
+} // Fim da função teste_obterTabelaCompleta
+
+
+
+/**
+ * Função para testar a função idToNome
+ */
+function teste_idToNome() {
+
+  const id = "3";
+  const nomeTabela = "MOTIVOS_DE_DESIGNACAO";  
+
+  const retorno = idToNome( id, nomeTabela );
+
+  console.log( retorno );
+
+} // Fim da função teste_idToNome
+
+
+
+
+/**
+ * ##### FIM DO MÓDULO tabelasSistema.gs #####
+ */
