@@ -39,10 +39,10 @@ function autenticarUsuario() {
 
       resultadoAutenticacao = {
 
-        id:        usuario[ID],
-        email:     usuario[EMAIL],
-        regional:  usuario[ID_INSTITUICAO],
-        tipo:      usuario[TIPO_USUARIO]
+        id:           usuario[ID],
+        email:        usuario[EMAIL],
+        instituicao:  usuario[ID_INSTITUICAO],
+        tipo:         usuario[TIPO_USUARIO]
 
       };
     }

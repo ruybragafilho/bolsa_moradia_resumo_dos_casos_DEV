@@ -21,22 +21,31 @@
       <!-- Filtro para os Status das Convocações - Início -->
       <p class="mt-3 fw-bold">STATUS DA CONVOCAÇÃO</p>
       <div id="checkbox_StatusConvocacao">
-        <!-- 1: checkbox inline   -->
-        <!-- 0: checkbox vertical -->        
-        <?!= gerarCheckBox( BUFFER_RESPOSTAS_SIMPLES, "checkbox_StatusConvocacao", 1 ); ?>
-      </div>      
-      <!-- Filtro para os Status das Convocações - Fim -->     
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="checkbox_StatusConvocacao_1" value="Sim" name="checkbox_StatusConvocacao">
+          <label class="form-check-label" for="checkbox_StatusConvocacao_1">Sim</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="checkbox_StatusConvocacao_2" value="Não" name="checkbox_StatusConvocacao">
+          <label class="form-check-label" for="checkbox_StatusConvocacao_2">Não</label>
+        </div>        
+      </div>
+      <!-- Filtro para os Status das Convocações - Fim -->                
 
 
       <!-- Filtro para Documentação Pendente - Início -->
       <p class="mt-3 fw-bold">DOCUMENTAÇÃO PENDENTE</p>
       <div id="checkbox_DocumentacaoPendente">
-        <!-- 1: checkbox inline   -->
-        <!-- 0: checkbox vertical -->        
-        <?!= gerarCheckBox( BUFFER_RESPOSTAS_SIMPLES, "checkbox_DocumentacaoPendente", 1 ); ?>
-      </div>      
-      <!-- Filtro para Documentação Pendente - Fim -->
-
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="checkbox_DocumentacaoPendente_1" value="Sim" name="checkbox_DocumentacaoPendente">
+          <label class="form-check-label" for="checkbox_DocumentacaoPendente_1">Sim</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="checkbox_DocumentacaoPendente_2" value="Não" name="checkbox_DocumentacaoPendente">
+          <label class="form-check-label" for="checkbox_DocumentacaoPendente_2">Não</label>
+        </div>        
+      </div>
+      <!-- Filtro para Documentação Pendente - Fim -->      
 
     </section>      
     <!-- Filtros para filtrar as linhas dos resumos dos casos - Fim -->

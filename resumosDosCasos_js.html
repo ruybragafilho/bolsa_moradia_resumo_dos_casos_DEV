@@ -8,6 +8,16 @@
    */
   function configurarPaginaResumosDosCasos() {
 
+
+    // Não mostra o filtro por órgãos Encaminhadores, na tela de resumos dos casos,
+    // para trabalhadores dos órgão encaminhadores, pois eles só veem os casos
+    // da sua própri instituição
+    if( usuarioLogado.instituicao != "0" ) {
+      document.getElementById("checkbox_OrgaosEncaminhadores").style.display = "none";
+      document.getElementById("label_OrgaosEncaminhadores").style.display = "none";                                
+    }   
+
+
     // Obtém a tabela de resumos dos casos
     let tabelaResumoDosCasos = document.getElementById('resumosDosCasos');
 
@@ -291,7 +301,7 @@
                      
                    })
                    // Chama a função backend para gerar e retornar a tabela de resumos de casos
-                   .obterFila();
+                   .obterFila( usuarioLogado.instituicao );
 
     // Se flag == 0, apenas carrega a página de resumo de casos, sem recarregar a tabela
     } else {
