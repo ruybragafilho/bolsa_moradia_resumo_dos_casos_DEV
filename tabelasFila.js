@@ -240,19 +240,10 @@ async function obterFila( idInstituicao ) {
 
   // RETORNA NULL, SE TABELA DE CASOS ESTIVER VAZIA
   if( TAMANHO_FILA < 1 ) return null;
-
-
-  // Aplica filtro para selecionar a instituicão apropriada (ORGÃO ENCAMMINHADOR)
-  let casosFiltrados = [];
-  if( idInstituicao != "0" ) {
-    casosFiltrados = BUFFER_FILA.filter( linhaCaso => (linhaCaso[ORGAO_ENCAMINHADOR] == idInstituicao) );
-  } else {
-    casosFiltrados = BUFFER_FILA;
-  }
     
   
   // Obtém os casos na fila
-  let fila = casosFiltrados.map( caso => {    
+  let fila = BUFFER_FILA.map( caso => {    
 
     return {
 
@@ -349,8 +340,18 @@ async function obterFila( idInstituicao ) {
   });
 
 
-  // Retorna a fila
-  return fila;
+
+  // Aplica filtro para selecionar a instituicão apropriada (ORGÃO ENCAMMINHADOR)
+  let filaFiltrada = [];
+  if( idInstituicao != "0" ) {
+    filaFiltrada = fila.filter( linhaCaso => (linhaCaso.id_orgao_encaminhador == idInstituicao) );
+  } else {
+    filaFiltrada = fila;
+  }
+
+
+  // Retorna a fila filtrada
+  return filaFiltrada;
 
 } // Fim da Função obterFila 
 
