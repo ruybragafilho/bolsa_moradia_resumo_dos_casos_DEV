@@ -146,10 +146,44 @@ function obterTabelaCompleta( nomeTabela ) {
 
 
 /**
- * Função que grava um caso na fila
- *   
+ * Função que recebe um id e o nome da tabela a qual o id se refere, 
+ * e retorna o nome relacionado ao ID. 
  */
+function idToNome( id, nomeTabela ) {
 
+  if( id == "" ) {
+    return "";
+  }
+
+  let bufferTabela;
+  let tamanhoTabela;
+
+  switch( nomeTabela ) {
+    case "RESPOSTAS_SIMPLES":        bufferTabela = BUFFER_RESPOSTAS_SIMPLES;
+                                     tamanhoTabela = NUM_RESPOSTAS_SIMPLES;
+                                     break;                                                        
+    case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
+                                     tamanhoTabela = NUM_ORGAOS_ENCAMINHADORES;
+                                     break;          
+    case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
+                                     tamanhoTabela = NUM_MOTIVOS_DE_DESIGNACAO;
+                                     break;               
+    default:                         throw( new Error( "idToNome - Tabela Inválida" ) );    
+  }
+
+  if( id < 1  ||  id > tamanhoTabela ) {
+    throw( new Error( "idToNome - ID Inválido - " + id + " - " + tamanhoTabela ) );      
+  }
+
+  return bufferTabela[id-1][NOME];  
+
+} // Fim da função idToNome
+
+
+
+/**
+ * Função que grava um caso na fila 
+ */
 function gravarCasoNaFila( caso ) {
 
   // Determina em qual linha da tabela o caso será gravado
@@ -186,6 +220,9 @@ function gravarCasoNaFila( caso ) {
 
 
 
+/**
+ * Função que limpa a fila, excluíndo todos os casos dela
+ */
 function limparFila() {
 
   let casoNulo = new Array(NUM_COLUNAS_TABELA_FILA-4).fill("");
@@ -222,51 +259,15 @@ function limparFila() {
     throw( new Error( "Nao foi possivel pegar o LOCK" ) );
   }    
 
-}
-
-
-
-
-
+} // Fim da função limparFila
 
 
 
 /**
- * Função que recebe um id e o nome da tabela a qual o id se refere, 
- * e retorna o nome relacionado ao ID. 
+ * Função que obtém um caso da tabela passada como parâmetro
+ * @param {Array 2D} tabela onde será obtido p caso
+ * @returns 1 caso
  */
-function idToNome( id, nomeTabela ) {
-
-  if( id == "" ) {
-    return "";
-  }
-
-  let bufferTabela;
-  let tamanhoTabela;
-
-  switch( nomeTabela ) {
-    case "RESPOSTAS_SIMPLES":        bufferTabela = BUFFER_RESPOSTAS_SIMPLES;
-                                     tamanhoTabela = NUM_RESPOSTAS_SIMPLES;
-                                     break;                                                        
-    case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
-                                     tamanhoTabela = NUM_ORGAOS_ENCAMINHADORES;
-                                     break;          
-    case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
-                                     tamanhoTabela = NUM_MOTIVOS_DE_DESIGNACAO;
-                                     break;               
-    default:                         throw( new Error( "idToNome - Tabela Inválida" ) );    
-  }
-
-  if( id < 1  ||  id > tamanhoTabela ) {
-    throw( new Error( "idToNome - ID Inválido - " + id + " - " + tamanhoTabela ) );      
-  }
-
-  return bufferTabela[id-1][NOME];  
-
-} // Fim da função idToNome
-
-
-
 function obterCaso( tabela ) {
 
   let caso = [];
@@ -287,15 +288,20 @@ function obterCaso( tabela ) {
 
   return caso;
 
-}
+} // Fim da função obterCaso
 
 
+
+/**
+ * Função que mostra, no console, o caso passado como parâmetro
+ * @param {Array 2D} caso caso que será impresso em console 
+ */
 function mostrarCaso( caso ) {
   console.log( "CASO" );
   caso.forEach( c => {        
       console.log( c );  
   });
-}
+} // Fim da função mostrarCaso
 
 
 
@@ -307,6 +313,12 @@ function testeObterCaso() {
 
 
 
+/**
+ * Função que calcula a pontuação de um caso, seguindo os critérios
+ * definidos pela DPOP
+ * @param {Arrau 2D} caso cuja pontuação será calculada
+ * @returns POntuação do caso
+ */
 function calcularPontuacao( caso ) {
 
   // Familiares do caso
@@ -720,7 +732,8 @@ function calcularPontuacao( caso ) {
   // Retorna a pontuação total
   console.log( "Pontuação total: " + pontuacaoTotal );
   return pontuacaoTotal;
-}
+
+} // Fim da função calcularPontuacao
 
 
 
@@ -735,73 +748,11 @@ function testeCalcularPontuacaoCaso() {
 
 
 
-
-
-
-function calcularIdade(dataNascimento) {
-
-    const hoje = new Date();
-    const nascimento = new Date(dataNascimento);
-    nascimento.setDate( nascimento.getDate() + 1 );
-
-    console.log( "Hoje: " + hoje );
-    console.log( "Data Nascimento: " + nascimento );
-    
-    // Calcula a diferença de anos
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    console.log( "Diferença Anos: " + idade );
-    
-    // Verifica se o aniversário já passou no ano atual
-    const mes = hoje.getMonth() - nascimento.getMonth();
-    if (mes < 0 || (mes == 0 && hoje.getDate() < nascimento.getDate())) {
-        idade--; // Subtrai 1 se o aniversário ainda não ocorreu
-    }
-
-    console.log( "Diferença Anos considerando o mês e o dia: " + idade );
-    
-    return idade;
-
-}
-
-
-function testeVerificarMaioridade() {
-
-  let dataNascimento = "2008-02-04";
-
-  let idade = calcularIdade( dataNascimento );
-
-  console.log( "Maioridade: " + (idade>=18)  );
-
-}
-
-
-
-function calcularIntervaloEmDias( data ) {
-
-    const hoje = new Date();
-    hoje.setHours( 1 );
-
-    const dataReferencia = new Date(data);
-    dataReferencia.setDate( dataReferencia.getDate() + 1 );
-    dataReferencia.setHours( 1 );
-
-    let intervaloEmMilisegundos = hoje.getTime() - dataReferencia.getTime();
-    let intervaloEmDias = intervaloEmMilisegundos / (1000 * 60 * 60 * 24);
-
-    return Math.floor( intervaloEmDias );
-}
-
-function testeCalcularIntervaloEmDias() {
-
-  let dataTeste = "2026-02-05";
-
-  let intevalo = calcularIntervaloEmDias( dataTeste );
-
-  console.log( "Intervalo: " + intevalo );
-}
-
-
-
+/**
+ * Função que determina o número de criançãs e adolescentes de um caso.
+ * @param {Array 2D} caso 
+ * @returns Número de C&A
+ */
 function numeroDeCEAs( caso ) {
 
   // Número de crianças e adolescentes na família
@@ -824,9 +775,16 @@ function numeroDeCEAs( caso ) {
   } 
     
   return numCEA;
-}
+
+} // Fim da função numeroDeCEAs
 
 
+
+/**
+ * Função que determina o número problemas de saúde de um caso.
+ * @param {Array 2D} caso 
+ * @returns Número de problemas de saúde
+ */
 function numeroDeProblemasDeSaude( caso ) {
 
   // Familiares do caso
@@ -847,14 +805,15 @@ function numeroDeProblemasDeSaude( caso ) {
   } 
     
   return numProbSaude;
-}
+
+} // Fim da função numeroDeProblemasDeSaude
 
 
 
 
-
-
-
+/**
+ * Função que carrega a fina a partir das tabelas de encaminamentos
+ */
 function carregarFila() {
 
   let caso;
@@ -918,10 +877,13 @@ function carregarFila() {
 
   flag_fila_carregada = 1;
 
-}
+} // Fim da função carregarFila
 
 
 
+/**
+ * Função que grava um caso na fila
+ */
 function gravarCaso( idCaso, caso ) {
 
 
@@ -953,17 +915,6 @@ function gravarCaso( idCaso, caso ) {
   }    
 
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

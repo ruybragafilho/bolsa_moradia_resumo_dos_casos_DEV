@@ -21,62 +21,61 @@ async function obterFila() {
   // Aguarda carregamento da fila
   while( !flag_fila_carregada ) {
     console.log( "Aguardando carregamento da fila" );
-    await esperar( 1000 );
+    await esperarFila( 1000 );
   }    
+
 
   // RETORNA NULL, SE FILA ESTIVER VAZIA
   if( TAMANHO_FILA < 1 ) return [];
-
     
   
   // Obtém os casos na fila
   let fila = BUFFER_FILA.map( caso => {    
 
-      return {
+    return {
 
-        id: caso[ID],
+      id: caso[ID],
 
-        referencia_familiar: caso[REFERENCIA_FAMILIAR],
-        cpf_rf: caso[CPF_RF],
+      referencia_familiar: caso[REFERENCIA_FAMILIAR],
+
+      cpf_rf: caso[CPF_RF],
  
-        id_orgao_encaminhador: caso[ORGAO_ENCAMINHADOR],
-        nome_orgao_encaminhador: idToNome( caso[ORGAO_ENCAMINHADOR], "ORGAOS_ENCAMINHADORES"),
+      id_orgao_encaminhador: caso[ORGAO_ENCAMINHADOR],
+      nome_orgao_encaminhador: idToNome( caso[ORGAO_ENCAMINHADOR], "ORGAOS_ENCAMINHADORES"),
         
-        tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
+      tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
 
-        pontuacao: caso[PONTUACAO],
+      pontuacao: caso[PONTUACAO],
 
-        quantidade_CEA: caso[QUANTIDADE_CEA],
+      quantidade_CEA: caso[QUANTIDADE_CEA],
 
-        quantidade_problemas_saude: caso[PROBLEMAS_SAUDE],
+      quantidade_problemas_saude: caso[PROBLEMAS_SAUDE],
 
-        idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
+      idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
 
-        status_convocacao: caso[STATUS_CONVOCACAO],
+      status_convocacao: caso[STATUS_CONVOCACAO],
 
-        tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
+      tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
 
-        status_convocacao: caso[STATUS_CONVOCACAO],
+      status_convocacao: caso[STATUS_CONVOCACAO],
 
-        id_motivo_designacao: caso[MOTIVO_DE_DESIGNACAO], 
-        nome_motivo_designacao: idToNome(caso[MOTIVO_DE_DESIGNACAO], "MOTIVOS_DE_DESIGNACAO"),
+      id_motivo_designacao: caso[MOTIVO_DE_DESIGNACAO], 
+      nome_motivo_designacao: idToNome(caso[MOTIVO_DE_DESIGNACAO], "MOTIVOS_DE_DESIGNACAO"),
         
-        data_designacao: caso[DATA_DE_DESIGNACAO],
+      data_designacao: caso[DATA_DE_DESIGNACAO],
 
-        doc_pendente: caso[DOC_PENDENTE],
+      doc_pendente: caso[DOC_PENDENTE],
            
-        posicaoNaFila: 0
+      posicaoNaFila: 0
 
-      };// Fim return   
-      
-
+    };// Fim return       
   });
-
 
 
   // Ordena os casos pelos pontos, em ordem decrescente  
   fila.sort( (a,b) => b.pontuacao - a.pontuacao );
 
+  
   // Determina a posicao na fila da regional / fila geral
   let posicao = 1;
   fila.forEach( caso => {
