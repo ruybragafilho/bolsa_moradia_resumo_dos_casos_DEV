@@ -22,8 +22,6 @@ function refreshBufferFila() {
   TAMANHO_FILA = BUFFER_FILA.length;
 }
 
-let flag_fila_carregada = 1;
-
 
 
 /**
@@ -61,6 +59,17 @@ const DOC_PENDENTE            = 13;
 //carregarFila();
 
 
+// Timer 
+const esperarFila = (time) => new Promise( ( resolve, reject ) => setTimeout( resolve, time ) );
+
+
+// Flag que indica se a fila ezvaziada
+let flag_fila_vazia = 0;
+
+
+// Flag que indica se a fila foi carregada com os dados das tabelas de encaminhamento
+let flag_fila_carregada = 1;
+
 
 
 /**
@@ -68,7 +77,9 @@ const DOC_PENDENTE            = 13;
  */
 function limparFila() {
 
-  let casoNulo = new Array(NUM_COLUNAS_TABELA_FILA-4).fill("");
+  flag_fila_vazia = 0;
+
+  let casoNulo = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
 
   // TENTA PEGAR O LOCK
   const lock = LockService.getScriptLock();
@@ -81,7 +92,7 @@ function limparFila() {
 
     for( let linha=2; linha<=TAMANHO_FILA+1; ++linha ) {
 
-      range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA-4 );
+      range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA );
       range.setValues([casoNulo]);
     }
 
@@ -102,6 +113,8 @@ function limparFila() {
     throw( new Error( "Nao foi possivel pegar o LOCK" ) );
   }    
 
+  flag_fila_vazia = 1;
+
 } // Fim da função limparFila
 
 
@@ -110,14 +123,22 @@ function limparFila() {
 /**
  * Função que carrega a fila a partir das tabelas de encaminhamentos
  */
-function carregarFila() {
+async function carregarFila() {
+
+  flag_fila_carregada = 0;
 
   let caso;
-  let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA-4).fill("");
+  let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
   let id = 0;
 
 
   limparFila();
+
+    // Aguarda esvaziamento da fila
+  while( !flag_fila_vazia ) {
+    console.log( "Aguardando esvaziamento da fila" );
+    await esperarFila( 1000 );
+  }    
 
   
   console.log( "\n\nCASOS EXTERNOS" );
@@ -171,7 +192,7 @@ function carregarFila() {
 
   refreshBufferFila();
 
-  flag_fila_carregada = 1;
+  flag_fila_carregada = 1;  
 
 } // Fim da função carregarFila
 
@@ -190,7 +211,7 @@ function gravarCasoNaFila( idCaso, caso ) {
   // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
   if( lock.hasLock() ) {    
 
-    let range = TABELA_FILA.getRange( idCaso+1, 1, 1, NUM_COLUNAS_TABELA_FILA-4 );
+    let range = TABELA_FILA.getRange( idCaso+1, 1, 1, NUM_COLUNAS_TABELA_FILA );
     range.setValues( [caso] );
 
     // Flush na planilha
@@ -212,11 +233,6 @@ function gravarCasoNaFila( idCaso, caso ) {
 
 } // Fim da função gravarCasoNaFila
 
-
-
-
-// Timer 
-  const esperarFila = (time) => new Promise( ( resolve, reject ) => setTimeout( resolve, time ) );
 
 
 /**
