@@ -138,7 +138,7 @@ function testeObterCaso() {
 
 
 
-
+let pontuacaoParametro = [];
 
 /**
  * Função que calcula a pontuação de um caso, seguindo os critérios
@@ -164,6 +164,8 @@ function calcularPontuacao( caso ) {
   let pontuacaoCriterio;
   let pontuacaoTotal = 0;
 
+  pontuacaoParametro = [];
+
 
   // 1) VULNERABILIDADE ASSOCIADA A CICLOS DE VIDA E PERTENCIMENTO IDENTITÁRIO
   peso = 2;
@@ -176,12 +178,14 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_GENERO] == 3 || rf[UNI_GENERO] == 4 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    pontuacaoParametro.push( ["Famílias com RF mulher (cis ou trans)", pontuacaoCriterio] );
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_GENERO] == 3 || familiar[UNI_GENERO] == 4 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        pontuacaoParametro.push( ["Famílias com familiar não RF mulher (cis ou trans)", pontuacaoCriterio] );
         break;
       }
     } 
@@ -198,12 +202,14 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_GENERO] != 1 && rf[UNI_GENERO] != 3 && rf[UNI_ORIENTACAO_SEXUAL] != 3 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    pontuacaoParametro.push( ["Famílias cuja RF tem identidade de gênero e orientação sexual diferentes\nda cisheterossexualidade", pontuacaoCriterio] );
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_GENERO] != 1 && familiar[UNI_GENERO] != 3 && familiar[UNI_ORIENTACAO_SEXUAL] != 3 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        pontuacaoParametro.push( ["Famílias com familiar não RF com identidade de gênero e orientação sexual\ndiferentes da cisheterossexualidade", pontuacaoCriterio] );
         break;
       }
     } 
@@ -219,12 +225,14 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_RACA_COR] == 2 || rf[UNI_RACA_COR] == 4 || rf[UNI_RACA_COR] == 5 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    pontuacaoParametro.push( ["Famílias cuja RF é preto, pardo ou indígena", pontuacaoCriterio] );
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_RACA_COR] == 2 || familiar[UNI_RACA_COR] == 4 || familiar[UNI_RACA_COR] == 5 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        pontuacaoParametro.push( ["Famílias com familiar não RF preto, pardo ou indígena", pontuacaoCriterio] );
         break;
       }
     } 

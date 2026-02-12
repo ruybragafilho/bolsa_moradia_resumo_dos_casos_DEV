@@ -274,7 +274,7 @@ async function obterFila( idInstituicao ) {
         
       tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
 
-      pontuacao: parseInt(caso[PONTUACAO]),
+      pontuacao: parseInt(caso[PONTUACAO]),      
 
       quantidade_CEA: parseInt(caso[QUANTIDADE_CEA]),
 
