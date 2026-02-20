@@ -18,14 +18,17 @@ const PLANILHA_CODIGOS     =  SpreadsheetApp.openById(PLANILHA_CODIGOS_ID);
 const TABELA_RESPOSTAS_SIMPLES      =  PLANILHA_CODIGOS.getSheetByName('RESPOSTAS_SIMPLES');
 const TABELA_ORGAOS_ENCAMINHADORES  =  PLANILHA_CODIGOS.getSheetByName('ORGAOS_ENCAMINHADORES');
 const TABELA_MOTIVOS_DE_DESIGNACAO  =  PLANILHA_CODIGOS.getSheetByName('MOTIVOS_DE_DESIGNACAO');
+const TABELA_PARAMETROS             =  PLANILHA_CODIGOS.getSheetByName('PARAMETROS');
 
 const BUFFER_RESPOSTAS_SIMPLES      =  TABELA_RESPOSTAS_SIMPLES.getDataRange().getDisplayValues().splice(1);
 const BUFFER_ORGAOS_ENCAMINHADORES  =  TABELA_ORGAOS_ENCAMINHADORES.getDataRange().getDisplayValues().splice(1);
 const BUFFER_MOTIVOS_DE_DESIGNACAO  =  TABELA_MOTIVOS_DE_DESIGNACAO.getDataRange().getDisplayValues().splice(1);
+const BUFFER_PARAMETROS             =  TABELA_PARAMETROS.getDataRange().getDisplayValues().splice(1);
 
 const NUM_RESPOSTAS_SIMPLES      =  BUFFER_RESPOSTAS_SIMPLES.length;
 const NUM_ORGAOS_ENCAMINHADORES  =  BUFFER_ORGAOS_ENCAMINHADORES.length;
 const NUM_MOTIVOS_DE_DESIGNACAO  =  BUFFER_MOTIVOS_DE_DESIGNACAO.length;
+const NUM_PARAMETROS             =  BUFFER_PARAMETROS.length;
 
 
 
@@ -48,9 +51,11 @@ const NUM_USUARIOS                =  BUFFER_USUARIOS.length;
 const ID = 0;
 
 
-// Posições das colunas NOME e ATIVO nas tabelas da planilha CODIGOS e USUARIOS
+// Posições das colunas nas tabelas da planilha CODIGOS e USUARIOS
 const NOME  = 1;
 const ATIVO = 2;
+const PESO_PARAMETRO = 3;
+const PONTUACAO_PARAMETRO = 4;
 
 
 // Posições das colunas da planilha USUARIOS
@@ -94,6 +99,8 @@ function obterTabelaCompleta( nomeTabela ) {
                                      break;
     case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
                                      break;            
+    case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
+                                     break;                                                 
     default:                         throw( new Error( "Tabela inválida" ) ); 
   }
 
@@ -130,6 +137,9 @@ function idToNome( id, nomeTabela ) {
     case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
                                      tamanhoTabela = NUM_MOTIVOS_DE_DESIGNACAO;
                                      break;               
+    case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
+                                     tamanhoTabela = NUM_PARAMETROS;
+                                     break;                                                    
     default:                         throw( new Error( "idToNome - Tabela Inválida" ) );    
   }
 

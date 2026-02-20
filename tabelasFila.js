@@ -15,7 +15,7 @@ const PLANILHA_FILA           =  SpreadsheetApp.openById(PLANILHA_FILA_ID);
 const TABELA_FILA             =  PLANILHA_FILA.getSheetByName('FILA');
 let BUFFER_FILA               =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
 let TAMANHO_FILA              =  BUFFER_FILA.length;
-const NUM_COLUNAS_TABELA_FILA =  14;
+const NUM_COLUNAS_TABELA_FILA =  16;
 
 function refreshBufferFila() {
   BUFFER_FILA  =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
@@ -24,26 +24,25 @@ function refreshBufferFila() {
 
 
 
-/**
- * Constantes que armazenam as posições das colunas nas tabelas
- */
-
-
 // Posições das colunas da planilha FILA
-const REFERENCIA_FAMILIAR     =  1;
-const CPF_RF                  =  2;
-const ORGAO_ENCAMINHADOR      =  3;
-const DATA_ENCAMINHAMENTO     =  4;
-const PONTUACAO               =  5;
-const QUANTIDADE_CEA          =  6;
-const PROBLEMAS_SAUDE         =  7;
-const DATA_NASCIMENTO_RF      =  8;
-const TEMPO_SITUACAO_DE_RUA   =  9;
+const REFERENCIA_FAMILIAR        =  1;
+const CPF_RF                     =  2;
+const ORGAO_ENCAMINHADOR         =  3;
+const DATA_ENCAMINHAMENTO        =  4;
+const PONTUACAO                  =  5;
 
-const STATUS_CONVOCACAO       = 10;
-const MOTIVO_DE_DESIGNACAO    = 11;
-const DATA_DE_DESIGNACAO      = 12;
-const DOC_PENDENTE            = 13;
+const IDS_PARAMETROS_CASO        =  6;
+const PONTUACOES_PARAMETROS_CASO =  7;
+
+const QUANTIDADE_CEA             =  8;
+const PROBLEMAS_SAUDE            =  9;
+const DATA_NASCIMENTO_RF         = 10;
+const TEMPO_SITUACAO_DE_RUA      = 11;
+
+const STATUS_CONVOCACAO          = 12;
+const MOTIVO_DE_DESIGNACAO       = 13;
+const DATA_DE_DESIGNACAO         = 14;
+const DOC_PENDENTE               = 15;
 
 
 
@@ -156,6 +155,10 @@ async function carregarFila() {
     
     resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
     resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+
+    resumoCaso[IDS_PARAMETROS_CASO] = idsParametrosCaso.join(";");
+    resumoCaso[PONTUACOES_PARAMETROS_CASO] = pontuacoesParametrosCaso.join(";");
+
     resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
     resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
@@ -181,6 +184,10 @@ async function carregarFila() {
     
     resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
     resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+
+    resumoCaso[IDS_PARAMETROS_CASO] = idsParametrosCaso.join(";");
+    resumoCaso[PONTUACOES_PARAMETROS_CASO] = pontuacoesParametrosCaso.join(";");
+
     resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
     resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
@@ -261,6 +268,8 @@ async function obterFila( idInstituicao ) {
   // Obtém os casos na fila
   let fila = BUFFER_FILA.map( caso => {    
 
+    let ids_parametros = caso[IDS_PARAMETROS_CASO].split(";");
+
     return {
 
       id: caso[ID],
@@ -274,6 +283,11 @@ async function obterFila( idInstituicao ) {
         
       tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
 
+      nomes_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][NOME] ),
+      pesos_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PESO_PARAMETRO] ),
+      pontuacoes_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PONTUACAO_PARAMETRO] ),
+
+      pontuacoes_caso: caso[PONTUACOES_PARAMETROS_CASO].split(";"),
       pontuacao: parseInt(caso[PONTUACAO]),      
 
       quantidade_CEA: parseInt(caso[QUANTIDADE_CEA]),

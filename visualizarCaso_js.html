@@ -20,7 +20,7 @@
 
 
   /**
-   * Função chamada quando o botão editar é clicado para salvar uma atualização de caso
+   * Função chamada quando o usuário clica em um caso, na tela de resumos dos casos
    */    
   function visualizarCaso() {
 
@@ -39,7 +39,74 @@
     document.getElementById( "nome_referenciaFamiliarInput" ).value = cache_CasoEmVisualizacao.referencia_familiar;
     document.getElementById( "cpf_referenciaFamiliarInput" ).value  = cache_CasoEmVisualizacao.cpf_rf;
 
+    // Mostra os parâmetros do caso
+    visualizarParametroCaso( cache_CasoEmVisualizacao );
+
+    // Mostra pontuação total do caso
+    document.getElementById('totalizacaoParametrosDoCaso').innerHTML = `PONTUAÇÃO DO CASO: ${cache_CasoEmVisualizacao.pontuacao}`;
+
+
   } // Fim da função visualizarCaso
+
+
+
+  /**
+   * Função que renderiza uma tabela com os parâmetros do caso
+   */    
+  function visualizarParametroCaso( caso ) {
+
+    // Parâmetros do caso
+    let nomes_parametros = caso.nomes_parametros;
+    let pesos_parametros = caso.pesos_parametros;
+    let pontuacoes_parametros = caso.pontuacoes_parametros;
+    let num_parametros = nomes_parametros.length;
+
+    let pontuacoes_caso = caso.pontuacoes_caso;
+
+
+    // Seleciona o corpo da tabela onde os dados serão inseridos    
+    const tbody = document.getElementById("conteudoParametrosDoCaso");
+
+    // Limpa o conteúdo da tabela
+    tbody.innerHTML = ''; 
+
+
+    // Para cada parametro do caso, cria uma linha na tabela
+
+    console.log
+
+    for( let p=0; p<num_parametros; ++p ) {
+
+      // Cria uma linha da tabela
+      const tr = document.createElement('tr');
+
+      // Preenche a linha com as células contendo os dados e o select de desiginação
+      tr.innerHTML =           
+       `<td class="align-middle">${nomes_parametros[p]}</td>
+        <td class="align-middle">${pesos_parametros[p]}</td>
+        <td class="align-middle">${pontuacoes_parametros[p]}</td>
+        <td class="align-middle">${pontuacoes_caso[p]}</td>`;   
+      
+      // Adiciona a linha na tabela
+      tbody.appendChild(tr);
+
+    } // Fim do for
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  } // Fim da função visualizarParametroCaso
 
 
 

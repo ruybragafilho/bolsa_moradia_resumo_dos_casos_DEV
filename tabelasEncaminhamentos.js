@@ -138,7 +138,8 @@ function testeObterCaso() {
 
 
 
-let pontuacaoParametro = [];
+let idsParametrosCaso = [];
+let pontuacoesParametrosCaso = [];
 
 /**
  * Função que calcula a pontuação de um caso, seguindo os critérios
@@ -164,7 +165,10 @@ function calcularPontuacao( caso ) {
   let pontuacaoCriterio;
   let pontuacaoTotal = 0;
 
-  pontuacaoParametro = [];
+  // Array onde cada posição armazenará um objeto contendo o nome do parâmetro
+  // e a pontuação obtida devido à presença desse parâmetro
+  idsParametrosCaso = [];
+  pontuacoesParametrosCaso = [];
 
 
   // 1) VULNERABILIDADE ASSOCIADA A CICLOS DE VIDA E PERTENCIMENTO IDENTITÁRIO
@@ -177,15 +181,17 @@ function calcularPontuacao( caso ) {
 
   if( rf[UNI_GENERO] == 3 || rf[UNI_GENERO] == 4 ) { 
     pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
-    pontuacaoParametro.push( ["Famílias com RF mulher (cis ou trans)", pontuacaoCriterio] );
+    console.log( "Pontuação RF: " + pontuacaoCriterio );    
+    idsParametrosCaso.push(1);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_GENERO] == 3 || familiar[UNI_GENERO] == 4 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        pontuacaoParametro.push( ["Famílias com familiar não RF mulher (cis ou trans)", pontuacaoCriterio] );
+        idsParametrosCaso.push(2);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);
         break;
       }
     } 
@@ -202,14 +208,16 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_GENERO] != 1 && rf[UNI_GENERO] != 3 && rf[UNI_ORIENTACAO_SEXUAL] != 3 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    pontuacaoParametro.push( ["Famílias cuja RF tem identidade de gênero e orientação sexual diferentes\nda cisheterossexualidade", pontuacaoCriterio] );
+    idsParametrosCaso.push(3);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_GENERO] != 1 && familiar[UNI_GENERO] != 3 && familiar[UNI_ORIENTACAO_SEXUAL] != 3 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        pontuacaoParametro.push( ["Famílias com familiar não RF com identidade de gênero e orientação sexual\ndiferentes da cisheterossexualidade", pontuacaoCriterio] );
+        idsParametrosCaso.push(4);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);
         break;
       }
     } 
@@ -225,14 +233,16 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_RACA_COR] == 2 || rf[UNI_RACA_COR] == 4 || rf[UNI_RACA_COR] == 5 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    pontuacaoParametro.push( ["Famílias cuja RF é preto, pardo ou indígena", pontuacaoCriterio] );
+    idsParametrosCaso.push(5);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_RACA_COR] == 2 || familiar[UNI_RACA_COR] == 4 || familiar[UNI_RACA_COR] == 5 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        pontuacaoParametro.push( ["Famílias com familiar não RF preto, pardo ou indígena", pontuacaoCriterio] );
+        idsParametrosCaso.push(6);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);
         break;
       }
     } 
@@ -258,13 +268,20 @@ function calcularPontuacao( caso ) {
       console.log( "Pontuação Familiar: " + pontuacaoCriterio );
     }
   }   
-  if( pontuacaoCriterio > 0 && 
-      !tem_segundo_rf &&
-      (rf[UNI_GENERO] == 1 || rf[UNI_GENERO] == 2) ) {
-    
+
+  if( pontuacaoCriterio > 0 ) {
+
+    idsParametrosCaso.push(7);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);
+
+    if(!tem_segundo_rf &&   (rf[UNI_GENERO] == 1 || rf[UNI_GENERO] == 2) ) {    
       pontuacaoCriterio += peso*1;
-      console.log( "Pontuação RF: " + pontuacaoCriterio );    
-  }
+      console.log( "Pontuação RF: " + pontuacaoCriterio ); 
+      idsParametrosCaso.push(8);
+      pontuacoesParametrosCaso.push(peso*1);                             
+    }                           
+
+  } 
 
   pontuacaoTotal += pontuacaoCriterio;  
 
@@ -279,6 +296,8 @@ function calcularPontuacao( caso ) {
   if( idadeRF >= 80 ) { 
     pontuacaoCriterio = peso*4;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(9);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
@@ -286,6 +305,8 @@ function calcularPontuacao( caso ) {
       if( idadeFamiliar >= 80 ) {
         pontuacaoCriterio = peso*3;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        idsParametrosCaso.push(10);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
     } 
@@ -294,6 +315,8 @@ function calcularPontuacao( caso ) {
     if( idadeRF >= 60 ) { 
       pontuacaoCriterio = peso*2;
       console.log( "Pontuação RF: " + pontuacaoCriterio );
+      idsParametrosCaso.push(11);
+      pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
     } else {
       for( let i=1; i<numeroFamiliares; ++i ) {
         familiar = caso[i];
@@ -301,6 +324,8 @@ function calcularPontuacao( caso ) {
         if( idadeFamiliar >= 60 ) {
           pontuacaoCriterio = peso*1;
           console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+          idsParametrosCaso.push(12);
+          pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
           break;
         }
       } 
@@ -317,12 +342,16 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_PCD] == 2 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(13);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_PCD] == 2 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        idsParametrosCaso.push(14);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
     } 
@@ -339,12 +368,16 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_GESTANTE] == 2 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(15);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_GESTANTE] == 2 ) {
-        pontuacaoCriterio = peso*1;
+        pontuacaoCriterio = peso*1;        
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        idsParametrosCaso.push(16);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
     } 
@@ -369,6 +402,8 @@ function calcularPontuacao( caso ) {
       rf[UNI_CEA_PRIVACAO_CONVIVIO] == 2   ) {
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(17);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
   pontuacaoTotal += pontuacaoCriterio;
@@ -382,6 +417,8 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_CEA_TRABALHO_INFANTIL_EXPLORACAO_SEXUAL] == 2 ) {
     pontuacaoCriterio = peso*6;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(18);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
   pontuacaoTotal += pontuacaoCriterio;  
@@ -394,6 +431,8 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_PROSTITUICAO] == 2 ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(19);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
   pontuacaoTotal += pontuacaoCriterio;  
@@ -438,7 +477,7 @@ function calcularPontuacao( caso ) {
     } 
   }  
 
-  pontuacaoTotal += pontuacaoCriterio;  
+  //pontuacaoTotal += pontuacaoCriterio;  
 
 
   // 3.2) Famílias com pessoas que possuem diagnóstico de sofrimento mental, uso prejudicial
@@ -449,6 +488,8 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_DIAGNOSTICO] == 2 ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(25);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
   pontuacaoTotal += pontuacaoCriterio;  
@@ -464,19 +505,31 @@ function calcularPontuacao( caso ) {
   pontuacaoCriterio = 0;
   
   switch( rf[UNI_TEMPO_SITUACAO_DE_RUA] ) {
-    case "6":   pontuacaoCriterio = peso*6;
-                break;    
-    case "5":   pontuacaoCriterio = peso*5;
-                break;    
-    case "4":   pontuacaoCriterio = peso*4;
-                break;    
-    case "3":   pontuacaoCriterio = peso*3;
+    case "1":   pontuacaoCriterio = peso*1;
+                idsParametrosCaso.push(26);
+                pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
     case "2":   pontuacaoCriterio = peso*2;
+                idsParametrosCaso.push(27);
+                pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
-    case "1":   pontuacaoCriterio = peso*1;
+    case "3":   pontuacaoCriterio = peso*3;
+                idsParametrosCaso.push(28);
+                pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
+                break;    
+    case "4":   pontuacaoCriterio = peso*4;
+                idsParametrosCaso.push(29);
+                pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
+                break;    
+    case "5":   pontuacaoCriterio = peso*5;
+                idsParametrosCaso.push(30);
+                pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
+                break;    
+    case "6":   pontuacaoCriterio = peso*6;
+                idsParametrosCaso.push(31);
+                pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;
-    default:    pontuacaoCriterio = peso*0;
+    default:    pontuacaoCriterio = 0;
                 break;
   }
   console.log( "Pontuação RF: " + pontuacaoCriterio );
@@ -492,6 +545,8 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_INSTITUCIONALIZACAO] != 1 ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(32);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
   pontuacaoTotal += pontuacaoCriterio; 
@@ -505,10 +560,14 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 2 ) {
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(33);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 3 ||
              rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 4   ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(34);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
   pontuacaoTotal += pontuacaoCriterio;  
@@ -527,12 +586,16 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_TRABALHO_FORMAL] != 1 || rf[UNI_TRABALHO_OUTROS] != 1 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(35);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_TRABALHO_FORMAL] != 1 || familiar[UNI_TRABALHO_OUTROS] != 1  ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        idsParametrosCaso.push(36);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
     } 
@@ -549,12 +612,16 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_ESTAMOS_JUNTOS] == 2 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    idsParametrosCaso.push(37);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_ESTAMOS_JUNTOS] == 2 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        idsParametrosCaso.push(38);
+        pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
     } 
