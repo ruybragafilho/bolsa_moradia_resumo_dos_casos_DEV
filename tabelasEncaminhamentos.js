@@ -447,37 +447,63 @@ function calcularPontuacao( caso ) {
   console.log( "Parâmero 3.1" );
   pontuacaoCriterio = 0;
 
+  let flagParametroSaude;
+
   if( rf[UNI_PROBLEMAS_SAUDE] == 3 ) { 
+
     pontuacaoCriterio = peso*3;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+    
+    flagParametroSaude = 20;
+    idsParametrosCaso.push(flagParametroSaude);
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
+
   } else if( rf[UNI_PROBLEMAS_SAUDE] == 2 ) { 
+
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
+
+    flagParametroSaude = 22;
 
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
         pontuacaoCriterio += peso*1;
+        flagParametroSaude = 21;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
         break;
       }
     } 
+
+    idsParametrosCaso.push(flagParametroSaude);          
+    pontuacoesParametrosCaso.push(pontuacaoCriterio);                                   
     
   } else {
+
+    flagParametroSaude = 0;
+
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
         pontuacaoCriterio = peso*2;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        flagParametroSaude = 23;
         break;
       } else if( familiar[UNI_PROBLEMAS_SAUDE] == 2 ) {
         pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );        
+        console.log( "Pontuação Familiar: " + pontuacaoCriterio );  
+        flagParametroSaude = 24;      
       }
+    }
+    
+    if(flagParametroSaude != 0) {
+      idsParametrosCaso.push(flagParametroSaude);      
+      pontuacoesParametrosCaso.push(pontuacaoCriterio);
     } 
+
   }  
 
-  //pontuacaoTotal += pontuacaoCriterio;  
+  pontuacaoTotal += pontuacaoCriterio;  
 
 
   // 3.2) Famílias com pessoas que possuem diagnóstico de sofrimento mental, uso prejudicial
