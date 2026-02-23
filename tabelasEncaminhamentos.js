@@ -722,7 +722,7 @@ function numeroDeProblemasDeSaude( caso ) {
     return 0;
   } 
 
-  // Número de crianças e adolescentes na família
+  // Número de problemas de saúde na família
   let numProbSaude = parseInt(caso[0][UNI_PROBLEMAS_SAUDE]);
 
   let familiar = []; 
