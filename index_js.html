@@ -52,7 +52,7 @@
                      } else {
                
                        // mostra modal com mensagem de gravação de dados
-                       mostrarModalErro( "Usuário não cadastrado no sistema!" );           
+                       mostrarModalErro( "index_js - Usuário não cadastrado no sistema!" );           
                
                      }
                
@@ -60,7 +60,7 @@
                
                      // mostra modal com mensagem de erro
                      // numa possível excessão
-                     mostrarModalErro( error.message );    
+                     mostrarModalErro( "index_js" + error.message );    
                
                    } // Fim do try catch                        
 
@@ -70,7 +70,7 @@
                   // do usuário, mostra mensagem de erro
                  .withFailureHandler( error => {
 
-                   mostrarModalErro( error.message );
+                   mostrarModalErro( "index_js" + error.message );
 
                   })
                   // Chama a função backend para autenticar o usuario
