@@ -9,13 +9,13 @@
 /**
  * Função que evolui um caso da tabela CASOS
  *  
- * @param {String} id: id do caso de será evoluido
+ * @param {String} idCaso: id do caso de será evoluido
  * @param {String} idEvolucao: id da evolucao
  */
-function evoluirCasoBE( id, idEvolucao ) {
+function evoluirCasoBE( idCaso, idEvolucao ) {
 
   // Se id inválido, retorna uma exceção
-  if( id < 1  ||  id > TAMANHO_FILA ) {
+  if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
     throw( new Error( "ID Inválido" ) );
   }  
 
@@ -27,15 +27,15 @@ function evoluirCasoBE( id, idEvolucao ) {
   if( lock.hasLock() ) {
 
     // Converte o id para Integer
-    const idCaso = parseInt(id);
+    const id = parseInt(idCaso);
         
     // Gera, formata e grava a data da evolução do caso
     let dataEvolucao = new Date().toLocaleString("pt-BR", {dateStyle: "short"});
-    const data = TABELA_FILA.getRange( idCaso+1, DATA_EVOLUCAO+1 );
+    const data = TABELA_FILA.getRange( id+1, DATA_EVOLUCAO+1 );
     data.setValue( dataEvolucao );    
 
     // Grava o id da evolução do caso
-    const idSituacaoBeneficio = TABELA_FILA.getRange( idCaso+1, SITUACAO_BENEFICIO+1 );
+    const idSituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
     idSituacaoBeneficio.setValue( idEvolucao );        
 
     // SOLTA O LOCK
@@ -46,7 +46,7 @@ function evoluirCasoBE( id, idEvolucao ) {
   } else {
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+    throw( new Error( "evoluirCasoBE - Nao foi possivel pegar o LOCK" ) );
   }
 
 } // Fim da função evoluirCasoBE
@@ -64,11 +64,11 @@ function evoluirCasoBE( id, idEvolucao ) {
  */
 function teste_evoluirCasoBE() {
 
-  let id = 1;
+  let idCaso = 1;
   let idEvolucao = "3";   
 
   try {
-    evoluirCasoBE( id, idEvolucao );
+    evoluirCasoBE( idCaso, idEvolucao );
   } catch( error ) {
     console.log( error.message );
   }
