@@ -40,7 +40,7 @@ const DATA_NASCIMENTO_RF         = 10;
 const TEMPO_SITUACAO_DE_RUA      = 11;
 
 const SITUACAO_BENEFICIO         = 12;
-const DATA_EVOLUCAO              = 13;
+const DATA_ULTIMA_EVOLUCAO       = 13;
 const DOC_PENDENTE               = 14;
 
 
@@ -108,7 +108,7 @@ function limparFila() {
   } else {
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+    throw( new Error( "limparFila - Nao foi possivel pegar o LOCK" ) );
   }    
 
   flag_fila_vazia = 1;
@@ -162,6 +162,12 @@ async function carregarFila() {
     resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
+
+    resumoCaso[SITUACAO_BENEFICIO] = 2;
+
+    resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
+
+    resumoCaso[DOC_PENDENTE] = 1;
     
     gravarCasoNaFila( id, resumoCaso );
   }  
@@ -190,7 +196,13 @@ async function carregarFila() {
     resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
     resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
-    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
+    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];    
+
+    resumoCaso[SITUACAO_BENEFICIO] = 2;
+
+    resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
+
+    resumoCaso[DOC_PENDENTE] = 1;
 
     gravarCasoNaFila( id, resumoCaso );
     
@@ -234,7 +246,7 @@ function gravarCasoNaFila( idCaso, caso ) {
   } else {
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+    throw( new Error( "gravarCasoNaFila - Nao foi possivel pegar o LOCK" ) );
   }    
 
 } // Fim da função gravarCasoNaFila
@@ -294,19 +306,16 @@ async function obterFila( idInstituicao ) {
       quantidade_problemas_saude: parseInt(caso[PROBLEMAS_SAUDE]),
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
-
-      status_convocacao: caso[STATUS_CONVOCACAO],
-
+      
       tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
 
-      status_convocacao: caso[STATUS_CONVOCACAO] == 1 ? "Sim" : "Não",
-
-      id_motivo_designacao: caso[MOTIVO_DE_DESIGNACAO], 
-      nome_motivo_designacao: idToNome(caso[MOTIVO_DE_DESIGNACAO], "MOTIVOS_DE_DESIGNACAO"),
+      id_situacao_beneficio: caso[SITUACAO_BENEFICIO], 
+      nome_situacao_beneficio: idToNome(caso[SITUACAO_BENEFICIO], "SITUACOES_BENEFICIO"),
         
-      data_designacao: caso[DATA_DE_DESIGNACAO],
+      data_ultima_evolucao: caso[DATA_ULTIMA_EVOLUCAO],
 
-      doc_pendente: caso[DOC_PENDENTE] == 1 ? "Sim" : "Não",
+      id_doc_pendente: caso[DOC_PENDENTE],
+      nome_doc_pendente: idToNome(caso[DOC_PENDENTE], "RESPOSTAS_SIMPLES"),
            
       posicaoNaFila: 0
 

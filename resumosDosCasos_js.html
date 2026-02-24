@@ -132,7 +132,9 @@
         <td class="clicavel align-middle">${item.idade_RF}</td>        
         <td class="clicavel align-middle">${item.tempo_nas_ruas}</td>        
 
-        <td class="clicavel align-middle">${item.status_convocacao}</td>        
+        <td class="clicavel align-middle">${item.nome_situacao_beneficio}</td>        
+        <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>        
+        
         <td class="align-middle" style="width: 180px;">${designacao}</td>
         <td class="clicavel align-middle">${item.doc_pendente}</td>`;   
       
@@ -204,12 +206,12 @@
 
     // Obtém os checkbox selecionados dos filtros
     const orgaosEncaminhadores = Array.from(document.getElementsByName("checkbox_OrgaosEncaminhadores")).filter(c => c.checked).map(c => c.value);
-    const statusConvocacao     = Array.from(document.getElementsByName("checkbox_StatusConvocacao")).filter(c => c.checked).map(c => c.value);
+    const situacaoBeneficio     = Array.from(document.getElementsByName("checkbox_SituacaoBeneficio")).filter(c => c.checked).map(c => c.value);
     const documentacaoPendente = Array.from(document.getElementsByName("checkbox_DocumentacaoPendente")).filter(c => c.checked).map(c => c.value);
     
     // Se algum checkbox de filtro tiver sido marcado
     if( orgaosEncaminhadores.length ||
-        statusConvocacao.length     ||
+        situacaoBeneficio.length     ||
         documentacaoPendente.length ) {
 
       // Reset nos casos filtrados
@@ -223,11 +225,11 @@
         const regra1 = ((orgaosEncaminhadores.length == 0)  ||  
                          orgaosEncaminhadores.filter(orgao => caso.id_orgao_encaminhador.split(";").includes(orgao)).length > 0 );
                            
-        const regra2 = ((statusConvocacao.length == 0)  ||  
-                         statusConvocacao.filter(statusC => caso.status_convocacao.split(";").includes(statusC)).length > 0 );
+        const regra2 = ((situacaoBeneficio.length == 0)  ||  
+                         situacaoBeneficio.filter(situacaoB => caso.id_situacao_beneficio.split(";").includes(situacaoB)).length > 0 );
                            
         const regra3 = ((documentacaoPendente.length == 0)  ||  
-                         documentacaoPendente.filter(DocPendente => caso.doc_pendente.split(";").includes(DocPendente)).length > 0 );
+                         documentacaoPendente.filter(DocPendente => caso.id_doc_pendente.split(";").includes(DocPendente)).length > 0 );
 
         // Se caso atual atende todas as regras,
         // o insere na tabela de casos filtrados
