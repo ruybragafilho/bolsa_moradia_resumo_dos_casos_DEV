@@ -15,7 +15,7 @@ const PLANILHA_FILA           =  SpreadsheetApp.openById(PLANILHA_FILA_ID);
 const TABELA_FILA             =  PLANILHA_FILA.getSheetByName('FILA');
 let BUFFER_FILA               =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
 let TAMANHO_FILA              =  BUFFER_FILA.length;
-const NUM_COLUNAS_TABELA_FILA =  16;
+const NUM_COLUNAS_TABELA_FILA =  15;
 
 function refreshBufferFila() {
   BUFFER_FILA  =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
@@ -39,10 +39,9 @@ const PROBLEMAS_SAUDE            =  9;
 const DATA_NASCIMENTO_RF         = 10;
 const TEMPO_SITUACAO_DE_RUA      = 11;
 
-const STATUS_CONVOCACAO          = 12;
-const MOTIVO_DE_DESIGNACAO       = 13;
-const DATA_DE_DESIGNACAO         = 14;
-const DOC_PENDENTE               = 15;
+const SITUACAO_BENEFICIO         = 12;
+const DATA_EVOLUCAO              = 13;
+const DOC_PENDENTE               = 14;
 
 
 
