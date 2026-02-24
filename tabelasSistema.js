@@ -10,24 +10,29 @@
  * Planilha CODIGOS contendo as tabelas 
  *     . RESPOSTAS_SIMPLES 
  *     . ORGAOS_ENCAMINHADORES 
- *     . MOTIVOS_DE_DESIGNACAO  
+ *     . SITUACOES_BENEFICIO  
+ *     . EVOLUCOES
+ *     . PARAMETROS
  */
 const PLANILHA_CODIGOS_ID  =  "1kiunfkV_113EpaCKopb8NI75RneypnmvfwbcK1hyjt0";
 const PLANILHA_CODIGOS     =  SpreadsheetApp.openById(PLANILHA_CODIGOS_ID);
 
 const TABELA_RESPOSTAS_SIMPLES      =  PLANILHA_CODIGOS.getSheetByName('RESPOSTAS_SIMPLES');
 const TABELA_ORGAOS_ENCAMINHADORES  =  PLANILHA_CODIGOS.getSheetByName('ORGAOS_ENCAMINHADORES');
-const TABELA_MOTIVOS_DE_DESIGNACAO  =  PLANILHA_CODIGOS.getSheetByName('MOTIVOS_DE_DESIGNACAO');
+const TABELA_SITUACOES_BENEFICIO    =  PLANILHA_CODIGOS.getSheetByName('SITUACOES_BENEFICIO');
+const TABELA_EVOLUCOES              =  PLANILHA_CODIGOS.getSheetByName('EVOLUCOES');
 const TABELA_PARAMETROS             =  PLANILHA_CODIGOS.getSheetByName('PARAMETROS');
 
 const BUFFER_RESPOSTAS_SIMPLES      =  TABELA_RESPOSTAS_SIMPLES.getDataRange().getDisplayValues().splice(1);
 const BUFFER_ORGAOS_ENCAMINHADORES  =  TABELA_ORGAOS_ENCAMINHADORES.getDataRange().getDisplayValues().splice(1);
-const BUFFER_MOTIVOS_DE_DESIGNACAO  =  TABELA_MOTIVOS_DE_DESIGNACAO.getDataRange().getDisplayValues().splice(1);
+const BUFFER_SITUACOES_BENEFICIO    =  TABELA_SITUACOES_BENEFICIO.getDataRange().getDisplayValues().splice(1);
+const BUFFER_EVOLUCOES              =  TABELA_EVOLUCOES.getDataRange().getDisplayValues().splice(1);
 const BUFFER_PARAMETROS             =  TABELA_PARAMETROS.getDataRange().getDisplayValues().splice(1);
 
 const NUM_RESPOSTAS_SIMPLES      =  BUFFER_RESPOSTAS_SIMPLES.length;
 const NUM_ORGAOS_ENCAMINHADORES  =  BUFFER_ORGAOS_ENCAMINHADORES.length;
-const NUM_MOTIVOS_DE_DESIGNACAO  =  BUFFER_MOTIVOS_DE_DESIGNACAO.length;
+const NUM_SITUACOES_BENEFICIO    =  BUFFER_SITUACOES_BENEFICIO.length;
+const NUM_EVOLUCOES              =  BUFFER_EVOLUCOES.length;
 const NUM_PARAMETROS             =  BUFFER_PARAMETROS.length;
 
 
@@ -97,8 +102,10 @@ function obterTabelaCompleta( nomeTabela ) {
                                      break;                                                                  
     case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
                                      break;
-    case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
+    case "SITUACOES_BENEFICIO":      bufferTabela = BUFFER_SITUACOES_BENEFICIO;
                                      break;            
+    case "EVOLUCOES":                bufferTabela = BUFFER_EVOLUCOES;
+                                     break;                                                 
     case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
                                      break;                                                 
     default:                         throw( new Error( "Tabela inválida" ) ); 
@@ -134,8 +141,11 @@ function idToNome( id, nomeTabela ) {
     case "ORGAOS_ENCAMINHADORES":    bufferTabela = BUFFER_ORGAOS_ENCAMINHADORES;
                                      tamanhoTabela = NUM_ORGAOS_ENCAMINHADORES;
                                      break;          
-    case "MOTIVOS_DE_DESIGNACAO":    bufferTabela = BUFFER_MOTIVOS_DE_DESIGNACAO;
-                                     tamanhoTabela = NUM_MOTIVOS_DE_DESIGNACAO;
+    case "SITUACOES_BENEFICIO":      bufferTabela = BUFFER_SITUACOES_BENEFICIO;
+                                     tamanhoTabela = NUM_SITUACOES_BENEFICIO;
+                                     break;               
+    case "EVOLUCOES":                bufferTabela = BUFFER_EVOLUCOES;
+                                     tamanhoTabela = NUM_EVOLUCOES;
                                      break;               
     case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
                                      tamanhoTabela = NUM_PARAMETROS;
@@ -186,7 +196,7 @@ function teste_obterTabelaCompleta() {
 function teste_idToNome() {
 
   const id = "3";
-  const nomeTabela = "MOTIVOS_DE_DESIGNACAO";  
+  const nomeTabela = "SITUACOES_BENEFICIO";  
 
   const retorno = idToNome( id, nomeTabela );
 
