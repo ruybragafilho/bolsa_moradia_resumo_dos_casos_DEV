@@ -35,7 +35,7 @@ function reativarCasoBE( idCaso ) {
 
     // Grava null no motivo de designação do caso
     const idSituacaoBeneficio = TABELA_CASOS.getRange( id+1, SITUACAO_BENEFICIO+1 );
-    idSituacaoBeneficio.setValue( "2" );        
+    idSituacaoBeneficio.setValue( "2" );   // 2 == ativo  
 
     // SOLTA O LOCK
     lock.releaseLock();
