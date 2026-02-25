@@ -163,11 +163,11 @@ async function carregarFila() {
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
 
-    resumoCaso[SITUACAO_BENEFICIO] = 2;
+    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Ativo
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
-    resumoCaso[DOC_PENDENTE] = 1;
+    resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
     
     gravarCasoNaFila( id, resumoCaso );
   }  
@@ -198,11 +198,11 @@ async function carregarFila() {
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];    
 
-    resumoCaso[SITUACAO_BENEFICIO] = 2;
+    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Ativo
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
-    resumoCaso[DOC_PENDENTE] = 1;
+    resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
 
     gravarCasoNaFila( id, resumoCaso );
     
