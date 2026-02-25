@@ -16,7 +16,7 @@ function reativarCasoBE( idCaso ) {
 
   // Se id inválido, retorna uma exceção
   if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
-    throw( new Error( "ID Inválido" ) );
+    throw( new Error( "reativarCasoBE - ID Inválido" ) );
   }  
 
   // TENTA PEGAR O LOCK
@@ -26,16 +26,31 @@ function reativarCasoBE( idCaso ) {
   // SE PEGAR O LOCK, PROSSEGUE COM A REATIVAÇÃO
   if( lock.hasLock() ) {
 
-    // Converte o id para Integer
-    const id = parseInt(idCaso);
-        
-    // Grava null na data de designação do caso    
-    const data = TABELA_CASOS.getRange( id+1, DATA_EVOLUCAO+1 );
-    data.setValue( "" );    
+    // Grava a reativação
+    try {
 
-    // Grava null no motivo de designação do caso
-    const idSituacaoBeneficio = TABELA_CASOS.getRange( id+1, SITUACAO_BENEFICIO+1 );
-    idSituacaoBeneficio.setValue( "2" );   // 2 == ativo  
+      // Converte o id para Integer
+      const id = parseInt(idCaso);
+          
+
+      // Grava null na data de designação do caso    
+      const dataNula = "";
+  
+      const campo_data = TABELA_FILA.getRange( id+1, DATA_ULTIMA_EVOLUCAO+1 );
+      campo_data.setValue( dataNula );    
+  
+  
+      // Grava null no motivo de designação do caso
+      const situacaoBeneficio_ativo = 1;
+  
+      const campo_SituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
+      campo_SituacaoBeneficio.setValue( situacaoBeneficio_ativo );  
+
+
+    } catch( error ) {
+      throw( "reativarCasoBE - " + error.message );
+    }
+
 
     // SOLTA O LOCK
     lock.releaseLock();

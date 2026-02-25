@@ -723,13 +723,13 @@ function numeroDeProblemasDeSaude( caso ) {
   } 
 
   // Número de problemas de saúde na família
-  let numProbSaude = parseInt(caso[0][UNI_PROBLEMAS_SAUDE]);
+  let numProbSaude = parseInt(caso[0][UNI_PROBLEMAS_SAUDE]) - 1;
 
   let familiar = []; 
 
   for( let i=1; i<numeroFamiliares; ++i ) {
     familiar = caso[i];
-    numProbSaude += parseInt(familiar[UNI_PROBLEMAS_SAUDE]);
+    numProbSaude += parseInt(familiar[UNI_PROBLEMAS_SAUDE]) - 1;
   } 
     
   return numProbSaude;

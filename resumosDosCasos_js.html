@@ -14,7 +14,9 @@
     // da sua própri instituição
     if( usuarioLogado.instituicao != "0" ) {
       document.getElementById("checkbox_OrgaosEncaminhadores").style.display = "none";
-      document.getElementById("label_OrgaosEncaminhadores").style.display = "none";                                
+      document.getElementById("label_OrgaosEncaminhadores").style.display = "none";      
+      
+      document.getElementById("coluna_evoluir").style.display = "none";      
     }   
 
 
@@ -116,9 +118,17 @@
       tr.id = item.id;
 
       // Gera o select de evolução ou o botão de reativação dessa linha
-      // Não mostra para trabalhadores da gestão
-      let evolucao = item.id_situacao_beneficio != "1" ? gerarSelectEvolucao( cache_TabelaEvolucoes, item.id ) 
-                                                       : gerarBotaoReativar( item.id );         
+      // Não mostra para trabalhadores da ponta
+      let evolucao;
+      let display_coluna_evoluir;
+      if( usuarioLogado.instituicao == "0" ) {
+        evolucao = item.id_situacao_beneficio != "2" ? gerarSelectEvolucao( cache_TabelaEvolucoes, item.id ) 
+                                                     : gerarBotaoReativar( item.id );  
+        display_coluna_evoluir = "";                                                                     
+      } else {
+        evolucao = "";
+        display_coluna_evoluir = "display: none;"   
+      }     
   
       // Preenche a linha com as células contendo os dados e o select de evolução
       tr.innerHTML =           
@@ -130,13 +140,13 @@
         <td class="clicavel align-middle">${item.quantidade_CEA}</td>        
         <td class="clicavel align-middle">${item.quantidade_problemas_saude}</td>        
         <td class="clicavel align-middle">${item.idade_RF}</td>        
-        <td class="clicavel align-middle">${item.tempo_nas_ruas}</td>        
+        <td class="clicavel align-middle">${item.nome_tempo_nas_ruas}</td>        
 
         <td class="clicavel align-middle">${item.nome_situacao_beneficio}</td>        
         <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>        
         
-        <td class="align-middle" style="width: 180px;">${evolucao}</td>
-        <td class="clicavel align-middle">${item.doc_pendente}</td>`;   
+        <td class="align-middle" style="width: 180px; ${display_coluna_evoluir}">${evolucao}</td>
+        <td class="clicavel align-middle">${item.nome_doc_pendente}</td>`;   
       
       // Adiciona a linha na tabela
       tbody.appendChild(tr);

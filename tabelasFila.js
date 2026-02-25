@@ -163,7 +163,7 @@ async function carregarFila() {
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
 
-    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Ativo
+    resumoCaso[SITUACAO_BENEFICIO] = 1; // 1 == Ativo
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
@@ -198,7 +198,7 @@ async function carregarFila() {
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];    
 
-    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Ativo
+    resumoCaso[SITUACAO_BENEFICIO] = 1; // 1 == Ativo
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
@@ -307,7 +307,8 @@ async function obterFila( idInstituicao ) {
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
       
-      tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
+      id_tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
+      nome_tempo_nas_ruas: idToNome(caso[TEMPO_SITUACAO_DE_RUA], "INTERVALOS_DE_TEMPO"),
 
       id_situacao_beneficio: caso[SITUACAO_BENEFICIO], 
       nome_situacao_beneficio: idToNome(caso[SITUACAO_BENEFICIO], "SITUACOES_BENEFICIO"),

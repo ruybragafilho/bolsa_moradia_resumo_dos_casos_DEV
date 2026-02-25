@@ -12,6 +12,7 @@
  *     . ORGAOS_ENCAMINHADORES 
  *     . SITUACOES_BENEFICIO  
  *     . EVOLUCOES
+ *     . INTERVALOS_DE_TEMPO
  *     . PARAMETROS
  */
 const PLANILHA_CODIGOS_ID  =  "1kiunfkV_113EpaCKopb8NI75RneypnmvfwbcK1hyjt0";
@@ -21,18 +22,21 @@ const TABELA_RESPOSTAS_SIMPLES      =  PLANILHA_CODIGOS.getSheetByName('RESPOSTA
 const TABELA_ORGAOS_ENCAMINHADORES  =  PLANILHA_CODIGOS.getSheetByName('ORGAOS_ENCAMINHADORES');
 const TABELA_SITUACOES_BENEFICIO    =  PLANILHA_CODIGOS.getSheetByName('SITUACOES_BENEFICIO');
 const TABELA_EVOLUCOES              =  PLANILHA_CODIGOS.getSheetByName('EVOLUCOES');
+const TABELA_INTERVALOS_DE_TEMPO    =  PLANILHA_CODIGOS.getSheetByName('INTERVALOS_DE_TEMPO');
 const TABELA_PARAMETROS             =  PLANILHA_CODIGOS.getSheetByName('PARAMETROS');
 
 const BUFFER_RESPOSTAS_SIMPLES      =  TABELA_RESPOSTAS_SIMPLES.getDataRange().getDisplayValues().splice(1);
 const BUFFER_ORGAOS_ENCAMINHADORES  =  TABELA_ORGAOS_ENCAMINHADORES.getDataRange().getDisplayValues().splice(1);
 const BUFFER_SITUACOES_BENEFICIO    =  TABELA_SITUACOES_BENEFICIO.getDataRange().getDisplayValues().splice(1);
 const BUFFER_EVOLUCOES              =  TABELA_EVOLUCOES.getDataRange().getDisplayValues().splice(1);
+const BUFFER_INTERVALOS_DE_TEMPO    =  TABELA_INTERVALOS_DE_TEMPO.getDataRange().getDisplayValues().splice(1);
 const BUFFER_PARAMETROS             =  TABELA_PARAMETROS.getDataRange().getDisplayValues().splice(1);
 
 const NUM_RESPOSTAS_SIMPLES      =  BUFFER_RESPOSTAS_SIMPLES.length;
 const NUM_ORGAOS_ENCAMINHADORES  =  BUFFER_ORGAOS_ENCAMINHADORES.length;
 const NUM_SITUACOES_BENEFICIO    =  BUFFER_SITUACOES_BENEFICIO.length;
 const NUM_EVOLUCOES              =  BUFFER_EVOLUCOES.length;
+const NUM_INTERVALOS_DE_TEMPO    =  BUFFER_INTERVALOS_DE_TEMPO.length;
 const NUM_PARAMETROS             =  BUFFER_PARAMETROS.length;
 
 
@@ -88,8 +92,7 @@ const TIPO_USUARIO      = 5;
  * É chamada pelo front-end para obter os ids e nomes das informações que
  * serão mostradas na tela
  * 
- * @param {String} nomeTabela: Nome da tabela a qual os ids se referem. Pode ser
- *                             RESPOSTAS_SIMPLES, ORGAOS_ENCAMINHADORES OU MOTIVOS_DE_DESIGNACAO 
+ * @param {String} nomeTabela: Nome da tabela a qual os ids se referem. 
  * 
  * return Uma cópia da tabela
  */
@@ -106,6 +109,8 @@ function obterTabelaCompleta( nomeTabela ) {
                                      break;            
     case "EVOLUCOES":                bufferTabela = BUFFER_EVOLUCOES;
                                      break;                                                 
+    case "INTERVALOS_DE_TEMPO":      bufferTabela = BUFFER_INTERVALOS_DE_TEMPO;
+                                     break;                                                                                      
     case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
                                      break;                                                 
     default:                         throw( new Error( "Tabela inválida" ) ); 
@@ -147,6 +152,9 @@ function idToNome( id, nomeTabela ) {
     case "EVOLUCOES":                bufferTabela = BUFFER_EVOLUCOES;
                                      tamanhoTabela = NUM_EVOLUCOES;
                                      break;               
+    case "INTERVALOS_DE_TEMPO":      bufferTabela = BUFFER_INTERVALOS_DE_TEMPO;
+                                     tamanhoTabela = NUM_INTERVALOS_DE_TEMPO;
+                                     break;                                                                                                                           
     case "PARAMETROS":               bufferTabela = BUFFER_PARAMETROS;
                                      tamanhoTabela = NUM_PARAMETROS;
                                      break;                                                    

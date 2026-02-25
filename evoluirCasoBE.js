@@ -16,7 +16,7 @@ function evoluirCasoBE( idCaso, idEvolucao ) {
 
   // Se id inválido, retorna uma exceção
   if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
-    throw( new Error( "ID Inválido" ) );
+    throw( new Error( "evoluirCasoBE - ID Inválido" ) );
   }  
 
   // TENTA PEGAR O LOCK
@@ -26,18 +26,32 @@ function evoluirCasoBE( idCaso, idEvolucao ) {
   // SE PEGAR O LOCK, PROSSEGUE COM A EVOLUÇÃO
   if( lock.hasLock() ) {
 
-    // Converte o id para Integer
-    const id = parseInt(idCaso);
-        
-    // Gera, formata e grava a data da evolução do caso
-    let dataEvolucao = new Date().toLocaleString("pt-BR", {dateStyle: "short"});
-    const data = TABELA_FILA.getRange( id+1, DATA_EVOLUCAO+1 );
-    data.setValue( dataEvolucao );    
+    // Grava a evolução
+    try {
 
-    // Grava o id da evolução do caso
-    const idSituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
-    idSituacaoBeneficio.setValue( idEvolucao );        
+      // Converte o id para Integer
+      const id = parseInt(idCaso);
 
+          
+      // Gera, formata e grava a data da evolução do caso
+      let dataEvolucao = new Date().toLocaleString("pt-BR", {dateStyle: "short"});
+  
+      const campo_data = TABELA_FILA.getRange( id+1, DATA_ULTIMA_EVOLUCAO+1 );
+      campo_data.setValue( dataEvolucao );    
+  
+  
+      // Gera e grava o id da evolução do caso
+      let idSituacaoBeneficio = parseInt(idEvolucao) + 1;
+  
+      const campo_SituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
+      campo_SituacaoBeneficio.setValue( idSituacaoBeneficio );      
+
+
+    } catch( error ) {
+      throw( "evoluirCasoBE - " + error.message );
+    }
+
+    
     // SOLTA O LOCK
     lock.releaseLock();
 
