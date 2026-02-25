@@ -15,7 +15,7 @@ const PLANILHA_FILA           =  SpreadsheetApp.openById(PLANILHA_FILA_ID);
 const TABELA_FILA             =  PLANILHA_FILA.getSheetByName('FILA');
 let BUFFER_FILA               =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
 let TAMANHO_FILA              =  BUFFER_FILA.length;
-const NUM_COLUNAS_TABELA_FILA =  14;
+const NUM_COLUNAS_TABELA_FILA =  15;
 
 function refreshBufferFila() {
   BUFFER_FILA  =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
@@ -24,26 +24,24 @@ function refreshBufferFila() {
 
 
 
-/**
- * Constantes que armazenam as posições das colunas nas tabelas
- */
-
-
 // Posições das colunas da planilha FILA
-const REFERENCIA_FAMILIAR     =  1;
-const CPF_RF                  =  2;
-const ORGAO_ENCAMINHADOR      =  3;
-const DATA_ENCAMINHAMENTO     =  4;
-const PONTUACAO               =  5;
-const QUANTIDADE_CEA          =  6;
-const PROBLEMAS_SAUDE         =  7;
-const DATA_NASCIMENTO_RF      =  8;
-const TEMPO_SITUACAO_DE_RUA   =  9;
+const REFERENCIA_FAMILIAR        =  1;
+const CPF_RF                     =  2;
+const ORGAO_ENCAMINHADOR         =  3;
+const DATA_ENCAMINHAMENTO        =  4;
+const PONTUACAO                  =  5;
 
-const STATUS_CONVOCACAO       = 10;
-const MOTIVO_DE_DESIGNACAO    = 11;
-const DATA_DE_DESIGNACAO      = 12;
-const DOC_PENDENTE            = 13;
+const IDS_PARAMETROS_CASO        =  6;
+const PONTUACOES_PARAMETROS_CASO =  7;
+
+const QUANTIDADE_CEA             =  8;
+const PROBLEMAS_SAUDE            =  9;
+const DATA_NASCIMENTO_RF         = 10;
+const TEMPO_SITUACAO_DE_RUA      = 11;
+
+const SITUACAO_BENEFICIO         = 12;
+const DATA_ULTIMA_EVOLUCAO       = 13;
+const DOC_PENDENTE               = 14;
 
 
 
@@ -110,7 +108,7 @@ function limparFila() {
   } else {
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+    throw( new Error( "limparFila - Nao foi possivel pegar o LOCK" ) );
   }    
 
   flag_fila_vazia = 1;
@@ -156,10 +154,20 @@ async function carregarFila() {
     
     resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
     resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+
+    resumoCaso[IDS_PARAMETROS_CASO] = idsParametrosCaso.join(";");
+    resumoCaso[PONTUACOES_PARAMETROS_CASO] = pontuacoesParametrosCaso.join(";");
+
     resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
     resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
+
+    resumoCaso[SITUACAO_BENEFICIO] = 1; // 1 == Ativo
+
+    resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
+
+    resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
     
     gravarCasoNaFila( id, resumoCaso );
   }  
@@ -181,10 +189,20 @@ async function carregarFila() {
     
     resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
     resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+
+    resumoCaso[IDS_PARAMETROS_CASO] = idsParametrosCaso.join(";");
+    resumoCaso[PONTUACOES_PARAMETROS_CASO] = pontuacoesParametrosCaso.join(";");
+
     resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
     resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
-    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
+    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];    
+
+    resumoCaso[SITUACAO_BENEFICIO] = 1; // 1 == Ativo
+
+    resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
+
+    resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
 
     gravarCasoNaFila( id, resumoCaso );
     
@@ -228,7 +246,7 @@ function gravarCasoNaFila( idCaso, caso ) {
   } else {
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+    throw( new Error( "gravarCasoNaFila - Nao foi possivel pegar o LOCK" ) );
   }    
 
 } // Fim da função gravarCasoNaFila
@@ -261,6 +279,8 @@ async function obterFila( idInstituicao ) {
   // Obtém os casos na fila
   let fila = BUFFER_FILA.map( caso => {    
 
+    let ids_parametros = caso[IDS_PARAMETROS_CASO].split(";");
+
     return {
 
       id: caso[ID],
@@ -274,26 +294,29 @@ async function obterFila( idInstituicao ) {
         
       tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
 
-      pontuacao: parseInt(caso[PONTUACAO]),
+      nomes_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][NOME] ),
+      pesos_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PESO_PARAMETRO] ),
+      pontuacoes_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PONTUACAO_PARAMETRO] ),
+
+      pontuacoes_caso: caso[PONTUACOES_PARAMETROS_CASO].split(";"),
+      pontuacao: parseInt(caso[PONTUACAO]),      
 
       quantidade_CEA: parseInt(caso[QUANTIDADE_CEA]),
 
       quantidade_problemas_saude: parseInt(caso[PROBLEMAS_SAUDE]),
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
+      
+      id_tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
+      nome_tempo_nas_ruas: idToNome(caso[TEMPO_SITUACAO_DE_RUA], "INTERVALOS_DE_TEMPO"),
 
-      status_convocacao: caso[STATUS_CONVOCACAO],
-
-      tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
-
-      status_convocacao: caso[STATUS_CONVOCACAO] == 1 ? "Sim" : "Não",
-
-      id_motivo_designacao: caso[MOTIVO_DE_DESIGNACAO], 
-      nome_motivo_designacao: idToNome(caso[MOTIVO_DE_DESIGNACAO], "MOTIVOS_DE_DESIGNACAO"),
+      id_situacao_beneficio: caso[SITUACAO_BENEFICIO], 
+      nome_situacao_beneficio: idToNome(caso[SITUACAO_BENEFICIO], "SITUACOES_BENEFICIO"),
         
-      data_designacao: caso[DATA_DE_DESIGNACAO],
+      data_ultima_evolucao: caso[DATA_ULTIMA_EVOLUCAO],
 
-      doc_pendente: caso[DOC_PENDENTE] == 1 ? "Sim" : "Não",
+      id_doc_pendente: caso[DOC_PENDENTE],
+      nome_doc_pendente: idToNome(caso[DOC_PENDENTE], "RESPOSTAS_SIMPLES"),
            
       posicaoNaFila: 0
 

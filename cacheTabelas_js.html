@@ -11,20 +11,24 @@
   *  #######################################################################################
   */
 
-  // Cache da tabela Respostas Simples, carregados via chamada 
+  // Cache da tabela Respostas Simples, carregadas via chamada 
   // da função backend obterTabelaCompleta( "RESPOSTAS_SIMPLES" )  
   let cache_TabelaRespostasSimples = [];  
 
-  // Cache da tabela Órgãos Encaminhadores, carregados via chamada 
+  // Cache da tabela Órgãos Encaminhadores, carregadas via chamada 
   // da função backend obterTabelaCompleta( "ORGAOS_ENCAMINHADORES" )   
   let cache_TabelaOrgaosEncaminhadores = [];    
 
-  // Cache da tabela Motivos de Designação, carregados via chamada 
-  // da função backend obterTabelaCompleta( "MOTIVOS_DE_DESIGNACAO" )  
-  let cache_TabelaMotivosDeDesignacao = [];
+  // Cache da tabela Situações Benefício, carregadas via chamada 
+  // da função backend obterTabelaCompleta( "SITUACOES_BENEFICIO" )  
+  let cache_TabelaSituacoesBeneficio = [];
+
+  // Cache da tabela Evoluções, carregadas via chamada da
+  // função backend obterTabelaCompleta( "EVOLUCOES" )  
+  let cache_TabelaEvolucoes = [];
 
 
-  // Cache da tabela com os casos, carregados via chamada 
+  // Cache da tabela com os casos, carregadas via chamada 
   // da função backend obterCasos  
   let cache_TabelaCasos = [];
 
@@ -35,7 +39,8 @@
   //    1: já foi carregada
   let flagCache_TabelaRespostasSimples      = 0;
   let flagCache_TabelaOrgaosEncaminhadores  = 0;  
-  let flagCache_TabelaMotivosDeDesignacao   = 0;  
+  let flagCache_TabelaSituacoesBeneficio    = 0;  
+  let flagCache_TabelaEvolucoes             = 0;  
   let flagCache_TabelaCasos                 = 0;
   
 
@@ -54,7 +59,8 @@
 
     carregarTabelaNaCache( "RESPOSTAS_SIMPLES" );    
     carregarTabelaNaCache( "ORGAOS_ENCAMINHADORES" );
-    carregarTabelaNaCache( "MOTIVOS_DE_DESIGNACAO" );
+    carregarTabelaNaCache( "SITUACOES_BENEFICIO" );
+    carregarTabelaNaCache( "EVOLUCOES" );
 
   } // Fim da função preCarregarTabelasNaCache
 
@@ -68,7 +74,8 @@
     
     if( flagCache_TabelaRespostasSimples      && 
         flagCache_TabelaOrgaosEncaminhadores  &&
-        flagCache_TabelaMotivosDeDesignacao ) {
+        flagCache_TabelaSituacoesBeneficio    &&
+        flagCache_TabelaEvolucoes  ) {
 
       return true;
 
@@ -93,19 +100,24 @@
 
                     // Atribui a tabela carregada ao cache apropriado
                     switch( nomeTabela ) {
-                      case "RESPOSTAS_SIMPLES":        cache_TabelaRespostasSimples     = tabela;
-                                                       flagCache_TabelaRespostasSimples = 1;
-                                                       break;              
+                      
+                      case "RESPOSTAS_SIMPLES":     cache_TabelaRespostasSimples     = tabela;
+                                                    flagCache_TabelaRespostasSimples = 1;
+                                                    break;              
 
-                      case "ORGAOS_ENCAMINHADORES":    cache_TabelaOrgaosEncaminhadores     = tabela;
-                                                       flagCache_TabelaOrgaosEncaminhadores = 1;  
-                                                       break;            
+                      case "ORGAOS_ENCAMINHADORES": cache_TabelaOrgaosEncaminhadores     = tabela;
+                                                    flagCache_TabelaOrgaosEncaminhadores = 1;  
+                                                    break;            
 
-                      case "MOTIVOS_DE_DESIGNACAO":    cache_TabelaMotivosDeDesignacao     = tabela;
-                                                       flagCache_TabelaMotivosDeDesignacao = 1;  
-                                                       break;            
+                      case "SITUACOES_BENEFICIO":   cache_TabelaSituacoesBeneficio     = tabela;
+                                                    flagCache_TabelaSituacoesBeneficio = 1;  
+                                                    break;           
 
-                      default:                         throw( new Error( "Tabela Inválida" ) ); 
+                      case "EVOLUCOES":             cache_TabelaEvolucoes     = tabela;
+                                                    flagCache_TabelaEvolucoes = 1;  
+                                                    break;            
+
+                      default:                      throw( new Error( "Tabela Inválida" ) ); 
 
                     }
 

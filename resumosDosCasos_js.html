@@ -14,7 +14,9 @@
     // da sua própri instituição
     if( usuarioLogado.instituicao != "0" ) {
       document.getElementById("checkbox_OrgaosEncaminhadores").style.display = "none";
-      document.getElementById("label_OrgaosEncaminhadores").style.display = "none";                                
+      document.getElementById("label_OrgaosEncaminhadores").style.display = "none";      
+      
+      document.getElementById("coluna_evoluir").style.display = "none";      
     }   
 
 
@@ -27,12 +29,13 @@
     // Adiciona o listener à tabela inteira - Delegação de eventos
     tabelaResumoDosCasos.addEventListener( 'click', function(event) { 
 
+      // Obtém o elemento onde ocorreu o evento clique
       let clickedElement = event.target;
 
       // Trata evento de clique no botão, reativando o caso        
       if( clickedElement.classList.contains('bt-reativar') ) {
 
-        // mostra modal com mensagem de designação de caso
+        // mostra modal com mensagem de reativação de caso
         mostrarModalMensagem( "Reativando o caso, por favor aguarde..." );                                       
 
         // Obtém o id do caso
@@ -41,28 +44,28 @@
         // Chama a função front end para reativar o caso
         reativarCasoFE( idCaso );          
 
-      // Trata evento de clique no botão, designando o caso        
-      } else if( clickedElement.classList.contains('bt-designar') ) {
+      // Trata evento de clique no botão, evoluindo o caso        
+      } else if( clickedElement.classList.contains('bt-evoluir') ) {
 
         // Obtém o id do caso e o valor do select
         let idCaso = clickedElement.parentElement.parentElement.parentElement.id;
-        let idSelect ="selectMotivoDesiginacao_" + idCaso;
+        let idSelect ="selectEvoluir_" + idCaso;
         let valorSelect = document.getElementById(idSelect).value;          
 
-        // Se motivo de designação tiver sido informado,
-        // prossegue com a designação
+        // Se tipo de evolução tiver sido informado,
+        // prossegue com a evolução
         if( valorSelect ) {
 
-          // mostra modal com mensagem de designação de caso
-          mostrarModalMensagem( "Designando o caso, por favor aguarde..." );                               
+          // mostra modal com mensagem de evolução de caso
+          mostrarModalMensagem( "Evoluindo o caso, por favor aguarde..." );                               
   
-          // Chama a função front end para designar o caso
-          designarCasoFE( idCaso, valorSelect );          
+          // Chama a função front end para evoluir o caso
+          evoluirCasoFE( idCaso, valorSelect );          
 
         // Se não, mostra modal de erro
         } else {
 
-          // Exibe modal de erro caso motivo de designação não tenha sido selecionado
+          // Exibe modal de erro caso o tipo de evolução não tenha sido selecionado
           mostrarModalErro( "O campo TIPO DE EVOLUÇÃO é obrigatório!" );                      
         }
 
@@ -71,10 +74,9 @@
       } else if( clickedElement.classList.contains('clicavel') ) {
 
         // Obtém o id do caso 
-        id_CasoEmVisualizacao = clickedElement.parentElement.id;          
+        id_CasoEmVisualizacao = clickedElement.parentElement.id;                  
 
-        // Obter o ID do caso clicado e chamar visualizar
-
+        // Exibe a página de visualização
         console.log( "Mostrar caso" );
         exibirPagina('visualizarCaso')
 
@@ -115,12 +117,20 @@
       // Seta o id da linha com o id do caso
       tr.id = item.id;
 
-      // Gera o select de designação ou o botão de reativação dessa linha
-      // Não mostra para trabalhadores da gestão
-      let designacao = item.data_designacao == ""  ? gerarSelectDesignacao( cache_TabelaMotivosDeDesignacao, item.id ) 
-                                                   : gerarBotaoReativar( item.id );         
-
-      // Preenche a linha com as células contendo os dados e o select de desiginação
+      // Gera o select de evolução ou o botão de reativação dessa linha
+      // Não mostra para trabalhadores da ponta
+      let evolucao;
+      let display_coluna_evoluir;
+      if( usuarioLogado.instituicao == "0" ) {
+        evolucao = item.id_situacao_beneficio != "2" ? gerarSelectEvolucao( cache_TabelaEvolucoes, item.id ) 
+                                                     : gerarBotaoReativar( item.id );  
+        display_coluna_evoluir = "";                                                                     
+      } else {
+        evolucao = "";
+        display_coluna_evoluir = "display: none;"   
+      }     
+  
+      // Preenche a linha com as células contendo os dados e o select de evolução
       tr.innerHTML =           
        `<td class="clicavel align-middle">${item.posicaoNaFila}</td>
         <td class="clicavel align-middle">${item.referencia_familiar}</td>
@@ -130,11 +140,13 @@
         <td class="clicavel align-middle">${item.quantidade_CEA}</td>        
         <td class="clicavel align-middle">${item.quantidade_problemas_saude}</td>        
         <td class="clicavel align-middle">${item.idade_RF}</td>        
-        <td class="clicavel align-middle">${item.tempo_nas_ruas}</td>        
+        <td class="clicavel align-middle">${item.nome_tempo_nas_ruas}</td>        
 
-        <td class="clicavel align-middle">${item.status_convocacao}</td>        
-        <td class="align-middle" style="width: 180px;">${designacao}</td>
-        <td class="clicavel align-middle">${item.doc_pendente}</td>`;   
+        <td class="clicavel align-middle">${item.nome_situacao_beneficio}</td>        
+        <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>        
+        
+        <td class="align-middle" style="width: 180px; ${display_coluna_evoluir}">${evolucao}</td>
+        <td class="clicavel align-middle">${item.nome_doc_pendente}</td>`;   
       
       // Adiciona a linha na tabela
       tbody.appendChild(tr);
@@ -166,30 +178,30 @@
 
 
   /**
-   * Gera o Select de Designação de caso, que é utilizado na tabela de resumos de casos
+   * Gera o Select de Evolução de caso, que é utilizado na tabela de resumos de casos
    *
-   * @param {Array} tabelaMotivosDesignacao - Tabela com os motivos de designacao
-   * @param {String} idCaso - Id do caso que será designado
+   * @param {Array} tabelaEvolucoes - Tabela com os tipos de evoluções
+   * @param {String} idCaso - Id do caso que será evoluido
    */
-  function gerarSelectDesignacao( tabelaMotivosDesignacao, idCaso ) {
+  function gerarSelectEvolucao( tabelaEvolucoes, idCaso ) {
 
-    let idSelect ="selectMotivoDesiginacao_" + idCaso;
+    let idSelect ="selectEvoluir_" + idCaso;
 
-    // Gera, dinamicamente, o select + botão de designação / encerramento que será usado em cada linha
-    let designacaoSelect = `
+    // Gera, dinamicamente, o select + botão de evolução
+    let evolucaoSelect = `
       <div class="d-flex align-items-center" style="gap: 4px;">
         <select id="${idSelect}" class="form-select form-select-sm py-0" style="width: 120px; height: 28px;">`;
 
-    designacaoSelect += gerarSelectFrontend( tabelaMotivosDesignacao );
+    evolucaoSelect += gerarSelectFrontend( tabelaEvolucoes );
 
-    designacaoSelect += ` 
+    evolucaoSelect += ` 
         </select>
-        <button class="btn btn-sm btn-primary bt-designar">Designar</button>
+        <button class="btn btn-sm btn-primary bt-evoluir">Evoluir</button>
       </div>`;        
 
-    return designacaoSelect;
+    return evolucaoSelect;
       
-  } // Fim da função gerarSelectDesignacao 
+  } // Fim da função gerarSelectEvolucao 
 
 
 
@@ -204,12 +216,12 @@
 
     // Obtém os checkbox selecionados dos filtros
     const orgaosEncaminhadores = Array.from(document.getElementsByName("checkbox_OrgaosEncaminhadores")).filter(c => c.checked).map(c => c.value);
-    const statusConvocacao     = Array.from(document.getElementsByName("checkbox_StatusConvocacao")).filter(c => c.checked).map(c => c.value);
+    const situacaoBeneficio     = Array.from(document.getElementsByName("checkbox_SituacaoBeneficio")).filter(c => c.checked).map(c => c.value);
     const documentacaoPendente = Array.from(document.getElementsByName("checkbox_DocumentacaoPendente")).filter(c => c.checked).map(c => c.value);
     
     // Se algum checkbox de filtro tiver sido marcado
     if( orgaosEncaminhadores.length ||
-        statusConvocacao.length     ||
+        situacaoBeneficio.length     ||
         documentacaoPendente.length ) {
 
       // Reset nos casos filtrados
@@ -223,11 +235,11 @@
         const regra1 = ((orgaosEncaminhadores.length == 0)  ||  
                          orgaosEncaminhadores.filter(orgao => caso.id_orgao_encaminhador.split(";").includes(orgao)).length > 0 );
                            
-        const regra2 = ((statusConvocacao.length == 0)  ||  
-                         statusConvocacao.filter(statusC => caso.status_convocacao.split(";").includes(statusC)).length > 0 );
+        const regra2 = ((situacaoBeneficio.length == 0)  ||  
+                         situacaoBeneficio.filter(situacaoB => caso.id_situacao_beneficio.split(";").includes(situacaoB)).length > 0 );
                            
         const regra3 = ((documentacaoPendente.length == 0)  ||  
-                         documentacaoPendente.filter(DocPendente => caso.doc_pendente.split(";").includes(DocPendente)).length > 0 );
+                         documentacaoPendente.filter(DocPendente => caso.id_doc_pendente.split(";").includes(DocPendente)).length > 0 );
 
         // Se caso atual atende todas as regras,
         // o insere na tabela de casos filtrados

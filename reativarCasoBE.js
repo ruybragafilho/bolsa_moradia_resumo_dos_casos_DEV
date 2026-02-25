@@ -9,14 +9,14 @@
 /**
  * Função que reativa um caso da tabela CASOS
  *  
- * @param {String} id: id do caso de será reativado 
+ * @param {String} idCaso: id do caso que será reativado 
  *  
  */
-function reativarCasoBE( id ) {
+function reativarCasoBE( idCaso ) {
 
   // Se id inválido, retorna uma exceção
-  if( id < 1  ||  id > NUM_CASOS ) {
-    throw( new Error( "ID Inválido" ) );
+  if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
+    throw( new Error( "reativarCasoBE - ID Inválido" ) );
   }  
 
   // TENTA PEGAR O LOCK
@@ -26,16 +26,31 @@ function reativarCasoBE( id ) {
   // SE PEGAR O LOCK, PROSSEGUE COM A REATIVAÇÃO
   if( lock.hasLock() ) {
 
-    // Converte o id para Integer
-    const idCaso = parseInt(id);
-        
-    // Grava null na data de designação do caso    
-    const data = TABELA_CASOS.getRange( idCaso+1, DATA_DE_DESIGNACAO+1 );
-    data.setValue( "" );    
+    // Grava a reativação
+    try {
 
-    // Grava null no motivo de designação do caso
-    const idMotivo = TABELA_CASOS.getRange( idCaso+1, MOTIVO_DE_DESIGNACAO+1 );
-    idMotivo.setValue( "" );        
+      // Converte o id para Integer
+      const id = parseInt(idCaso);
+          
+
+      // Grava null na data de designação do caso    
+      const dataNula = "";
+  
+      const campo_data = TABELA_FILA.getRange( id+1, DATA_ULTIMA_EVOLUCAO+1 );
+      campo_data.setValue( dataNula );    
+  
+  
+      // Grava null no motivo de designação do caso
+      const situacaoBeneficio_ativo = 1;
+  
+      const campo_SituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
+      campo_SituacaoBeneficio.setValue( situacaoBeneficio_ativo );  
+
+
+    } catch( error ) {
+      throw( "reativarCasoBE - " + error.message );
+    }
+
 
     // SOLTA O LOCK
     lock.releaseLock();
@@ -45,7 +60,7 @@ function reativarCasoBE( id ) {
   } else {
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "Nao foi possivel pegar o LOCK" ) );
+    throw( new Error( "reativarCasoBE - Nao foi possivel pegar o LOCK" ) );
   }
 
 } // Fim da função reativarCasoBE
