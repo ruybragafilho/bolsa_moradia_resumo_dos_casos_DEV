@@ -45,7 +45,15 @@ function evoluirCasoBE( idCaso, idEvolucao ) {
   
       const campo_SituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
       campo_SituacaoBeneficio.setValue( idSituacaoBeneficio );      
+      
 
+      // Envia email para o órgão encaminhador
+      const emailOrgaoEncaminhador = BUFFER_FILA[id-1][EMAIL_ORGAO_ENCAMINHADOR];
+      const cpfRFCaso = BUFFER_FILA[id-1][CPF_RF];
+      const nomeRFCaso = BUFFER_FILA[id-1][REFERENCIA_FAMILIAR];
+      const evolucaoCaso = idToNome( idSituacaoBeneficio,  "SITUACOES_BENEFICIO" );
+
+      enviarEmailBE( emailOrgaoEncaminhador, cpfRFCaso, nomeRFCaso, evolucaoCaso );      
 
     } catch( error ) {
       throw( "evoluirCasoBE - " + error.message );

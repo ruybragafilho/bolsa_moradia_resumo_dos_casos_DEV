@@ -15,7 +15,7 @@ const PLANILHA_FILA           =  SpreadsheetApp.openById(PLANILHA_FILA_ID);
 const TABELA_FILA             =  PLANILHA_FILA.getSheetByName('FILA');
 let BUFFER_FILA               =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
 let TAMANHO_FILA              =  BUFFER_FILA.length;
-const NUM_COLUNAS_TABELA_FILA =  15;
+const NUM_COLUNAS_TABELA_FILA =  16;
 
 function refreshBufferFila() {
   BUFFER_FILA  =  TABELA_FILA.getDataRange().getDisplayValues().splice(1);
@@ -42,6 +42,7 @@ const TEMPO_SITUACAO_DE_RUA      = 11;
 const SITUACAO_BENEFICIO         = 12;
 const DATA_ULTIMA_EVOLUCAO       = 13;
 const DOC_PENDENTE               = 14;
+const EMAIL_ORGAO_ENCAMINHADOR   = 15;
 
 
 
@@ -168,6 +169,8 @@ async function carregarFila() {
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
     resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
+
+    resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR];
     
     gravarCasoNaFila( id, resumoCaso );
   }  
@@ -203,6 +206,8 @@ async function carregarFila() {
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
     resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
+
+    resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR];
 
     gravarCasoNaFila( id, resumoCaso );
     
@@ -291,6 +296,8 @@ async function obterFila( idInstituicao ) {
  
       id_orgao_encaminhador: caso[ORGAO_ENCAMINHADOR],
       nome_orgao_encaminhador: idToNome( caso[ORGAO_ENCAMINHADOR], "ORGAOS_ENCAMINHADORES"),
+
+      email_orgao_encaminhador: caso[EMAIL_ORGAO_ENCAMINHADOR],
         
       tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
 
