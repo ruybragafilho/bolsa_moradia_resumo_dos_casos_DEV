@@ -1,0 +1,35 @@
+<script>
+
+  "use strict";
+  
+  /**
+   * Função frontend que altera o status da documentação de um caso
+   *  
+   * @param {String} id: id do caso cujo status da documentação será alterado
+   *
+   */  
+  function docPendenteFE( idCaso ) {
+
+    // Chama função do Apps Script para designar um caso
+    google.script.run
+                 .withSuccessHandler( () => {
+
+                   // Volta para a tela de resumos de casos
+                   console.log( "\ndocPendenteFE_js - INÍCIO" ); 
+                   redirecionarParaTelaResumosDosCasos( 1 );
+                   console.log( "docPendenteFE_js - FIM" ); 
+
+                 })
+                 .withFailureHandler( erro => {
+
+                   // mostra modal com mensagem de erro
+                   mostrarModalErro( "docPendenteFE - " + erro.message );
+
+                 })
+                 // Chama a função backend que altera o status da documentação
+                 .docPendenteBE( idCaso );  
+
+  } // Fim da função docPendenteFE
+
+
+</script>

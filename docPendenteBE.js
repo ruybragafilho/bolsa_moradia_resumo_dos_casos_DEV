@@ -2,17 +2,17 @@
 
 /**
  * Módulo:    docPendenteBE.gs
- * Objetivo:  Registrar o status do campo Documentação Pendente de um caso da tabela CASOS
+ * Objetivo:  Altera o status do campo Documentação Pendente de um caso da tabela CASOS
  */
 
 
 /**
- * Função que evolui um caso da tabela CASOS
+ * Função que altera o status do campo Documentação Pendente de um caso da tabela CASOS
  *  
  * @param {String} idCaso: id do caso de será evoluido
- * @param {String} idStatusDocPendente: id do status do campo Documentação Pendente
+ * 
  */
-function docPendenteBE( idCaso, idStatusDocPendente ) {
+function docPendenteBE( idCaso ) {
 
   // Se id inválido, retorna uma exceção
   if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
@@ -32,7 +32,9 @@ function docPendenteBE( idCaso, idStatusDocPendente ) {
       // Converte o id para Integer
       const id = parseInt(idCaso);
 
-          
+      // Nega o status atual do Doc Pendente
+      let idStatusDocPendente = BUFFER_FILA[id-1][DOC_PENDENTE] == "2" ? "1" : "2";
+                
       // Grava o status do campo Documentação Pendente  
       const campo_data = TABELA_FILA.getRange( id+1, DOC_PENDENTE+1 );
       campo_data.setValue( idStatusDocPendente );    
@@ -69,11 +71,10 @@ function docPendenteBE( idCaso, idStatusDocPendente ) {
  */
 function teste_docPendenteBE() {
 
-  let idCaso = 1;
-  let idStatusDocPendente = "2";   
-
+  let idCaso = 3;
+  
   try {
-    docPendenteBE( idCaso, idStatusDocPendente );
+    docPendenteBE( idCaso );
   } catch( error ) {
     console.log( error.message );
   }

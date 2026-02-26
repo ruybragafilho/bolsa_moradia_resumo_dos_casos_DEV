@@ -45,6 +45,18 @@
         reativarCasoFE( idCaso );          
 
       // Trata evento de clique no botão, evoluindo o caso        
+      } else if( clickedElement.classList.contains('check-docPendente') ) {
+
+        // mostra modal com mensagem de mudança de status da documentação
+        mostrarModalMensagem( "Alterando o status da documentação, por favor aguarde..." );                                       
+
+        // Obtém o id do caso
+        let idCaso = clickedElement.parentElement.parentElement.id;
+       
+        // Chama a função front end para reativar o caso
+        console.log( "ID Check doc Pendente: " + idCaso );        
+        docPendenteFE( idCaso );
+
       } else if( clickedElement.classList.contains('bt-evoluir') ) {
 
         // Obtém o id do caso e o valor do select
@@ -129,6 +141,24 @@
         evolucao = "";
         display_coluna_evoluir = "display: none;"   
       }     
+
+      // Gera a informação sobre o status da documentação pendente
+      // Para gestores da DPOP, mostra checkbox para alterar o status
+      // Para trabalhadores da ponta, mostra apenas a informação ( Sim / Não )
+      let docPendente;      
+              
+      if( usuarioLogado.instituicao == "0" ) {
+        
+        let statusCheck = item.id_doc_pendente == "2" ? "checked" : "";
+        let check = `<input class="check-docPendente form-check-input border border-secondary rounded-1 me-1" type="checkbox" ${statusCheck}>`;
+        docPendente = `<td class="clicavel align-middle">${check}</td>` ;
+                                                             
+      } else {
+
+        let statusColor = item.id_doc_pendente == "2" ? "text-danger" : "text-primary";        
+        docPendente = `<td class="clicavel align-middle ${statusColor}">${item.nome_doc_pendente}</td>`;
+        
+      }           
   
       // Preenche a linha com as células contendo os dados e o select de evolução
       tr.innerHTML =           
@@ -143,10 +173,10 @@
         <td class="clicavel align-middle">${item.nome_tempo_nas_ruas}</td>        
 
         <td class="clicavel align-middle">${item.nome_situacao_beneficio}</td>        
-        <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>        
-        
-        <td class="align-middle" style="width: 180px; ${display_coluna_evoluir}">${evolucao}</td>
-        <td class="clicavel align-middle">${item.nome_doc_pendente}</td>`;   
+        <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>
+        <td class="align-middle" style="width: 180px; ${display_coluna_evoluir}">${evolucao}</td>`;   
+
+      tr.innerHTML += docPendente;   
       
       // Adiciona a linha na tabela
       tbody.appendChild(tr);
