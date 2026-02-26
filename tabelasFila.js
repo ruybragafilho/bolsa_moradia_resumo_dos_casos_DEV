@@ -383,7 +383,8 @@ async function obterFila( idInstituicao ) {
   // Aplica filtro para selecionar a instituicão apropriada (ORGÃO ENCAMMINHADOR)
   let filaFiltrada = [];
   if( idInstituicao != "0" ) {
-    filaFiltrada = fila.filter( linhaCaso => (linhaCaso.id_orgao_encaminhador == idInstituicao) );
+    //filaFiltrada = fila.filter( linhaCaso => (linhaCaso.id_orgao_encaminhador == idInstituicao) );
+    filaFiltrada = fila;
   } else {
     filaFiltrada = fila;
   }
