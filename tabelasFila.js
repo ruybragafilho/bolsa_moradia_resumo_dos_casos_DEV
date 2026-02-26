@@ -284,7 +284,7 @@ async function obterFila( idInstituicao ) {
   // Obtém os casos na fila
   let fila = BUFFER_FILA.map( caso => {    
 
-    let ids_parametros = caso[IDS_PARAMETROS_CASO].split(";");
+    let ids_parametros = caso[IDS_PARAMETROS_CASO] != "" ? caso[IDS_PARAMETROS_CASO].split(";") : "";
 
     return {
 
@@ -301,16 +301,16 @@ async function obterFila( idInstituicao ) {
         
       tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
 
-      nomes_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][NOME] ),
-      pesos_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PESO_PARAMETRO] ),
-      pontuacoes_parametros: ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PONTUACAO_PARAMETRO] ),
+      nomes_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][NOME] ) : "",
+      pesos_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PESO_PARAMETRO] ) : "",
+      pontuacoes_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PONTUACAO_PARAMETRO] ) : "",
 
-      pontuacoes_caso: caso[PONTUACOES_PARAMETROS_CASO].split(";"),
-      pontuacao: parseInt(caso[PONTUACAO]),      
+      pontuacoes_caso: caso[PONTUACOES_PARAMETROS_CASO] != "" ? caso[PONTUACOES_PARAMETROS_CASO].split(";") : "",
+      pontuacao: caso[PONTUACAO] != "" ? parseInt(caso[PONTUACAO]) : 0,      
 
       quantidade_CEA: parseInt(caso[QUANTIDADE_CEA]),
 
-      quantidade_problemas_saude: parseInt(caso[PROBLEMAS_SAUDE]),
+      quantidade_problemas_saude: caso[PROBLEMAS_SAUDE] != "" ? parseInt(caso[PROBLEMAS_SAUDE]) : 0,
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
       
@@ -364,11 +364,14 @@ async function obterFila( idInstituicao ) {
     }             
     
     // Quinto critétio - Tempo nas Ruas
-    if( b.tempo_nas_ruas > a.tempo_nas_ruas ) {
-      return 1;
-    } else if(b.tempo_nas_ruas < a.tempo_nas_ruas) {
-      return -1;
-    }                 
+    if( b.tempo_nas_ruas != "" && a.tempo_nas_ruas != "" ) {
+      if( b.tempo_nas_ruas > a.tempo_nas_ruas ) {
+        return 1;
+      } else if(b.tempo_nas_ruas < a.tempo_nas_ruas) {
+        return -1;
+      }                 
+    }
+
 
     // Retorno Padrão
     return 0;

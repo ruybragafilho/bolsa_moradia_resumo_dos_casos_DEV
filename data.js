@@ -9,6 +9,8 @@
  */
 function calcularIdade(dataNascimento) {
 
+    if(dataNascimento == "") { return 0; }
+
     const hoje = new Date();
     const nascimento = new Date(dataNascimento);
     nascimento.setDate( nascimento.getDate() + 1 );
@@ -53,6 +55,8 @@ function testeVerificarMaioridade() {
  * @returns Número de dias no intervalo
  */
 function calcularIntervaloEmDias( data ) {
+
+    if(data == "") { return ""; }
 
     const hoje = new Date();
     hoje.setHours( 1 );

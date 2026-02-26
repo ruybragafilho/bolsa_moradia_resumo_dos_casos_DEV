@@ -205,7 +205,8 @@ function calcularPontuacao( caso ) {
   console.log( "Parâmero 1.2" );
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_GENERO] != 1 && rf[UNI_GENERO] != 3 && rf[UNI_ORIENTACAO_SEXUAL] != 3 ) { 
+  if( (rf[UNI_GENERO] == 2 || rf[UNI_GENERO] == 4 || rf[UNI_GENERO] == 5 || rf[UNI_GENERO] == 6) && 
+      (rf[UNI_ORIENTACAO_SEXUAL] == 1 || rf[UNI_ORIENTACAO_SEXUAL] == 2 || rf[UNI_ORIENTACAO_SEXUAL] == 4 || rf[UNI_ORIENTACAO_SEXUAL] == 5) ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
     idsParametrosCaso.push(3);
@@ -213,7 +214,8 @@ function calcularPontuacao( caso ) {
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_GENERO] != 1 && familiar[UNI_GENERO] != 3 && familiar[UNI_ORIENTACAO_SEXUAL] != 3 ) {
+      if( (familiar[UNI_GENERO] == 2 || familiar[UNI_GENERO] == 4 || familiar[UNI_GENERO] == 5 || familiar[UNI_GENERO] == 6) && 
+          (familiar[UNI_ORIENTACAO_SEXUAL] == 1 || familiar[UNI_ORIENTACAO_SEXUAL] == 2 || familiar[UNI_ORIENTACAO_SEXUAL] == 4 || familiar[UNI_ORIENTACAO_SEXUAL] == 5)  ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
         idsParametrosCaso.push(4);
@@ -568,7 +570,8 @@ function calcularPontuacao( caso ) {
   console.log( "Parâmero 4.2" );
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_INSTITUCIONALIZACAO] != 1 ) {
+  if( rf[UNI_INSTITUCIONALIZACAO] == 2 || rf[UNI_INSTITUCIONALIZACAO] == 3 || rf[UNI_INSTITUCIONALIZACAO] == 4 ||
+      rf[UNI_INSTITUCIONALIZACAO] == 5 || rf[UNI_INSTITUCIONALIZACAO] == 6 ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
     idsParametrosCaso.push(32);
@@ -609,7 +612,7 @@ function calcularPontuacao( caso ) {
   console.log( "Parâmero 5.1" );
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_TRABALHO_FORMAL] != 1 || rf[UNI_TRABALHO_OUTROS] != 1 ) { 
+  if( rf[UNI_TRABALHO_FORMAL] == 2 || rf[UNI_TRABALHO_OUTROS] == 2 || rf[UNI_TRABALHO_OUTROS] == 3 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
     idsParametrosCaso.push(35);
@@ -617,7 +620,7 @@ function calcularPontuacao( caso ) {
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_TRABALHO_FORMAL] != 1 || familiar[UNI_TRABALHO_OUTROS] != 1  ) {
+      if( familiar[UNI_TRABALHO_FORMAL] == 2 || familiar[UNI_TRABALHO_OUTROS] == 2 || familiar[UNI_TRABALHO_OUTROS] == 3 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
         idsParametrosCaso.push(36);
@@ -722,14 +725,13 @@ function numeroDeProblemasDeSaude( caso ) {
     return 0;
   } 
 
-  // Número de problemas de saúde na família
-  let numProbSaude = parseInt(caso[0][UNI_PROBLEMAS_SAUDE]) - 1;
+  // Número de problemas de saúde na família  
+  let numProbSaude = caso[0][UNI_PROBLEMAS_SAUDE] != "" ? parseInt(caso[0][UNI_PROBLEMAS_SAUDE]) - 1 : 0;
 
   let familiar = []; 
-
   for( let i=1; i<numeroFamiliares; ++i ) {
     familiar = caso[i];
-    numProbSaude += parseInt(familiar[UNI_PROBLEMAS_SAUDE]) - 1;
+    numProbSaude += familiar[UNI_PROBLEMAS_SAUDE] != "" ? parseInt(familiar[UNI_PROBLEMAS_SAUDE]) - 1 : 0;    
   } 
     
   return numProbSaude;
