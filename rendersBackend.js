@@ -65,6 +65,63 @@ function gerarSelectBackend( tabela ) {
 
 
 
+/**
+ * Gerador de Checkbox no formato de tabela
+ *
+ * @param {Array} tabela - Tabela de onde os ids e os nomes das opções serão lidos
+ * @param {String} idCheckBox - O id do checkbox que será gerado
+ * @param {Number} numColunas - Número de colunas na tabela de checkbox
+ * 
+ */
+function gerarCheckBoxTable( tabela, idCheckBox, numColunas ) {
 
+  
+  if( numColunas < 1 ) {
+    numColunas = 1;
+  }
+
+  let i = 0;
+  let larguraColuna = 12 / numColunas;
+  
+ 
+  // Gera, dinamicamente, as opções do Check Box
+  let checkBoxGerado = `<table class="table table-sm table-borderless">
+                          <tbody>`;
+  let idItem;
+  
+  tabela.forEach( item => {
+
+    if( parseInt( item[ATIVO] ) ) {
+
+      idItem = idCheckBox + item[ID];
+
+      if( (i % numColunas) == 0 ) {
+        checkBoxGerado += `<tr>`;
+      }
+
+      checkBoxGerado += 
+      `<td class="col-${larguraColuna}">
+         <div class="form-check">
+           <input class="form-check-input" type="checkbox" name="${idCheckBox}" id="${idItem}" value="${item[ID]}">
+           <label class="form-check-label" for="${idItem}">${item[NOME]}</label>
+         </div>
+       </td>`;
+
+      if( (numColunas>1) && (i % numColunas) == (numColunas-1) ) {
+        checkBoxGerado += `</tr>`;
+      }
+
+      ++i;
+
+    } // Fim do if item ativo
+
+  }); // Fim do tabela.forEach
+
+  checkBoxGerado += `  </tbody>
+                     </table>`;
+      
+  return checkBoxGerado;
+
+} // Fim da função gerarCheckBoxTable
 
 
