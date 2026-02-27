@@ -60,7 +60,7 @@
                
                      // mostra modal com mensagem de erro
                      // numa possível excessão
-                     mostrarModalErro( "index_js" + error.message );    
+                     mostrarModalErro( "index_js - " + error.message );    
                
                    } // Fim do try catch                        
 
@@ -70,7 +70,7 @@
                   // do usuário, mostra mensagem de erro
                  .withFailureHandler( error => {
 
-                   mostrarModalErro( "index_js" + error.message );
+                   mostrarModalErro( "index_js - " + error.message );
 
                   })
                   // Chama a função backend para autenticar o usuario
