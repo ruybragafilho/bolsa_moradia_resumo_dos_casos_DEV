@@ -41,7 +41,7 @@ function reativarCasoBE( idCaso ) {
   
   
       // Grava null no motivo de designação do caso
-      const situacaoBeneficio_ativo = 1;
+      const situacaoBeneficio_ativo = 2;  // 2 == Habilitado e ainda não convocado
   
       const campo_SituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
       campo_SituacaoBeneficio.setValue( situacaoBeneficio_ativo );  

@@ -164,7 +164,7 @@ async function carregarFila() {
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
 
-    resumoCaso[SITUACAO_BENEFICIO] = 1; // 1 == Ativo
+    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Habilitado e ainda não convocado
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
@@ -201,7 +201,7 @@ async function carregarFila() {
     resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
     resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];    
 
-    resumoCaso[SITUACAO_BENEFICIO] = 1; // 1 == Ativo
+    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Habilitado e ainda não convocado
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 

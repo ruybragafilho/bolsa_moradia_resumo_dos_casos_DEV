@@ -157,7 +157,7 @@
       let evolucao;
       let display_coluna_evoluir;
       if( usuarioLogado.instituicao == "0" ) {
-        evolucao = item.id_situacao_beneficio != "2" ? gerarSelectEvolucao( cache_TabelaEvolucoes, item.id ) 
+        evolucao = item.id_situacao_beneficio != "2" ? gerarSelectEvolucao( cache_TabelaSituacoesBeneficio, item.id ) 
                                                      : gerarBotaoReativar( item.id );  
         display_coluna_evoluir = "";                                                                     
       } else {

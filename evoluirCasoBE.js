@@ -41,7 +41,7 @@ function evoluirCasoBE( idCaso, idEvolucao ) {
   
   
       // Gera e grava o id da evolução do caso
-      let idSituacaoBeneficio = parseInt(idEvolucao) + 1;
+      let idSituacaoBeneficio = parseInt(idEvolucao);
   
       const campo_SituacaoBeneficio = TABELA_FILA.getRange( id+1, SITUACAO_BENEFICIO+1 );
       campo_SituacaoBeneficio.setValue( idSituacaoBeneficio );      
