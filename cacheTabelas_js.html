@@ -23,10 +23,6 @@
   // da função backend obterTabelaCompleta( "SITUACOES_BENEFICIO" )  
   let cache_TabelaSituacoesBeneficio = [];
 
-  // Cache da tabela Evoluções, carregadas via chamada da
-  // função backend obterTabelaCompleta( "EVOLUCOES" )  
-  let cache_TabelaEvolucoes = [];
-
 
   // Cache da tabela com os casos, carregadas via chamada 
   // da função backend obterCasos  
@@ -39,8 +35,7 @@
   //    1: já foi carregada
   let flagCache_TabelaRespostasSimples      = 0;
   let flagCache_TabelaOrgaosEncaminhadores  = 0;  
-  let flagCache_TabelaSituacoesBeneficio    = 0;  
-  let flagCache_TabelaEvolucoes             = 0;  
+  let flagCache_TabelaSituacoesBeneficio    = 0;    
   let flagCache_TabelaCasos                 = 0;
   
 
@@ -60,7 +55,6 @@
     carregarTabelaNaCache( "RESPOSTAS_SIMPLES" );    
     carregarTabelaNaCache( "ORGAOS_ENCAMINHADORES" );
     carregarTabelaNaCache( "SITUACOES_BENEFICIO" );
-    carregarTabelaNaCache( "EVOLUCOES" );
 
   } // Fim da função preCarregarTabelasNaCache
 
@@ -74,8 +68,7 @@
     
     if( flagCache_TabelaRespostasSimples      && 
         flagCache_TabelaOrgaosEncaminhadores  &&
-        flagCache_TabelaSituacoesBeneficio    &&
-        flagCache_TabelaEvolucoes  ) {
+        flagCache_TabelaSituacoesBeneficio      ) {
 
       return true;
 
@@ -112,10 +105,6 @@
                       case "SITUACOES_BENEFICIO":   cache_TabelaSituacoesBeneficio     = tabela;
                                                     flagCache_TabelaSituacoesBeneficio = 1;  
                                                     break;           
-
-                      case "EVOLUCOES":             cache_TabelaEvolucoes     = tabela;
-                                                    flagCache_TabelaEvolucoes = 1;  
-                                                    break;            
 
                       default:                      throw( new Error( "Tabela Inválida" ) ); 
 

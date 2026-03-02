@@ -305,8 +305,12 @@ async function obterFila( idInstituicao ) {
       pesos_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PESO_PARAMETRO] ) : "",
       pontuacoes_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PONTUACAO_PARAMETRO] ) : "",
 
-      pontuacoes_caso: caso[PONTUACOES_PARAMETROS_CASO] != "" ? caso[PONTUACOES_PARAMETROS_CASO].split(";") : "",
-      pontuacao: caso[PONTUACAO] != "" ? parseInt(caso[PONTUACAO]) : 0,      
+      pontuacoes_caso:  (caso[SITUACAO_BENEFICIO] != "" && caso[SITUACAO_BENEFICIO] != "1") ?
+                        (caso[PONTUACOES_PARAMETROS_CASO] != ""  ? caso[PONTUACOES_PARAMETROS_CASO].split(";") : "") :
+                        "",
+      pontuacao: (caso[SITUACAO_BENEFICIO] != "" && caso[SITUACAO_BENEFICIO] != "1") ?
+                 (caso[PONTUACAO] != "" ? parseInt(caso[PONTUACAO]) : 0) :
+                 0,      
 
       quantidade_CEA: parseInt(caso[QUANTIDADE_CEA]),
 
