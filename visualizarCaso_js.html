@@ -34,17 +34,26 @@
     }
     cache_CasoEmVisualizacao = cache_TabelaCasos[ indiceCasoNaTabelaResumo ];
 
-    // Exibe os dados na página de visualização de caso
-    document.getElementById( "id_referenciaFamiliarInput" ).value   = cache_CasoEmVisualizacao.id;
-    document.getElementById( "nome_referenciaFamiliarInput" ).value = cache_CasoEmVisualizacao.referencia_familiar;
-    document.getElementById( "cpf_referenciaFamiliarInput" ).value  = cache_CasoEmVisualizacao.cpf_rf;
+    // Mostra os parâmetros do caso apenas para os trabalhadores
+    // do órgão que encaminhou o cidadão
+    if( cache_CasoEmVisualizacao.id_orgao_encaminhador == usuarioLogado.instituicao ||
+        usuarioLogado.instituicao == "0" ) {
 
-    // Mostra os parâmetros do caso
-    visualizarParametroCaso( cache_CasoEmVisualizacao );
+      // Exibe os dados na página de visualização de caso
+      document.getElementById( "nome_referenciaFamiliarInput" ).value = cache_CasoEmVisualizacao.referencia_familiar;
+      document.getElementById( "cpf_referenciaFamiliarInput" ).value  = cache_CasoEmVisualizacao.cpf_rf;
+  
+      // Mostra os parâmetros do caso
+      visualizarParametroCaso( cache_CasoEmVisualizacao );
+  
+      // Mostra pontuação total do caso
+      document.getElementById('totalizacaoParametrosDoCaso').innerHTML = `PONTUAÇÃO DO CASO: ${cache_CasoEmVisualizacao.pontuacao}`;
 
-    // Mostra pontuação total do caso
-    document.getElementById('totalizacaoParametrosDoCaso').innerHTML = `PONTUAÇÃO DO CASO: ${cache_CasoEmVisualizacao.pontuacao}`;
-
+    } else {
+      // Exibe modal de erro caso o tipo de evolução não tenha sido selecionado
+      mostrarModalErro( "Informações disponíveis apenas para a entidade que encaminhou esse cidadão!" );   
+      redirecionarParaTelaResumosDosCasos( 0 );                   
+    }
 
   } // Fim da função visualizarCaso
 
@@ -71,10 +80,7 @@
     tbody.innerHTML = ''; 
 
 
-    // Para cada parametro do caso, cria uma linha na tabela
-
-    console.log
-
+    // Para cada parametro do caso, cria uma linha na tabela    
     for( let p=0; p<num_parametros; ++p ) {
 
       // Cria uma linha da tabela

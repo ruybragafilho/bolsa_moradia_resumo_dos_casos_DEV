@@ -9,20 +9,18 @@
   function configurarPaginaResumosDosCasos() {
 
 
-    // Não mostra o filtro por órgãos Encaminhadores, na tela de resumos dos casos,
-    // para trabalhadores dos órgão encaminhadores, pois eles só veem os casos
-    // da sua própri instituição
+    // Não mostra o filtro por órgãos Encaminhadores e as colunas com os critérios 
+    // de desempate, na tela de resumos dos casos, para trabalhadores dos órgão 
+    // encaminhadores
     if( usuarioLogado.instituicao != "0" ) {      
-      document.getElementById("coluna_evoluir").style.display = "none";      
-    }   
 
-    // Não mostra as colunas com os critérios de desempate para
-    // trabalhadores não root
-    if( usuarioLogado.tipo != "0" ) {
+      document.getElementById("coluna_evoluir").style.display = "none";      
+
       document.getElementById("coluna_quantidade_cea").style.display = "none";      
       document.getElementById("coluna_quantidade_prob_saude").style.display = "none";      
       document.getElementById("coluna_idade_rf").style.display = "none";      
-      document.getElementById("coluna_tempo_nas_ruas").style.display = "none";      
+      document.getElementById("coluna_tempo_nas_ruas").style.display = "none";            
+
     }
 
 
@@ -95,7 +93,7 @@
         id_CasoEmVisualizacao = clickedElement.parentElement.id;                  
 
         // Exibe a página de visualização
-        console.log( "Mostrar caso" );
+        console.log( "Mostrar caso" );        
         exibirPagina('visualizarCaso')
 
       } // Fim teste target evento - tabela ou botão designar caso
@@ -129,8 +127,8 @@
     // Para cada item nos resumosDosCasos, cria uma linha na tabela
     tabelaCasos.forEach( item => {
 
-      // Testa se o item não está inativo
-      if( item.id_situacao_beneficio != "1" ) {
+      // Testa se o item não está inativo ou se o usuário é da DPOP
+      if( item.id_situacao_beneficio != "1" || usuarioLogado.instituicao == "0" ) {
 
         // Cria uma linha da tabela
         const tr = document.createElement('tr');
@@ -169,7 +167,7 @@
         }           
   
         // Gera as colunas com os critérios de desempate
-        // Mostra apenas para trabalhadores root
+        // Mostra apenas para trabalhadores da DPOP
         let quantidade_cea;
         let display_coluna_quantidade_cea;
   
@@ -182,7 +180,7 @@
         let tempo_nas_ruas;
         let display_coluna_tempo_nas_ruas;
   
-        if( usuarioLogado.tipo == "0" ) {
+        if( usuarioLogado.instituicao == "0" ) {
   
           quantidade_cea = item.quantidade_CEA;
           display_coluna_quantidade_cea = "";

@@ -284,7 +284,7 @@ function calcularPontuacao( caso ) {
   if( idadeRF >= 80 ) { 
     pontuacaoCriterio = peso*4;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(9);
+    idsParametrosCaso.push(8);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
@@ -293,7 +293,7 @@ function calcularPontuacao( caso ) {
       if( idadeFamiliar >= 80 ) {
         pontuacaoCriterio = peso*3;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        idsParametrosCaso.push(10);
+        idsParametrosCaso.push(9);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
@@ -303,7 +303,7 @@ function calcularPontuacao( caso ) {
     if( idadeRF >= 60 ) { 
       pontuacaoCriterio = peso*2;
       console.log( "Pontuação RF: " + pontuacaoCriterio );
-      idsParametrosCaso.push(11);
+      idsParametrosCaso.push(10);
       pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
     } else {
       for( let i=1; i<numeroFamiliares; ++i ) {
@@ -312,7 +312,7 @@ function calcularPontuacao( caso ) {
         if( idadeFamiliar >= 60 ) {
           pontuacaoCriterio = peso*1;
           console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-          idsParametrosCaso.push(12);
+          idsParametrosCaso.push(11);
           pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
           break;
         }
@@ -330,7 +330,7 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_PCD] == 2 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(13);
+    idsParametrosCaso.push(12);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
@@ -338,7 +338,7 @@ function calcularPontuacao( caso ) {
       if( familiar[UNI_PCD] == 2 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        idsParametrosCaso.push(14);
+        idsParametrosCaso.push(13);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
@@ -356,7 +356,7 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_GESTANTE] == 2 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(15);
+    idsParametrosCaso.push(14);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
@@ -364,7 +364,7 @@ function calcularPontuacao( caso ) {
       if( familiar[UNI_GESTANTE] == 2 ) {
         pontuacaoCriterio = peso*1;        
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        idsParametrosCaso.push(16);
+        idsParametrosCaso.push(15);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
@@ -390,7 +390,7 @@ function calcularPontuacao( caso ) {
       rf[UNI_CEA_PRIVACAO_CONVIVIO] == 2   ) {
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(17);
+    idsParametrosCaso.push(16);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
@@ -405,7 +405,7 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_CEA_TRABALHO_INFANTIL_EXPLORACAO_SEXUAL] == 2 ) {
     pontuacaoCriterio = peso*6;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(18);
+    idsParametrosCaso.push(17);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
@@ -419,7 +419,7 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_PROSTITUICAO] == 2 ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(19);
+    idsParametrosCaso.push(18);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
@@ -442,7 +442,7 @@ function calcularPontuacao( caso ) {
     pontuacaoCriterio = peso*3;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
     
-    flagParametroSaude = 20;
+    flagParametroSaude = 19;
     idsParametrosCaso.push(flagParametroSaude);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
 
@@ -451,13 +451,13 @@ function calcularPontuacao( caso ) {
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
 
-    flagParametroSaude = 22;
+    flagParametroSaude = 21;
 
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
       if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
         pontuacaoCriterio += peso*1;
-        flagParametroSaude = 21;
+        flagParametroSaude = 20;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
         break;
       }
@@ -475,12 +475,12 @@ function calcularPontuacao( caso ) {
       if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
         pontuacaoCriterio = peso*2;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        flagParametroSaude = 23;
+        flagParametroSaude = 22;
         break;
       } else if( familiar[UNI_PROBLEMAS_SAUDE] == 2 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );  
-        flagParametroSaude = 24;      
+        flagParametroSaude = 23;      
       }
     }
     
@@ -502,7 +502,7 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_DIAGNOSTICO] == 2 ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(25);
+    idsParametrosCaso.push(24);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
@@ -520,27 +520,27 @@ function calcularPontuacao( caso ) {
   
   switch( rf[UNI_TEMPO_SITUACAO_DE_RUA] ) {
     case "1":   pontuacaoCriterio = peso*1;
-                idsParametrosCaso.push(26);
+                idsParametrosCaso.push(25);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
     case "2":   pontuacaoCriterio = peso*2;
-                idsParametrosCaso.push(27);
+                idsParametrosCaso.push(26);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
     case "3":   pontuacaoCriterio = peso*3;
-                idsParametrosCaso.push(28);
+                idsParametrosCaso.push(27);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
     case "4":   pontuacaoCriterio = peso*4;
-                idsParametrosCaso.push(29);
+                idsParametrosCaso.push(28);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
     case "5":   pontuacaoCriterio = peso*5;
-                idsParametrosCaso.push(30);
+                idsParametrosCaso.push(29);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
     case "6":   pontuacaoCriterio = peso*6;
-                idsParametrosCaso.push(31);
+                idsParametrosCaso.push(30);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;
     default:    pontuacaoCriterio = 0;
@@ -560,7 +560,7 @@ function calcularPontuacao( caso ) {
       rf[UNI_INSTITUCIONALIZACAO] == 5 || rf[UNI_INSTITUCIONALIZACAO] == 6 ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(32);
+    idsParametrosCaso.push(31);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
@@ -575,13 +575,13 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 2 ) {
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(33);
+    idsParametrosCaso.push(32);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 3 ||
              rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 4   ) {
     pontuacaoCriterio = peso*1;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(34);
+    idsParametrosCaso.push(33);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
 
@@ -601,7 +601,7 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_TRABALHO_FORMAL] == 2 || rf[UNI_TRABALHO_OUTROS] == 2 || rf[UNI_TRABALHO_OUTROS] == 3 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(35);
+    idsParametrosCaso.push(34);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
@@ -609,7 +609,7 @@ function calcularPontuacao( caso ) {
       if( familiar[UNI_TRABALHO_FORMAL] == 2 || familiar[UNI_TRABALHO_OUTROS] == 2 || familiar[UNI_TRABALHO_OUTROS] == 3 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        idsParametrosCaso.push(36);
+        idsParametrosCaso.push(35);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
@@ -627,7 +627,7 @@ function calcularPontuacao( caso ) {
   if( rf[UNI_ESTAMOS_JUNTOS] == 2 ) { 
     pontuacaoCriterio = peso*2;
     console.log( "Pontuação RF: " + pontuacaoCriterio );
-    idsParametrosCaso.push(37);
+    idsParametrosCaso.push(36);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
@@ -635,7 +635,7 @@ function calcularPontuacao( caso ) {
       if( familiar[UNI_ESTAMOS_JUNTOS] == 2 ) {
         pontuacaoCriterio = peso*1;
         console.log( "Pontuação Familiar: " + pontuacaoCriterio );
-        idsParametrosCaso.push(38);
+        idsParametrosCaso.push(37);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
       }
