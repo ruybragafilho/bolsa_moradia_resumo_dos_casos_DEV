@@ -258,13 +258,8 @@ function calcularPontuacao( caso ) {
   console.log( "Parâmero 1.4" );
   pontuacaoCriterio = 0;
 
-  let tem_segundo_rf = false;
   for( let i=1; i<numeroFamiliares; ++i ) {
     familiar = caso[i];
-    if(familiar[UNI_RF_2] == "true") {
-      console.log( "SEGUNDO RF" );
-      tem_segundo_rf = true;      
-    }    
     if( calcularIdade( familiar[UNI_DATA_NASCIMENTO] ) < 18 ) {
       pontuacaoCriterio += peso*1;
       console.log( "Pontuação Familiar: " + pontuacaoCriterio );
@@ -272,17 +267,8 @@ function calcularPontuacao( caso ) {
   }   
 
   if( pontuacaoCriterio > 0 ) {
-
     idsParametrosCaso.push(7);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);
-
-    if(!tem_segundo_rf &&   (rf[UNI_GENERO] == 1 || rf[UNI_GENERO] == 2) ) {    
-      pontuacaoCriterio += peso*1;
-      console.log( "Pontuação RF: " + pontuacaoCriterio ); 
-      idsParametrosCaso.push(8);
-      pontuacoesParametrosCaso.push(peso*1);                             
-    }                           
-
   } 
 
   pontuacaoTotal += pontuacaoCriterio;  
