@@ -130,7 +130,7 @@ async function carregarFila() {
   let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
   let id = 0;
 
-
+/**
   limparFila();
 
     // Aguarda esvaziamento da fila
@@ -138,7 +138,7 @@ async function carregarFila() {
     console.log( "Aguardando esvaziamento da fila" );
     await esperarFila( 1000 );
   }    
-
+ */
   
   console.log( "\n\nCASOS EXTERNOS" );
   linhaTabela = 0;

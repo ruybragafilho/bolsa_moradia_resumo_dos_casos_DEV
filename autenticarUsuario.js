@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Módulo:    usuarios.gs
+ * Módulo:    autenticarUsuario.gs
  * Objetivo:  Autenticar um usuário no sistema
  */
 
