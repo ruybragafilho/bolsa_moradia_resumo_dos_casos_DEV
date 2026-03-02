@@ -9,20 +9,22 @@
   function configurarPaginaResumosDosCasos() {
 
 
-    // Não mostra o filtro por órgãos Encaminhadores e as colunas com os critérios 
-    // de desempate, na tela de resumos dos casos, para trabalhadores dos órgão 
-    // encaminhadores
-    if( usuarioLogado.instituicao != "0" ) {      
+    // Não mostra o filtro por órgãos Encaminhadores, na tela de resumos dos casos, 
+    // para trabalhadores dos órgão encaminhadores. (Mostra apenas para trabalhadores
+    // da DPOP)
+    if( usuarioLogado.instituicao != "0" ) {     
+      document.getElementById("coluna_evoluir").style.display = "none";   
+    }
 
-      document.getElementById("coluna_evoluir").style.display = "none";      
-
+    // Não mostra e as colunas com os critérios de desempate, na tela de resumos dos casos, 
+    // para trabalhadores peradores (técnicos e gestores). (Mostra apenas para trabalhadores
+    // da com permissão root)
+    if( usuarioLogado.tipo != "0" ) {      
       document.getElementById("coluna_quantidade_cea").style.display = "none";      
       document.getElementById("coluna_quantidade_prob_saude").style.display = "none";      
       document.getElementById("coluna_idade_rf").style.display = "none";      
       document.getElementById("coluna_tempo_nas_ruas").style.display = "none";            
-
-    }
-
+    }    
 
     // Obtém a tabela de resumos dos casos
     let tabelaResumoDosCasos = document.getElementById('resumosDosCasos');
@@ -94,7 +96,7 @@
 
         // Exibe a página de visualização
         console.log( "Mostrar caso" );        
-        exibirPagina('visualizarCaso')
+        exibirPagina('visualizarCaso');
 
       } // Fim teste target evento - tabela ou botão designar caso
         
@@ -158,7 +160,7 @@
         let evolucao;
         let display_coluna_evoluir;
         if( usuarioLogado.instituicao == "0" ) {
-          evolucao = item.id_situacao_beneficio != "2" ? gerarSelectEvolucao( cache_TabelaSituacoesBeneficio, item.id ) 
+          evolucao = item.id_situacao_beneficio != "1" ? gerarSelectEvolucao( cache_TabelaSituacoesBeneficio, item.id ) 
                                                        : gerarBotaoReativar( item.id );  
           display_coluna_evoluir = "";                                                                     
         } else {
@@ -180,7 +182,7 @@
         let tempo_nas_ruas;
         let display_coluna_tempo_nas_ruas;
   
-        if( usuarioLogado.instituicao == "0" ) {
+        if( usuarioLogado.tipo == "0" ) {
   
           quantidade_cea = item.quantidade_CEA;
           display_coluna_quantidade_cea = "";

@@ -237,6 +237,8 @@ function gravarCasoNaFila( idCaso, caso ) {
     let range = TABELA_FILA.getRange( idCaso+1, 1, 1, NUM_COLUNAS_TABELA_FILA );
     range.setValues( [caso] );
 
+    //TABELA_FILA.appendRow( caso );
+
     // Flush na planilha
     try {
       SpreadsheetApp.flush();
