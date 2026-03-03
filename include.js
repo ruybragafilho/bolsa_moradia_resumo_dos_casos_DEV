@@ -11,7 +11,21 @@
  */
 function include(fileName) {
 
-  return HtmlService.createTemplateFromFile(fileName).evaluate().getContent();  
+  if( !isStringValidBE( fileName ) ) {
+    throw( new Error( "include - Nome de Página Inválida: " + fileName ) ); 
+  }
+
+  let retorno;
+
+  try {
+
+    retorno = HtmlService.createTemplateFromFile(fileName).evaluate().getContent();  
+
+  } catch( error ) {
+    throw( "include: " + error.message );
+  }
+
+  return retorno;
 
 } // Fim da função include
 

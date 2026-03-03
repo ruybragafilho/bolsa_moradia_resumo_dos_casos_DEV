@@ -18,7 +18,13 @@
  */
 function autenticarUsuario() {
 
-  let email = Session.getActiveUser().getEmail().toLowerCase();
+  let email;
+
+  try {
+    email = Session.getActiveUser().getEmail().toLowerCase();
+  } catch( error ) {
+    throw( "autenticarUsuario: " + error.message );
+  }
 
   if (!email) {
     throw( new Error("Não foi possível obter o e-mail. Por favor, faça login novamente com a conta @pbh.gov.br e recarregue a página!") );

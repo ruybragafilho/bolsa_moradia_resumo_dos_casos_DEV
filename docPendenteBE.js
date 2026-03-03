@@ -14,8 +14,16 @@
  */
 function docPendenteBE( idCaso ) {
 
-  // Se id inválido, retorna uma exceção
-  if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
+  // Se id não é um inteiro válido, lança uma exceção
+  if( !isIntegerValidBE(idCaso) ) {
+    throw( new Error( "docPendenteBE - ID Inválido" ) );
+  }  
+
+  // Converte o id para Integer
+  const id = parseInt(idCaso);
+
+  // Se id está fora dos limites inferior ou superior, lança uma exceção
+  if( id < 1  ||  id > TAMANHO_FILA ) {
     throw( new Error( "docPendenteBE - ID Inválido" ) );
   }  
 
@@ -29,9 +37,6 @@ function docPendenteBE( idCaso ) {
     // Grava a evolução
     try {
 
-      // Converte o id para Integer
-      const id = parseInt(idCaso);
-
       // Nega o status atual do Doc Pendente
       let idStatusDocPendente = BUFFER_FILA[id-1][DOC_PENDENTE] == "2" ? "1" : "2";
                 
@@ -39,11 +44,9 @@ function docPendenteBE( idCaso ) {
       const campo_data = TABELA_FILA.getRange( id+1, DOC_PENDENTE+1 );
       campo_data.setValue( idStatusDocPendente );    
 
-
     } catch( error ) {
-      throw( "docPendenteBE - " + error.message );
+      throw( "docPendenteBE: " + error.message );
     }
-
     
     // SOLTA O LOCK
     lock.releaseLock();
@@ -53,7 +56,7 @@ function docPendenteBE( idCaso ) {
   } else {
 
     // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "docPendenteBE - Nao foi possivel pegar o LOCK" ) );
+    throw( new Error( "docPendenteBE: Nao foi possivel pegar o LOCK" ) );
   }
 
 } // Fim da função docPendenteBE

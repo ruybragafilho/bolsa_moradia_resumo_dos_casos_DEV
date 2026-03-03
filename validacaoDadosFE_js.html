@@ -1,0 +1,37 @@
+<script>
+
+/**
+ * Módulo:    validacaoDadosFE_js.html
+ * Objetivo:  Módulo com funções que verificam a validade dos dados
+ */
+
+  "use strict";
+  
+
+
+  // Fumção Frontend que verifica se o parâmetro passado é uma string válida
+  function isStringValidFE( str ) {
+    return typeof str === 'string' && str.trim().length > 0;
+  }
+
+
+  // Fumção Frontend que verifica se o parâmetro passado é um inteiro válido
+  function isIntegerValidFE( int ) {
+    return Number.isInteger( int );
+  }  
+
+
+  // Fumção Frontend que verifica se o parâmetro passado é uma data válida
+  function isDateValidFE(dateStr) {
+    // Tenta criar um objeto Date
+    const date = new Date(dateStr);
+    
+    // Verifica se o objeto Date é válido:
+    // 1. date.getTime() retorna NaN se for inválida
+    // 2. !isNaN(date) verifica se não é Not-a-Number
+    return !isNaN(date.getTime());
+  }
+
+
+</script>
+

@@ -33,8 +33,14 @@
   */  
   function preCarregarPaginasNaCache() {
     
-    carregarPaginaNaCache( "resumosDosCasos" );
-    carregarPaginaNaCache( "visualizarCaso" );    
+    try {
+
+      carregarPaginaNaCache( "resumosDosCasos" );
+      carregarPaginaNaCache( "visualizarCaso" );    
+
+    } catch( error ) {
+      throw( "preCarregarPaginasNaCache: " + error.message );
+    }
 
   } // Fim da função preCarregarPaginasNaCache
 
@@ -66,6 +72,10 @@
   */
   function carregarPaginaNaCache( nomePagina ) {
 
+    if( !isStringValidFE(nomePagina) ) {
+      throw( new Error( "carregarPaginaNaCache - Nome de Página Inválido: " + nomePagina ) ); 
+    }
+
     google.script.run
                  .withSuccessHandler( pagina => {                     
 
@@ -80,14 +90,14 @@
                                                 flagCache_PaginaVisualizarCaso = 1;
                                                 break;   
 
-                      default:                  throw( new Error( "Página Inválida = " + nomePagina ) ); 
+                      default:                  throw( new Error( "carregarPaginaNaCache - Página Inválida: " + nomePagina ) ); 
                     }
 
                  })
                  .withFailureHandler( erro => {
 
                    // Mostra modal de erro
-                   mostrarModalErro( "carregarPaginaNaCache - " + erro.message );
+                   mostrarModalErro( "carregarPaginaNaCache - Failure Handler: " + erro.message );
 
                  })
                  // Chama a função backend para carregar a tabela

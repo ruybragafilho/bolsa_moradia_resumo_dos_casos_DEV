@@ -62,11 +62,17 @@
   */  
   function preCarregarTabelasNaCache() {
 
-    carregarTabelaNaCache( "RESPOSTAS_SIMPLES" );    
-    carregarTabelaNaCache( "ORGAOS_ENCAMINHADORES" );
-    carregarTabelaNaCache( "SITUACOES_BENEFICIO" );
-    carregarTabelaNaCache( "INTERVALOS_DE_TEMPO" );
-    carregarTabelaNaCache( "PARAMETROS" );
+    try {
+
+      carregarTabelaNaCache( "RESPOSTAS_SIMPLES" );    
+      carregarTabelaNaCache( "ORGAOS_ENCAMINHADORES" );
+      carregarTabelaNaCache( "SITUACOES_BENEFICIO" );
+      carregarTabelaNaCache( "INTERVALOS_DE_TEMPO" );
+      carregarTabelaNaCache( "PARAMETROS" );      
+
+    } catch( error ) {
+      throw( "preCarregarTabelasNaCache: " + error.message );
+    }
 
   } // Fim da função preCarregarTabelasNaCache
 
@@ -101,6 +107,10 @@
   * @param {String} nomeTabela - Nome da tabela da base CODIGO que será carregada   
   */
   function carregarTabelaNaCache( nomeTabela ) {
+
+    if( !isStringValidFE(nomeTabela) ) {
+      throw( new Error( "carregarTabelaNaCache - Nome de Tabela Inválido: " + nomeTabela ) ); 
+    }    
 
     google.script.run
                  .withSuccessHandler( tabela => {                     

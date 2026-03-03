@@ -8,7 +8,19 @@
  */
 function doGet() {    
   
-  return HtmlService.createTemplateFromFile('index').evaluate();    
+//  return HtmlService.createTemplateFromFile('index').evaluate();
+
+  let retorno;
+
+  try {
+
+    retorno = HtmlService.createTemplateFromFile('index').evaluate();
+
+  } catch( error ) {
+    throw( "doGet: " + error.message );
+  }
+
+  return retorno;  
     
 } // Fim da função doGet
 
