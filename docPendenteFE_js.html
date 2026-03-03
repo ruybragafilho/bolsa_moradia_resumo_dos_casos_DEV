@@ -10,6 +10,21 @@
    */  
   function docPendenteFE( idCaso ) {
 
+
+    // Se id não é um inteiro válido, lança uma exceção
+    if( !isIntegerValidFE(idCaso) ) {
+      throw( new Error( "docPendenteFE - ID Inválido" ) );
+    }  
+  
+    // Converte o id para Integer
+    const id = parseInt(idCaso);
+  
+    // Se id está fora dos limites inferior ou superior, lança uma exceção
+    if( id < 1  ||  id > TAMANHO_FILA ) {
+      throw( new Error( "docPendenteFE - ID Inválido" ) );
+    }  
+    
+
     // Chama função do Apps Script para designar um caso
     google.script.run
                  .withSuccessHandler( () => {
@@ -23,11 +38,11 @@
                  .withFailureHandler( erro => {
 
                    // mostra modal com mensagem de erro
-                   mostrarModalErro( "docPendenteFE - " + erro.message );
+                   mostrarModalErro( "docPendenteFE - Failure Handler: " + erro.message );
 
                  })
                  // Chama a função backend que altera o status da documentação
-                 .docPendenteBE( idCaso );  
+                 .docPendenteBE( id );  
 
   } // Fim da função docPendenteFE
 

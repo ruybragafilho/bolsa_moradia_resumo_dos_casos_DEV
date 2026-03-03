@@ -138,7 +138,7 @@
                                                     flagCache_TabelaParametros = 1;  
                                                     break;           
 
-                      default:                      throw( new Error( "Tabela Inválida - " + nomeTabela ) ); 
+                      default:                      throw( new Error( "carregarTabelaNaCache - Tabela Inválida: " + nomeTabela ) ); 
 
                     }
 
@@ -146,7 +146,7 @@
                  .withFailureHandler( erro => {
 
                    // Mostra modal de erro
-                   mostrarModalErro( "carregarTabelaNaCache - " + erro.message );
+                   mostrarModalErro( "carregarTabelaNaCache - Failure Handler: " + erro.message );
 
                  })
                  // Chama a função backend para carregar a tabela

@@ -27,6 +27,7 @@ function docPendenteBE( idCaso ) {
     throw( new Error( "docPendenteBE - ID Inválido" ) );
   }  
 
+  
   // TENTA PEGAR O LOCK
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);  

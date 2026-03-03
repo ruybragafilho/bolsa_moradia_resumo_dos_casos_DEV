@@ -9,7 +9,7 @@
  */
 function calcularIdade(dataNascimento) {
 
-    if(dataNascimento == "") { return new Date(); }
+    if( !isDateValidBE(dataNascimento) ) { return new Date(); }
 
     const hoje = new Date();
     const nascimento = new Date(dataNascimento);
@@ -52,7 +52,7 @@ function testeVerificarMaioridade() {
  */
 function calcularIntervaloEmDias( data ) {
 
-    if(data == "") { return 0; }
+    if( !isDateValidBE(data) ) { return 0; }
 
     const hoje = new Date();
     hoje.setHours( 1 );
