@@ -52,7 +52,7 @@ function testeVerificarMaioridade() {
  */
 function calcularIntervaloEmDias( data ) {
 
-    if(data == "") { return ""; }
+    if(data == "") { return 0; }
 
     const hoje = new Date();
     hoje.setHours( 1 );
