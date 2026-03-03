@@ -90,7 +90,6 @@ function limparFila() {
     let range;
 
     for( let linha=2; linha<=TAMANHO_FILA+1; ++linha ) {
-
       range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA );
       range.setValues([casoNulo]);
     }
@@ -126,7 +125,7 @@ async function carregarFila() {
 
   flag_fila_carregada = 0;
 
-  let caso;
+  let caso = [];
   let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
   let id = 0;
 
@@ -145,32 +144,31 @@ async function carregarFila() {
   while( linhaTabela < NUM_LINHAS_TABELA_CASOS_EXTERNOS ) {
 
     caso = obterCaso( BUFFER_CASOS_EXTERNOS );
-    mostrarCaso( caso );
 
     ++id;
-    resumoCaso[ID] = id;
+    resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = caso[0][UNI_CPF_RF];
-    resumoCaso[ORGAO_ENCAMINHADOR] = caso[0][UNI_ORGAO_ENCAMINHADOR];
+    resumoCaso[CPF_RF] = String( caso[0][UNI_CPF_RF] );
+    resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
-    resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
-    resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+    resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
+    resumoCaso[PONTUACAO] = String( calcularPontuacao( caso ) );
 
     resumoCaso[IDS_PARAMETROS_CASO] = idsParametrosCaso.join(";");
     resumoCaso[PONTUACOES_PARAMETROS_CASO] = pontuacoesParametrosCaso.join(";");
 
-    resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
-    resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
-    resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
-    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];
+    resumoCaso[QUANTIDADE_CEA] = String( numeroDeCEAs( caso ) );
+    resumoCaso[PROBLEMAS_SAUDE] = String( numeroDeProblemasDeSaude( caso ) );
+    resumoCaso[DATA_NASCIMENTO_RF] = String( caso[0][UNI_DATA_NASCIMENTO] );
+    resumoCaso[TEMPO_SITUACAO_DE_RUA] = String( caso[0][UNI_TEMPO_SITUACAO_DE_RUA] );
 
-    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Habilitado e ainda não convocado
+    resumoCaso[SITUACAO_BENEFICIO] = "2"; // 2 == Habilitado e ainda não convocado
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
-    resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
+    resumoCaso[DOC_PENDENTE] = "1"; // 1 == Não
 
-    resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR];
+    resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = String( caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR] );
     
     gravarCasoNaFila( id, resumoCaso );
   }  
@@ -182,33 +180,32 @@ async function carregarFila() {
   while( linhaTabela < NUM_LINHAS_TABELA_CASOS_PBH ) {
 
     caso = obterCaso( BUFFER_CASOS_PBH );
-    mostrarCaso( caso );
 
     ++id;
-    resumoCaso[ID] = id;
+    resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = caso[0][UNI_CPF_RF];
-    resumoCaso[ORGAO_ENCAMINHADOR] = caso[0][UNI_ORGAO_ENCAMINHADOR];
+    resumoCaso[CPF_RF] = String( caso[0][UNI_CPF_RF] );
+    resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
-    resumoCaso[DATA_ENCAMINHAMENTO] = caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO];
-    resumoCaso[PONTUACAO] = calcularPontuacao( caso );
+    resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
+    resumoCaso[PONTUACAO] = String( calcularPontuacao( caso ) );
 
     resumoCaso[IDS_PARAMETROS_CASO] = idsParametrosCaso.join(";");
     resumoCaso[PONTUACOES_PARAMETROS_CASO] = pontuacoesParametrosCaso.join(";");
 
-    resumoCaso[QUANTIDADE_CEA] = numeroDeCEAs( caso );
-    resumoCaso[PROBLEMAS_SAUDE] = numeroDeProblemasDeSaude( caso );
-    resumoCaso[DATA_NASCIMENTO_RF] = caso[0][UNI_DATA_NASCIMENTO];
-    resumoCaso[TEMPO_SITUACAO_DE_RUA] = caso[0][UNI_TEMPO_SITUACAO_DE_RUA];    
+    resumoCaso[QUANTIDADE_CEA] = String( numeroDeCEAs( caso ) );
+    resumoCaso[PROBLEMAS_SAUDE] = String( numeroDeProblemasDeSaude( caso ) );
+    resumoCaso[DATA_NASCIMENTO_RF] = String( caso[0][UNI_DATA_NASCIMENTO] );
+    resumoCaso[TEMPO_SITUACAO_DE_RUA] = String( caso[0][UNI_TEMPO_SITUACAO_DE_RUA] );
 
-    resumoCaso[SITUACAO_BENEFICIO] = 2; // 2 == Habilitado e ainda não convocado
+    resumoCaso[SITUACAO_BENEFICIO] = "2"; // 2 == Habilitado e ainda não convocado
 
     resumoCaso[DATA_ULTIMA_EVOLUCAO] = "";
 
-    resumoCaso[DOC_PENDENTE] = 1; // 1 == Não
+    resumoCaso[DOC_PENDENTE] = "1"; // 1 == Não
 
-    resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR];
-
+    resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = String( caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR] );
+    
     gravarCasoNaFila( id, resumoCaso );
     
   }
@@ -226,6 +223,13 @@ async function carregarFila() {
  */
 function gravarCasoNaFila( idCaso, caso ) {
 
+  // Validação de parâmetros da função
+  if( !isIntegerValidBE(idCaso) ) {
+    throw( new Error( "gravarCasoNaFila - ID Inválido" ) );    
+  }  
+
+   
+  const id = parseInt( idCaso );
 
   // TENTA PEGAR O LOCK
   const lock = LockService.getScriptLock();
@@ -234,7 +238,7 @@ function gravarCasoNaFila( idCaso, caso ) {
   // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
   if( lock.hasLock() ) {    
 
-    let range = TABELA_FILA.getRange( idCaso+1, 1, 1, NUM_COLUNAS_TABELA_FILA );
+    let range = TABELA_FILA.getRange( id+1, 1, 1, NUM_COLUNAS_TABELA_FILA );
     range.setValues( [caso] );
 
     //TABELA_FILA.appendRow( caso );

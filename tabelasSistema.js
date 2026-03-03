@@ -94,6 +94,14 @@ const TIPO_USUARIO      = 5;
  * return Uma cópia da tabela
  */
 function obterTabelaCompleta( nomeTabela ) {
+  
+  // Validação de parâmetros da função
+  if( !isStringValidBE(nomeTabela) ) {
+    throw( new Error( "idToNome - Tabela Inválida" ) );    
+  }
+
+
+  // Seleciona a tabela apropriada
 
   let bufferTabela;
 
@@ -111,11 +119,15 @@ function obterTabelaCompleta( nomeTabela ) {
     default:                         throw( new Error( "Tabela inválida" ) ); 
   }
 
-  let tabela = [];
   
+  // Cria uma cópia da tabela
+  let tabela = [];  
   bufferTabela.forEach( linha => tabela.push( linha ) );
 
+
+  // Retorna a tabela
   return tabela;
+
 
 } // Fim da função obterTabelaCompleta
 
@@ -126,10 +138,19 @@ function obterTabelaCompleta( nomeTabela ) {
  * e retorna o nome relacionado ao ID. 
  */
 function idToNome( id, nomeTabela ) {
+  
+  // Validação de parâmetros da função
 
-  if( id == "" ) {
+  if( !isIntegerValidBE(id) ) {
     return "";
   }
+  
+  if( !isStringValidBE(nomeTabela) ) {
+    throw( new Error( "idToNome - Tabela Inválida" ) );    
+  }
+
+
+  // Seleciona a tabela apropriada
 
   let bufferTabela;
   let tamanhoTabela;
@@ -153,11 +174,18 @@ function idToNome( id, nomeTabela ) {
     default:                         throw( new Error( "idToNome - Tabela Inválida" ) );    
   }
 
-  if( id < 1  ||  id > tamanhoTabela ) {
-    throw( new Error( "idToNome - ID Inválido - " + id + " - " + tamanhoTabela ) );      
+
+  // Converte o id para Integer
+  const idItem = parseInt(id);
+
+  // Se id está fora dos limites inferior ou superior, lança uma exceção
+  if( idItem < 1  ||  idItem > tamanhoTabela ) {
+    throw( new Error( "idToNome - ID Inválido: " + id + " - " + tamanhoTabela ) );      
   }
 
-  return bufferTabela[id-1][NOME];  
+  // Retorna o nome referente ao ID
+  return bufferTabela[idItem-1][NOME];  
+
 
 } // Fim da função idToNome
 
