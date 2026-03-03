@@ -9,26 +9,20 @@
  */
 function calcularIdade(dataNascimento) {
 
-    if(dataNascimento == "") { return 0; }
+    if(dataNascimento == "") { return new Date(); }
 
     const hoje = new Date();
     const nascimento = new Date(dataNascimento);
     nascimento.setDate( nascimento.getDate() + 1 );
-
-    console.log( "Hoje: " + hoje );
-    console.log( "Data Nascimento: " + nascimento );
     
     // Calcula a diferença de anos
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    console.log( "Diferença Anos: " + idade );
+    let idade = hoje.getFullYear() - nascimento.getFullYear();    
     
     // Verifica se o aniversário já passou no ano atual
     const mes = hoje.getMonth() - nascimento.getMonth();
     if (mes < 0 || (mes == 0 && hoje.getDate() < nascimento.getDate())) {
         idade--; // Subtrai 1 se o aniversário ainda não ocorreu
-    }
-
-    console.log( "Diferença Anos considerando o mês e o dia: " + idade );
+    }    
     
     return idade;
 
@@ -36,6 +30,7 @@ function calcularIdade(dataNascimento) {
 
 
 
+// Função para testar a função calcularIdade
 function testeVerificarMaioridade() {
 
   let dataNascimento = "2008-02-04";
@@ -44,14 +39,15 @@ function testeVerificarMaioridade() {
 
   console.log( "Maioridade: " + (idade>=18)  );
 
-}
+} // Fim da função testeVerificarMaioridade
 
 
 
 /**
  * Função que calcula um intervalo de tempo entre a data atual e a data 
  * passada como parâmetro
- * @param {*} data 
+ * @param {Date} data: Data que será comparada com a data de hoje
+ *                     para calcular o intervalo de tempo 
  * @returns Número de dias no intervalo
  */
 function calcularIntervaloEmDias( data ) {
@@ -74,6 +70,7 @@ function calcularIntervaloEmDias( data ) {
 
 
 
+// Função para testar a função calcularIntervaloEmDias
 function testeCalcularIntervaloEmDias() {
 
   let dataTeste = "2026-02-05";
@@ -81,4 +78,5 @@ function testeCalcularIntervaloEmDias() {
   let intevalo = calcularIntervaloEmDias( dataTeste );
 
   console.log( "Intervalo: " + intevalo );
-}
+
+} // Fim da função testeCalcularIntervaloEmDias

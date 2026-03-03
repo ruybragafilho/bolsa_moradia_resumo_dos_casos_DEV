@@ -11,17 +11,25 @@
   *  #######################################################################################
   */
 
-  // Cache da tabela Respostas Simples, carregadas via chamada 
+  // Cache da tabela Respostas Simples, carregada via chamada 
   // da função backend obterTabelaCompleta( "RESPOSTAS_SIMPLES" )  
   let cache_TabelaRespostasSimples = [];  
 
-  // Cache da tabela Órgãos Encaminhadores, carregadas via chamada 
+  // Cache da tabela Órgãos Encaminhadores, carregada via chamada 
   // da função backend obterTabelaCompleta( "ORGAOS_ENCAMINHADORES" )   
   let cache_TabelaOrgaosEncaminhadores = [];    
 
-  // Cache da tabela Situações Benefício, carregadas via chamada 
+  // Cache da tabela Situações Benefício, carregada via chamada 
   // da função backend obterTabelaCompleta( "SITUACOES_BENEFICIO" )  
   let cache_TabelaSituacoesBeneficio = [];
+
+  // Cache da tabela Intervalos de Tempo, carregada via chamada 
+  // da função backend obterTabelaCompleta( "INTERVALOS_DE_TEMPO" )  
+  let cache_TabelaIntervalosDeTempo = [];
+
+  // Cache da tabela Parametros, carregada via chamada 
+  // da função backend obterTabelaCompleta( "PARAMETROS" )  
+  let cache_TabelaParametros = [];
 
 
   // Cache da tabela com os casos, carregadas via chamada 
@@ -36,6 +44,8 @@
   let flagCache_TabelaRespostasSimples      = 0;
   let flagCache_TabelaOrgaosEncaminhadores  = 0;  
   let flagCache_TabelaSituacoesBeneficio    = 0;    
+  let flagCache_TabelaIntervalosDeTempo     = 0;
+  let flagCache_TabelaParametros            = 0;
   let flagCache_TabelaCasos                 = 0;
   
 
@@ -55,6 +65,8 @@
     carregarTabelaNaCache( "RESPOSTAS_SIMPLES" );    
     carregarTabelaNaCache( "ORGAOS_ENCAMINHADORES" );
     carregarTabelaNaCache( "SITUACOES_BENEFICIO" );
+    carregarTabelaNaCache( "INTERVALOS_DE_TEMPO" );
+    carregarTabelaNaCache( "PARAMETROS" );
 
   } // Fim da função preCarregarTabelasNaCache
 
@@ -69,12 +81,13 @@
     if( flagCache_TabelaRespostasSimples      && 
         flagCache_TabelaOrgaosEncaminhadores  &&
         flagCache_TabelaSituacoesBeneficio    &&
+        flagCache_TabelaIntervalosDeTempo     && 
+        flagCache_TabelaParametros            &&
         flagCache_TabelaCasos      ) {
 
       return true;
 
     } else {
-
       return false;
     }
 
@@ -107,7 +120,15 @@
                                                     flagCache_TabelaSituacoesBeneficio = 1;  
                                                     break;           
 
-                      default:                      throw( new Error( "Tabela Inválida" ) ); 
+                      case "INTERVALOS_DE_TEMPO":   cache_TabelaIntervalosDeTempo     = tabela;
+                                                    flagCache_TabelaIntervalosDeTempo = 1;  
+                                                    break;           
+
+                      case "PARAMETROS":            cache_TabelaParametros     = tabela;
+                                                    flagCache_TabelaParametros = 1;  
+                                                    break;           
+
+                      default:                      throw( new Error( "Tabela Inválida - " + nomeTabela ) ); 
 
                     }
 
