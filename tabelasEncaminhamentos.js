@@ -179,21 +179,18 @@ function calcularPontuacao( caso ) {
   peso = 2;
 
 
-  // 1.1) Famílias com mulheres (cis ou trans)
-  console.log( "Parâmero 1.1" );
+  // 1.1) Famílias com mulheres (cis ou trans)  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_GENERO] == 3 || rf[UNI_GENERO] == 4 ) { 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );    
+  if( rf[UNI_GENERO] == "3" || rf[UNI_GENERO] == "4" ) { 
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(1);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_GENERO] == 3 || familiar[UNI_GENERO] == 4 ) {
-        pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( familiar[UNI_GENERO] == "3" || familiar[UNI_GENERO] == "4" ) {
+        pontuacaoCriterio = peso*1;        
         idsParametrosCaso.push(2);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);
         break;
@@ -205,23 +202,20 @@ function calcularPontuacao( caso ) {
 
 
   // 1.2) Famílias com indivíduos cuja identidade de gênero e orientação sexual sejam
-  //      diferentes da cisheterossexualidade
-  console.log( "Parâmero 1.2" );
+  //      diferentes da cisheterossexualidade  
   pontuacaoCriterio = 0;
 
-  if( (rf[UNI_GENERO] == 2 || rf[UNI_GENERO] == 4 || rf[UNI_GENERO] == 5 || rf[UNI_GENERO] == 6) && 
-      (rf[UNI_ORIENTACAO_SEXUAL] == 1 || rf[UNI_ORIENTACAO_SEXUAL] == 2 || rf[UNI_ORIENTACAO_SEXUAL] == 4 || rf[UNI_ORIENTACAO_SEXUAL] == 5) ) { 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( (rf[UNI_GENERO] == "2" || rf[UNI_GENERO] == "4" || rf[UNI_GENERO] == "5" || rf[UNI_GENERO] == "6" ) || 
+      (rf[UNI_ORIENTACAO_SEXUAL] == "1" || rf[UNI_ORIENTACAO_SEXUAL] == "2" || rf[UNI_ORIENTACAO_SEXUAL] == "4" || rf[UNI_ORIENTACAO_SEXUAL] == "5") ) {     
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(3);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( (familiar[UNI_GENERO] == 2 || familiar[UNI_GENERO] == 4 || familiar[UNI_GENERO] == 5 || familiar[UNI_GENERO] == 6) && 
-          (familiar[UNI_ORIENTACAO_SEXUAL] == 1 || familiar[UNI_ORIENTACAO_SEXUAL] == 2 || familiar[UNI_ORIENTACAO_SEXUAL] == 4 || familiar[UNI_ORIENTACAO_SEXUAL] == 5)  ) {
-        pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( (familiar[UNI_GENERO] == "2" || familiar[UNI_GENERO] == "4" || familiar[UNI_GENERO] == "5" || familiar[UNI_GENERO] == "6") || 
+          (familiar[UNI_ORIENTACAO_SEXUAL] == "1" || familiar[UNI_ORIENTACAO_SEXUAL] == "2" || familiar[UNI_ORIENTACAO_SEXUAL] == "4" || familiar[UNI_ORIENTACAO_SEXUAL] == "5")  ) {
+        pontuacaoCriterio = peso*1;        
         idsParametrosCaso.push(4);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);
         break;
@@ -232,21 +226,18 @@ function calcularPontuacao( caso ) {
   pontuacaoTotal += pontuacaoCriterio;
 
 
-  // 1.3) Famílias com indivíduos pretos, pardos ou indígenas
-  console.log( "Parâmero 1.3" );
+  // 1.3) Famílias com indivíduos pretos, pardos ou indígenas  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_RACA_COR] == 2 || rf[UNI_RACA_COR] == 4 || rf[UNI_RACA_COR] == 5 ) { 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_RACA_COR] == "2" || rf[UNI_RACA_COR] == "4" || rf[UNI_RACA_COR] == "5" ) { 
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(5);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_RACA_COR] == 2 || familiar[UNI_RACA_COR] == 4 || familiar[UNI_RACA_COR] == 5 ) {
-        pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( familiar[UNI_RACA_COR] == "2" || familiar[UNI_RACA_COR] == "4" || familiar[UNI_RACA_COR] == "5" ) {
+        pontuacaoCriterio = peso*1;        
         idsParametrosCaso.push(6);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);
         break;
@@ -258,15 +249,13 @@ function calcularPontuacao( caso ) {
 
 
   // 1.4) Famílias com crianças e adolescentes (pontuar por criança e adolescente)
-  //      compondo o núcleo familiar
-  console.log( "Parâmero 1.4" );
+  //      compondo o núcleo familiar  
   pontuacaoCriterio = 0;
 
   for( let i=1; i<numeroFamiliares; ++i ) {
     familiar = caso[i];
     if( calcularIdade( familiar[UNI_DATA_NASCIMENTO] ) < 18 ) {
-      pontuacaoCriterio += peso*1;
-      console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      pontuacaoCriterio += peso*1;      
     }
   }   
 
@@ -279,15 +268,13 @@ function calcularPontuacao( caso ) {
 
 
   // 1.5) Idosos (acima de 60 anos, com maior prioridade para idosos com 80 anos ou
-  // mais, conforme Estatuto do Idoso)
-  console.log( "Parâmero 1.5" );
+  // mais, conforme Estatuto do Idoso)  
   pontuacaoCriterio = 0;
 
   let idadeRF = calcularIdade( rf[UNI_DATA_NASCIMENTO] );
   let idadeFamiliar;
   if( idadeRF >= 80 ) { 
-    pontuacaoCriterio = peso*4;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+    pontuacaoCriterio = peso*4;    
     idsParametrosCaso.push(8);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
@@ -295,8 +282,7 @@ function calcularPontuacao( caso ) {
       familiar = caso[i];
       idadeFamiliar = calcularIdade( familiar[UNI_DATA_NASCIMENTO] );
       if( idadeFamiliar >= 80 ) {
-        pontuacaoCriterio = peso*3;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        pontuacaoCriterio = peso*3;        
         idsParametrosCaso.push(9);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
@@ -305,8 +291,7 @@ function calcularPontuacao( caso ) {
   }
   if( pontuacaoCriterio == 0 ) {
     if( idadeRF >= 60 ) { 
-      pontuacaoCriterio = peso*2;
-      console.log( "Pontuação RF: " + pontuacaoCriterio );
+      pontuacaoCriterio = peso*2;      
       idsParametrosCaso.push(10);
       pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
     } else {
@@ -314,8 +299,7 @@ function calcularPontuacao( caso ) {
         familiar = caso[i];
         idadeFamiliar = calcularIdade( familiar[UNI_DATA_NASCIMENTO] );
         if( idadeFamiliar >= 60 ) {
-          pontuacaoCriterio = peso*1;
-          console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+          pontuacaoCriterio = peso*1;          
           idsParametrosCaso.push(11);
           pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
           break;
@@ -327,21 +311,18 @@ function calcularPontuacao( caso ) {
   pontuacaoTotal += pontuacaoCriterio;  
 
   
-  // 1.6) Famílias com pessoas com deficiência
-  console.log( "Parâmero 1.6" );
+  // 1.6) Famílias com pessoas com deficiência  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_PCD] == 2 ) { 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_PCD] == "2" ) { 
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(12);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_PCD] == 2 ) {
-        pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( familiar[UNI_PCD] == "2" ) {
+        pontuacaoCriterio = peso*1;        
         idsParametrosCaso.push(13);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
@@ -353,21 +334,18 @@ function calcularPontuacao( caso ) {
 
 
   // 1.7) Famílias com mulheres em gestação ou em fase de 
-  // puerpério – até 6 meses após a gestação.
-  console.log( "Parâmero 1.7" );
+  // puerpério – até 6 meses após a gestação.  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_GESTANTE] == 2 ) { 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_GESTANTE] == "2" ) { 
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(14);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_GESTANTE] == 2 ) {
-        pontuacaoCriterio = peso*1;        
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( familiar[UNI_GESTANTE] == "2" ) {
+        pontuacaoCriterio = peso*1;                
         idsParametrosCaso.push(15);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
@@ -386,14 +364,12 @@ function calcularPontuacao( caso ) {
   // 2.1) Famílias em situação de rua com crianças e/ou adolescentes com
   //      medida protetiva de acolhimento ou em processo de acolhimento, e
   //      famílias que tiveram crianças e/ou adolescentes privadas do convívio
-  //      familiar em decorrência da vida nas ruas dos responsáveis
-  console.log( "Parâmero 2.1" );
+  //      familiar em decorrência da vida nas ruas dos responsáveis  
   pontuacaoCriterio = 0;
   
-  if( rf[UNI_CEA_ACOLHIMENTO_INSTITUCIONAL] == 2 ||
-      rf[UNI_CEA_PRIVACAO_CONVIVIO] == 2   ) {
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_CEA_ACOLHIMENTO_INSTITUCIONAL] == "2" ||
+      rf[UNI_CEA_PRIVACAO_CONVIVIO] == "2"   ) {
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(16);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
@@ -402,13 +378,11 @@ function calcularPontuacao( caso ) {
 
 
   // 2.2) Família em situação de rua com membros em situação de trabalho infantil
-  //      e/ou exploração sexual de crianças/adolescentes
-  console.log( "Parâmero 2.2" );
+  //      e/ou exploração sexual de crianças/adolescentes  
   pontuacaoCriterio = 0;
   
-  if( rf[UNI_CEA_TRABALHO_INFANTIL_EXPLORACAO_SEXUAL] == 2 ) {
-    pontuacaoCriterio = peso*6;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_CEA_TRABALHO_INFANTIL_EXPLORACAO_SEXUAL] == "2" ) {
+    pontuacaoCriterio = peso*6;    
     idsParametrosCaso.push(17);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
@@ -416,13 +390,11 @@ function calcularPontuacao( caso ) {
   pontuacaoTotal += pontuacaoCriterio;  
 
 
-  // 2.3) Família em situação de rua com membros em situação de prostituição
-  console.log( "Parâmero 2.3" );
+  // 2.3) Família em situação de rua com membros em situação de prostituição  
   pontuacaoCriterio = 0;
   
-  if( rf[UNI_PROSTITUICAO] == 2 ) {
-    pontuacaoCriterio = peso*1;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_PROSTITUICAO] == "2" ) {
+    pontuacaoCriterio = peso*1;    
     idsParametrosCaso.push(18);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
@@ -435,34 +407,31 @@ function calcularPontuacao( caso ) {
   peso = 1;
 
 
-  // 3.1) Presença de condições de saúde que necessitem de cuidado contínuo
-  console.log( "Parâmero 3.1" );
+  // 3.1) Presença de condições de saúde que necessitem de cuidado contínuo  
   pontuacaoCriterio = 0;
 
   let flagParametroSaude;
 
-  if( rf[UNI_PROBLEMAS_SAUDE] == 3 ) { 
+  if( rf[UNI_PROBLEMAS_SAUDE] == "3" ) { 
 
-    pontuacaoCriterio = peso*3;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+    pontuacaoCriterio = peso*3;    
     
     flagParametroSaude = 19;
     idsParametrosCaso.push(flagParametroSaude);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
 
-  } else if( rf[UNI_PROBLEMAS_SAUDE] == 2 ) { 
+  } else if( rf[UNI_PROBLEMAS_SAUDE] == "2" ) { 
 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+    pontuacaoCriterio = peso*2;    
 
     flagParametroSaude = 21;
 
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
+      if( familiar[UNI_PROBLEMAS_SAUDE] == "3" ) {
         pontuacaoCriterio += peso*1;
         flagParametroSaude = 20;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+        
         break;
       }
     } 
@@ -476,14 +445,12 @@ function calcularPontuacao( caso ) {
 
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_PROBLEMAS_SAUDE] == 3 ) {
-        pontuacaoCriterio = peso*2;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( familiar[UNI_PROBLEMAS_SAUDE] == "3" ) {
+        pontuacaoCriterio = peso*2;        
         flagParametroSaude = 22;
         break;
-      } else if( familiar[UNI_PROBLEMAS_SAUDE] == 2 ) {
-        pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );  
+      } else if( familiar[UNI_PROBLEMAS_SAUDE] == "2" ) {
+        pontuacaoCriterio = peso*1;        
         flagParametroSaude = 23;      
       }
     }
@@ -499,13 +466,11 @@ function calcularPontuacao( caso ) {
 
 
   // 3.2) Famílias com pessoas que possuem diagnóstico de sofrimento mental, uso prejudicial
-  //      de álcool e drogas e/ou membros dependentes de cuidados para a vida diária
-  console.log( "Parâmero 3.2" );
+  //      de álcool e drogas e/ou membros dependentes de cuidados para a vida diária  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_DIAGNOSTICO] == 2 ) {
-    pontuacaoCriterio = peso*1;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_DIAGNOSTICO] == "2" ) {
+    pontuacaoCriterio = peso*1;    
     idsParametrosCaso.push(24);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
@@ -518,12 +483,11 @@ function calcularPontuacao( caso ) {
   peso = 1;
 
 
-  // 4.1) Tempo de vida nas ruas e/ou de acolhimento institucional
-  console.log( "Parâmero 4.1" );
+  // 4.1) Tempo de vida nas ruas e/ou de acolhimento institucional  
   pontuacaoCriterio = 0;
   
   switch( rf[UNI_TEMPO_SITUACAO_DE_RUA] ) {
-    case "1":   pontuacaoCriterio = peso*1;
+    case "1":   pontuacaoCriterio = peso*2;
                 idsParametrosCaso.push(25);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
@@ -531,7 +495,7 @@ function calcularPontuacao( caso ) {
                 idsParametrosCaso.push(26);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
-    case "3":   pontuacaoCriterio = peso*3;
+    case "3":   pontuacaoCriterio = peso*2;
                 idsParametrosCaso.push(27);
                 pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
                 break;    
@@ -549,21 +513,21 @@ function calcularPontuacao( caso ) {
                 break;
     default:    pontuacaoCriterio = 0;
                 break;
-  }
-  console.log( "Pontuação RF: " + pontuacaoCriterio );
+  }  
 
   pontuacaoTotal += pontuacaoCriterio;    
   
 
   // 4.2) Histórico de institucionalização (Clínicas psiquiátricas, comunidades terapêuticas, 
-  //      sistema prisional, sistema socioeducativo, instituições asilares)
-  console.log( "Parâmero 4.2" );
+  //      sistema prisional, sistema socioeducativo, instituições asilares)  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_INSTITUCIONALIZACAO] == 2 || rf[UNI_INSTITUCIONALIZACAO] == 3 || rf[UNI_INSTITUCIONALIZACAO] == 4 ||
-      rf[UNI_INSTITUCIONALIZACAO] == 5 || rf[UNI_INSTITUCIONALIZACAO] == 6 ) {
-    pontuacaoCriterio = peso*1;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_INSTITUCIONALIZACAO].includes("2") || 
+      rf[UNI_INSTITUCIONALIZACAO].includes("3") || 
+      rf[UNI_INSTITUCIONALIZACAO].includes("4") ||      
+      rf[UNI_INSTITUCIONALIZACAO].includes("5") || 
+      rf[UNI_INSTITUCIONALIZACAO].includes("6") ) {
+    pontuacaoCriterio = peso*1;    
     idsParametrosCaso.push(31);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
@@ -572,19 +536,16 @@ function calcularPontuacao( caso ) {
   
 
   // 4.3) Famílias ou indivíduos em situação de ameaça, conflito 
-  //      territorial ou outras violências
-  console.log( "Parâmero 4.3" );
+  //      territorial ou outras violências  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 2 ) {
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA].includes("2") ) {
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(32);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
-  } else if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 3 ||
-             rf[UNI_AMEACA_CONFLITO_VIOLENCIA] == 4   ) {
-    pontuacaoCriterio = peso*1;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  } else if( rf[UNI_AMEACA_CONFLITO_VIOLENCIA].includes("3") ||
+             rf[UNI_AMEACA_CONFLITO_VIOLENCIA].includes("4")   ) {
+    pontuacaoCriterio = peso*1;    
     idsParametrosCaso.push(33);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   }
@@ -598,21 +559,22 @@ function calcularPontuacao( caso ) {
 
   
   // 5.1) Pessoas em situação vinculadas ao trabalho formal ou informal, 
-  //      grupos produtivos, associações e cooperativas
-  console.log( "Parâmero 5.1" );
+  //      grupos produtivos, associações e cooperativas  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_TRABALHO_FORMAL] == 2 || rf[UNI_TRABALHO_OUTROS] == 2 || rf[UNI_TRABALHO_OUTROS] == 3 ) { 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_TRABALHO_FORMAL] == "2" || 
+      rf[UNI_TRABALHO_OUTROS].includes("2") || 
+      rf[UNI_TRABALHO_OUTROS].includes("3") ) { 
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(34);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_TRABALHO_FORMAL] == 2 || familiar[UNI_TRABALHO_OUTROS] == 2 || familiar[UNI_TRABALHO_OUTROS] == 3 ) {
-        pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( familiar[UNI_TRABALHO_FORMAL] == "2" || 
+          familiar[UNI_TRABALHO_OUTROS].includes("2") || 
+          familiar[UNI_TRABALHO_OUTROS].includes("3") ) {
+        pontuacaoCriterio = peso*1;        
         idsParametrosCaso.push(35);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
@@ -624,21 +586,18 @@ function calcularPontuacao( caso ) {
 
 
   // 5.2) Participante do Programa Estamos Juntos, inseridos 
-  //      nas frentes de trabalho ou oportunidade CLT
-  console.log( "Parâmero 5.2" );
+  //      nas frentes de trabalho ou oportunidade CLT  
   pontuacaoCriterio = 0;
 
-  if( rf[UNI_ESTAMOS_JUNTOS] == 2 ) { 
-    pontuacaoCriterio = peso*2;
-    console.log( "Pontuação RF: " + pontuacaoCriterio );
+  if( rf[UNI_ESTAMOS_JUNTOS] == "2" ) { 
+    pontuacaoCriterio = peso*2;    
     idsParametrosCaso.push(36);
     pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
   } else {
     for( let i=1; i<numeroFamiliares; ++i ) {
       familiar = caso[i];
-      if( familiar[UNI_ESTAMOS_JUNTOS] == 2 ) {
-        pontuacaoCriterio = peso*1;
-        console.log( "Pontuação Familiar: " + pontuacaoCriterio );
+      if( familiar[UNI_ESTAMOS_JUNTOS] == "2" ) {
+        pontuacaoCriterio = peso*1;        
         idsParametrosCaso.push(37);
         pontuacoesParametrosCaso.push(pontuacaoCriterio);                             
         break;
@@ -650,8 +609,7 @@ function calcularPontuacao( caso ) {
 
 
 
-  // Retorna a pontuação total
-  console.log( "Pontuação total: " + pontuacaoTotal );
+  // Retorna a pontuação total  
   return pontuacaoTotal;
 
 } // Fim da função calcularPontuacao

@@ -129,6 +129,8 @@ async function carregarFila() {
   let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
   let id = 0;
 
+  let cpfRF = "";
+
 /**
   limparFila();
 
@@ -144,11 +146,12 @@ async function carregarFila() {
   while( linhaTabela < NUM_LINHAS_TABELA_CASOS_EXTERNOS ) {
 
     caso = obterCaso( BUFFER_CASOS_EXTERNOS );
+    cpfRF = String( caso[0][UNI_CPF_RF] );
 
     ++id;
     resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = String( caso[0][UNI_CPF_RF] );
+    resumoCaso[CPF_RF] = cpfRF.length == 11 ? cpfRF : String("0"+cpfRF);
     resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
     resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
@@ -170,7 +173,7 @@ async function carregarFila() {
 
     resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = String( caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR] );
     
-    gravarCasoNaFila( id, resumoCaso );
+    gravarCasoNaFila( resumoCaso );
   }  
 
 
@@ -180,11 +183,12 @@ async function carregarFila() {
   while( linhaTabela < NUM_LINHAS_TABELA_CASOS_PBH ) {
 
     caso = obterCaso( BUFFER_CASOS_PBH );
+    cpfRF = String( caso[0][UNI_CPF_RF] );
 
     ++id;
     resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = String( caso[0][UNI_CPF_RF] );
+    resumoCaso[CPF_RF] = cpfRF.length == 11 ? cpfRF : String("0"+cpfRF);
     resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
     resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
@@ -206,7 +210,7 @@ async function carregarFila() {
 
     resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = String( caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR] );
     
-    gravarCasoNaFila( id, resumoCaso );
+    gravarCasoNaFila( resumoCaso );
     
   }
 
@@ -221,16 +225,8 @@ async function carregarFila() {
 /**
  * Função que grava um caso na fila
  */
-function gravarCasoNaFila( idCaso, caso ) {
-
-  // Validação de parâmetros da função
-  if( !isIntegerValidBE(idCaso) ) {
-    throw( new Error( "gravarCasoNaFila - ID Inválido" ) );    
-  }  
-
-   
-  const id = parseInt( idCaso );
-
+function gravarCasoNaFila( caso ) {
+  
   // TENTA PEGAR O LOCK
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);  
@@ -238,10 +234,10 @@ function gravarCasoNaFila( idCaso, caso ) {
   // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
   if( lock.hasLock() ) {    
 
-    let range = TABELA_FILA.getRange( id+1, 1, 1, NUM_COLUNAS_TABELA_FILA );
-    range.setValues( [caso] );
+    //let range = TABELA_FILA.getRange( id+1, 1, 1, NUM_COLUNAS_TABELA_FILA );
+    //range.setValues( [caso] );
 
-    //TABELA_FILA.appendRow( caso );
+    TABELA_FILA.appendRow( caso );
 
     // Flush na planilha
     try {
