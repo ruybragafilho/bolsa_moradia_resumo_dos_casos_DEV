@@ -14,7 +14,7 @@
  */
 function enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso ) {
   
-  if( validarEmail( enderecoEmail ) ) {
+  if( isEmailValidBE( enderecoEmail ) ) {
 
     try {
   
@@ -49,24 +49,9 @@ function enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso ) {
 
 
 
-// Função que verifica se o formato do endereço de email é válido
-function validarEmail(enderecoEmail) {
-
-  // Regex padrão para validação de formato de e-mail
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  return ( enderecoEmail != "" && regex.test( enderecoEmail ) );
-
-} // Fim da função validarEmail
-    
-
-
-
 /**
  *  #####  TESTES PARA AS FUNÇÕES DESSE MÓDULO  #####
  */
-
-
 
 /**
  * Função para testar a função enviarEmail
@@ -81,20 +66,6 @@ function teste_enviarEmail() {
   enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso );
  
 }
-
-
-/**
- * Função para testar a função validarEmail
- */
-function teste_validarEmail() {
-  
-  let enderecoEmail = "sigps@pbh.gov.br";
-
-  let resultadoValidacao = validarEmail( enderecoEmail );
-
-  console.log( "Resultado teste validação: " + resultadoValidacao );
-}
-
 
 
 

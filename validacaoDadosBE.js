@@ -28,6 +28,17 @@ function isDateValidBE(dateStr) {
 }
 
 
+// Função que verifica se o formato do endereço de email é válido
+function isEmailValidBE(enderecoEmail) {
+
+  // Regex padrão para validação de formato de e-mail
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return ( isStringValidBE(enderecoEmail) && regex.test( enderecoEmail ) );
+
+} // Fim da função validarEmail
+    
+
 
 /**
  * ##### FIM DO MÓDULO isStringValidaBE.gs #####

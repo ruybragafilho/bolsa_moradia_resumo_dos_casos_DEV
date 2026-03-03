@@ -32,5 +32,16 @@
   }
 
 
+  // Função que verifica se o formato do endereço de email é válido
+  function isEmailValidFE(enderecoEmail) {
+  
+    // Regex padrão para validação de formato de e-mail
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    return ( isStringValidFE(enderecoEmail) && regex.test( enderecoEmail ) );
+  
+  } // Fim da função validarEmail
+
+
 </script>
 
