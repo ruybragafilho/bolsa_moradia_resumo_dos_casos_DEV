@@ -55,66 +55,31 @@ const EMAIL_ORGAO_ENCAMINHADOR   = 15;
  */
 
 
-//carregarFila();
-
-
-// Timer 
-const esperarFila = (time) => new Promise( ( resolve, reject ) => setTimeout( resolve, time ) );
-
-
-// Flag que indica se a fila ezvaziada
-let flag_fila_vazia = 0;
-
-
-// Flag que indica se a fila foi carregada com os dados das tabelas de encaminhamento
-let flag_fila_carregada = 1;
-
-
 
 /**
  * Função que limpa a fila, excluíndo todos os casos dela
  */
 function limparFila() {
 
-  flag_fila_vazia = 0;
-
+  // Caso nulo
   let casoNulo = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
 
-  // TENTA PEGAR O LOCK
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);  
+  // Limpa a fila
+  let range;
+  for( let linha=2; linha<=TAMANHO_FILA+1; ++linha ) {
+    range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA );
+    range.setValues([casoNulo]);
+  }
 
-  // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
-  if( lock.hasLock() ) {    
-
-    let range;
-
-    for( let linha=2; linha<=TAMANHO_FILA+1; ++linha ) {
-      range = TABELA_FILA.getRange( linha, 1, 1, NUM_COLUNAS_TABELA_FILA );
-      range.setValues([casoNulo]);
-    }
-
-    // Flush na planilha
-    try {
-      SpreadsheetApp.flush();
-      PLANILHA_FILA.waitForAllDataExecutionsCompletion(2);      
-    } catch( error ) {
-      throw( error.message );
-    }
-  
-    // SOLTA O LOCK
-    lock.releaseLock();
-
-  } else {
-
-    // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "limparFila - Nao foi possivel pegar o LOCK" ) );
-  }    
-
-  flag_fila_vazia = 1;
+  // Flush na planilha
+  try {
+    SpreadsheetApp.flush();
+    PLANILHA_FILA.waitForAllDataExecutionsCompletion(2);      
+  } catch( error ) {
+    throw( "limparFila: " + error.message );
+  }
 
 } // Fim da função limparFila
-
 
 
 
@@ -123,29 +88,18 @@ function limparFila() {
  */
 async function carregarFila() {
 
-  flag_fila_carregada = 0;
-
   let caso = [];
   let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
   let id = 0;
 
   let cpfRF = "";
 
-/**
-  limparFila();
-
-    // Aguarda esvaziamento da fila
-  while( !flag_fila_vazia ) {
-    console.log( "Aguardando esvaziamento da fila" );
-    await esperarFila( 1000 );
-  }    
- */
   
   console.log( "\n\nCASOS EXTERNOS" );
   linhaTabela = 0;
   while( linhaTabela < NUM_LINHAS_TABELA_CASOS_EXTERNOS ) {
 
-    caso = obterCaso( BUFFER_CASOS_EXTERNOS );
+    caso = obterCaso( BUFFER_CASOS_EXTERNOS );    
     cpfRF = String( caso[0][UNI_CPF_RF] );
 
     ++id;
@@ -173,9 +127,8 @@ async function carregarFila() {
 
     resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = String( caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR] );
     
-    gravarCasoNaFila( resumoCaso );
+    TABELA_FILA.appendRow( resumoCaso );
   }  
-
 
   
   console.log( "\n\nCASOS PBH" );
@@ -210,53 +163,20 @@ async function carregarFila() {
 
     resumoCaso[EMAIL_ORGAO_ENCAMINHADOR] = String( caso[0][UNI_EMAIL_TECNICO_ENCAMINHADOR] );
     
-    gravarCasoNaFila( resumoCaso );
-    
+    TABELA_FILA.appendRow( resumoCaso );        
+  }
+
+  // Flush na planilha
+  try {
+    SpreadsheetApp.flush();
+    PLANILHA_FILA.waitForAllDataExecutionsCompletion(2);      
+  } catch( error ) {
+    throw( error.message );
   }
 
   refreshBufferFila();
 
-  flag_fila_carregada = 1;  
-
 } // Fim da função carregarFila
-
-
-
-/**
- * Função que grava um caso na fila
- */
-function gravarCasoNaFila( caso ) {
-  
-  // TENTA PEGAR O LOCK
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);  
-
-  // SE PEGAR O LOCK, PROSSEGUE COM A INSERÇÃO
-  if( lock.hasLock() ) {    
-
-    //let range = TABELA_FILA.getRange( id+1, 1, 1, NUM_COLUNAS_TABELA_FILA );
-    //range.setValues( [caso] );
-
-    TABELA_FILA.appendRow( caso );
-
-    // Flush na planilha
-    try {
-      SpreadsheetApp.flush();
-      PLANILHA_FILA.waitForAllDataExecutionsCompletion(2);      
-    } catch( error ) {
-      throw( error.message );
-    }
-  
-    // SOLTA O LOCK
-    lock.releaseLock();
-
-  } else {
-
-    // SE NAO CONSEGUIR PEGAR O LOCK, LANCA UMA EXCESSAO
-    throw( new Error( "gravarCasoNaFila - Nao foi possivel pegar o LOCK" ) );
-  }    
-
-} // Fim da função gravarCasoNaFila
 
 
 
@@ -265,19 +185,7 @@ function gravarCasoNaFila( caso ) {
  * 
  * @return Uma fila em que cada posição contém um objeto com os dados de um caso
  */
-async function obterFila( idInstituicao ) {    
-
-  // Aguarda carregamento da fila
-  while( !flag_fila_carregada ) {
-    console.log( "Aguardando carregamento da fila" );
-    await esperarFila( 1000 );
-  }    
-
-
-  // Se id inválido, retorna uma exceção
-  if( idInstituicao < 0  ||  idInstituicao > NUM_ORGAOS_ENCAMINHADORES ) {
-    throw( new Error( "Obter Fila - ID Inválido" ) );
-  }
+async function obterFila() {    
 
   // RETORNA NULL, SE TABELA DE CASOS ESTIVER VAZIA
   if( TAMANHO_FILA < 1 ) return null;
@@ -395,19 +303,8 @@ async function obterFila( idInstituicao ) {
   });
 
 
-
-  // Aplica filtro para selecionar a instituicão apropriada (ORGÃO ENCAMMINHADOR)
-  let filaFiltrada = [];
-  if( idInstituicao != "0" ) {
-    //filaFiltrada = fila.filter( linhaCaso => (linhaCaso.id_orgao_encaminhador == idInstituicao) );
-    filaFiltrada = fila;
-  } else {
-    filaFiltrada = fila;
-  }
-
-
   // Retorna a fila filtrada
-  return filaFiltrada;
+  return fila;
 
 } // Fim da Função obterFila 
 
