@@ -187,37 +187,30 @@ async function carregarFila() {
  */
 async function obterFila() {    
 
+
   // RETORNA NULL, SE TABELA DE CASOS ESTIVER VAZIA
   if( TAMANHO_FILA < 1 ) return null;
     
   
   // Obtém os casos na fila
   let fila = BUFFER_FILA.map( caso => {    
-
-    let ids_parametros = caso[IDS_PARAMETROS_CASO] != "" ? caso[IDS_PARAMETROS_CASO].split(";") : "";
-
+    
     return {
 
       id: caso[ID],
 
       referencia_familiar: caso[REFERENCIA_FAMILIAR],
 
-      cpf_rf: caso[CPF_RF],
+      cpf_rf: caso[CPF_RF].length == 11 ? caso[CPF_RF] : "0"+caso[CPF_RF] ,
  
       id_orgao_encaminhador: caso[ORGAO_ENCAMINHADOR],
-      nome_orgao_encaminhador: idToNome( caso[ORGAO_ENCAMINHADOR], "ORGAOS_ENCAMINHADORES"),
-
+      
       email_orgao_encaminhador: caso[EMAIL_ORGAO_ENCAMINHADOR],
-        
-      tempo_espera: calcularIntervaloEmDias( caso[DATA_ENCAMINHAMENTO] ),
+            
+      ids_parametros_caso: caso[IDS_PARAMETROS_CASO] != "" ? caso[IDS_PARAMETROS_CASO].split(";") : "",
 
-      nomes_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][NOME] ) : "",
-      pesos_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PESO_PARAMETRO] ) : "",
-      pontuacoes_parametros: ids_parametros != "" ? ids_parametros.map( id => BUFFER_PARAMETROS[id-1][PONTUACAO_PARAMETRO] ) : "",
+      pontuacoes_parametros_caso:  caso[PONTUACOES_PARAMETROS_CASO] != ""  ? caso[PONTUACOES_PARAMETROS_CASO].split(";") : "",
 
-      pontuacoes_caso:  (caso[SITUACAO_BENEFICIO] != "" && caso[SITUACAO_BENEFICIO] != "1") ?
-                        (caso[PONTUACOES_PARAMETROS_CASO] != ""  ? caso[PONTUACOES_PARAMETROS_CASO].split(";") : "") :
-                        "",
       pontuacao: (caso[SITUACAO_BENEFICIO] != "" && caso[SITUACAO_BENEFICIO] != "1") ?
                  (caso[PONTUACAO] != "" ? parseInt(caso[PONTUACAO]) : 0) :
                  0,      
@@ -228,16 +221,13 @@ async function obterFila() {
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
       
-      id_tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA],
-      nome_tempo_nas_ruas: idToNome(caso[TEMPO_SITUACAO_DE_RUA], "INTERVALOS_DE_TEMPO"),
+      id_tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA] != "" ? parseInt(caso[TEMPO_SITUACAO_DE_RUA]) : 0,      
 
       id_situacao_beneficio: caso[SITUACAO_BENEFICIO], 
-      nome_situacao_beneficio: idToNome(caso[SITUACAO_BENEFICIO], "SITUACOES_BENEFICIO"),
         
       data_ultima_evolucao: caso[DATA_ULTIMA_EVOLUCAO],
 
       id_doc_pendente: caso[DOC_PENDENTE],
-      nome_doc_pendente: idToNome(caso[DOC_PENDENTE], "RESPOSTAS_SIMPLES"),
            
       posicaoNaFila: 0
 
@@ -277,15 +267,13 @@ async function obterFila() {
       return -1;
     }             
     
-    // Quinto critétio - Tempo nas Ruas
-    if( b.tempo_nas_ruas != "" && a.tempo_nas_ruas != "" ) {
-      if( b.tempo_nas_ruas > a.tempo_nas_ruas ) {
-        return 1;
-      } else if(b.tempo_nas_ruas < a.tempo_nas_ruas) {
-        return -1;
-      }                 
-    }
-
+    // Quinto critétio - Tempo nas Ruas    
+    if( b.id_tempo_nas_ruas > a.id_tempo_nas_ruas ) {
+      return 1;
+    } else if(b.id_tempo_nas_ruas < a.id_tempo_nas_ruas) {
+      return -1;
+    }                
+    
 
     // Retorno Padrão
     return 0;
@@ -304,7 +292,8 @@ async function obterFila() {
 
 
   // Retorna a fila filtrada
-  return fila;
+  //return fila;
+  return JSON.stringify( fila );
 
 } // Fim da Função obterFila 
 

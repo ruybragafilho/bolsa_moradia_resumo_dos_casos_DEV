@@ -152,7 +152,7 @@
         } else {
   
           let statusColor = item.id_doc_pendente == "2" ? "text-danger" : "text-primary";        
-          docPendente = `<td class="clicavel align-middle ${statusColor}">${item.nome_doc_pendente}</td>`;        
+          docPendente = `<td class="clicavel align-middle ${statusColor}">${item.id_doc_pendente}</td>`;        
         }     
         
         // Gera o select de evolução ou o botão de reativação dessa linha
@@ -193,7 +193,7 @@
           idade_rf = item.idade_RF;
           display_coluna_idade_rf = "";
           
-          tempo_nas_ruas = item.nome_tempo_nas_ruas;
+          tempo_nas_ruas = item.id_tempo_nas_ruas;
           display_coluna_tempo_nas_ruas = "";        
   
         } else {
@@ -216,7 +216,7 @@
         tr.innerHTML =           
          `<td class="clicavel align-middle">${item.posicaoNaFila}</td>
           <td class="clicavel align-middle">${item.referencia_familiar}</td>
-          <td class="clicavel align-middle">${item.nome_orgao_encaminhador}</td>
+          <td class="clicavel align-middle">${item.id_orgao_encaminhador}</td>
           <td class="clicavel align-middle">${item.pontuacao}</td>        
   
           <td class="clicavel align-middle" style="${display_coluna_quantidade_cea}">${quantidade_cea}</td>        
@@ -224,7 +224,7 @@
           <td class="clicavel align-middle" style="${display_coluna_idade_rf}">${idade_rf}</td>        
           <td class="clicavel align-middle" style="${display_coluna_tempo_nas_ruas}">${tempo_nas_ruas}</td>        
   
-          <td class="clicavel align-middle">${item.nome_situacao_beneficio}</td>        
+          <td class="clicavel align-middle">${item.id_situacao_beneficio}</td>        
           <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>
           <td class="align-middle" style="width: 180px; ${display_coluna_evoluir}">${evolucao}</td>`;   
   
@@ -380,7 +380,7 @@
                      mostrarModalMensagem( "Operação concluída! " );                    
   
                      // Atualiza o cache de resumos de casos com a tabela carregada do servidor
-                     cache_TabelaCasos = fila;   
+                     cache_TabelaCasos = JSON.parse( fila );   
 
                      // Sinaliza que a tabela de casos já está na cache
                      flagCache_TabelaCasos = 1;
@@ -398,7 +398,7 @@
                      
                    })
                    // Chama a função backend para gerar e retornar a tabela de resumos de casos
-                   .obterFila( usuarioLogado.instituicao );
+                   .obterFila();
 
     // Se flag == 0, apenas carrega a página de resumo de casos, sem recarregar a tabela
     } else {
