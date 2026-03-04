@@ -16,15 +16,12 @@ function docPendenteBE( idCaso ) {
 
   // Se id não é um inteiro válido, lança uma exceção
   if( !isIntegerValidBE(idCaso) ) {
-    throw( new Error( "docPendenteBE - ID Inválido" ) );
+    throw( new Error( "docPendenteBE - ID Inválido (teste Integer): " + idCaso ) );
   }  
-
-  // Converte o id para Integer
-  const id = parseInt(idCaso);
-
+ 
   // Se id está fora dos limites inferior ou superior, lança uma exceção
-  if( id < 1  ||  id > TAMANHO_FILA ) {
-    throw( new Error( "docPendenteBE - ID Inválido" ) );
+  if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
+    throw( new Error( "docPendenteBE - ID Inválido (Teste Limite): " + idCaso ) );
   }  
 
   
@@ -39,10 +36,10 @@ function docPendenteBE( idCaso ) {
     try {
 
       // Nega o status atual do Doc Pendente
-      let idStatusDocPendente = BUFFER_FILA[id-1][DOC_PENDENTE] == "2" ? "1" : "2";
+      let idStatusDocPendente = BUFFER_FILA[idCaso-1][DOC_PENDENTE] == "2" ? "1" : "2";
                 
       // Grava o status do campo Documentação Pendente  
-      const campo_data = TABELA_FILA.getRange( id+1, DOC_PENDENTE+1 );
+      const campo_data = TABELA_FILA.getRange( idCaso+1, DOC_PENDENTE+1 );
       campo_data.setValue( idStatusDocPendente );    
 
     } catch( error ) {

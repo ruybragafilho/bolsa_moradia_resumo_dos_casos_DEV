@@ -14,27 +14,33 @@
   // Cache da tabela Respostas Simples, carregada via chamada 
   // da função backend obterTabelaCompleta( "RESPOSTAS_SIMPLES" )  
   let cache_TabelaRespostasSimples = [];  
+  let numRespostasSimples = 0;
 
   // Cache da tabela Órgãos Encaminhadores, carregada via chamada 
   // da função backend obterTabelaCompleta( "ORGAOS_ENCAMINHADORES" )   
   let cache_TabelaOrgaosEncaminhadores = [];    
+  let numOrgaosEncaminhadores = 0;
 
   // Cache da tabela Situações Benefício, carregada via chamada 
   // da função backend obterTabelaCompleta( "SITUACOES_BENEFICIO" )  
   let cache_TabelaSituacoesBeneficio = [];
+  let numSituacoesBeneficio = 0;
 
   // Cache da tabela Intervalos de Tempo, carregada via chamada 
   // da função backend obterTabelaCompleta( "INTERVALOS_DE_TEMPO" )  
   let cache_TabelaIntervalosDeTempo = [];
+  let numIntervalosDeTempo = 0;
 
   // Cache da tabela Parametros, carregada via chamada 
   // da função backend obterTabelaCompleta( "PARAMETROS" )  
   let cache_TabelaParametros = [];
+  let numParametros = 0;
 
 
   // Cache da tabela com os casos, carregadas via chamada 
   // da função backend obterCasos  
   let cache_TabelaCasos = [];
+  let numCasos = 0;
 
 
 
@@ -54,6 +60,9 @@
   const COLUNA_ID    = 0;
   const COLUNA_NOME  = 1;
   const COLUNA_ATIVO = 2;  
+
+  const COLUNA_PESO_PARAMETRO      = 3;
+  const COLUNA_PONTUACAO_PARAMETRO = 4;
 
 
 
@@ -119,22 +128,27 @@
                     switch( nomeTabela ) {
                       
                       case "RESPOSTAS_SIMPLES":     cache_TabelaRespostasSimples     = tabela;
-                                                    flagCache_TabelaRespostasSimples = 1;
+                                                    numRespostasSimples              = tabela.length;
+                                                    flagCache_TabelaRespostasSimples = 1                                                    
                                                     break;              
 
                       case "ORGAOS_ENCAMINHADORES": cache_TabelaOrgaosEncaminhadores     = tabela;
+                                                    numOrgaosEncaminhadores              = tabela.length
                                                     flagCache_TabelaOrgaosEncaminhadores = 1;  
                                                     break;            
 
                       case "SITUACOES_BENEFICIO":   cache_TabelaSituacoesBeneficio     = tabela;
+                                                    numSituacoesBeneficio              = tabela.length
                                                     flagCache_TabelaSituacoesBeneficio = 1;  
                                                     break;           
 
                       case "INTERVALOS_DE_TEMPO":   cache_TabelaIntervalosDeTempo     = tabela;
+                                                    numIntervalosDeTempo              = tabela.length
                                                     flagCache_TabelaIntervalosDeTempo = 1;  
                                                     break;           
 
                       case "PARAMETROS":            cache_TabelaParametros     = tabela;
+                                                    numParametros              = tabela.length; 
                                                     flagCache_TabelaParametros = 1;  
                                                     break;           
 
@@ -153,6 +167,81 @@
                  .obterTabelaCompleta( nomeTabela );                                          
 
   } // Fim da função carregarTabelaNaCache
+
+
+
+
+  /**
+   * Função que recebe um id e o nome da tabela a qual o id se refere, 
+   * e retorna o nome relacionado ao ID. 
+   */
+  function idToNomeFE( id, nomeTabela ) {
+    
+    // Validação de parâmetros da função
+    
+    if( !isStringValidFE(id) ) {
+      return "";
+    } 
+  
+    if( !isStringValidFE(nomeTabela) ) {
+      throw( new Error( "idToNomeFE - Tabela Inválida" ) );    
+    }
+  
+  
+    // Seleciona a tabela apropriada
+  
+    let tabela;
+    let tamanhoTabela;
+  
+    switch( nomeTabela ) {
+      case "RESPOSTAS_SIMPLES":        tabela = cache_TabelaRespostasSimples;
+                                       tamanhoTabela = numRespostasSimples;
+                                       break;                                                        
+      case "ORGAOS_ENCAMINHADORES":    tabela = cache_TabelaOrgaosEncaminhadores;
+                                       tamanhoTabela = numOrgaosEncaminhadores;
+                                       break;          
+      case "SITUACOES_BENEFICIO":      tabela = cache_TabelaSituacoesBeneficio;
+                                       tamanhoTabela = numSituacoesBeneficio;
+                                       break;               
+      case "INTERVALOS_DE_TEMPO":      tabela = cache_TabelaIntervalosDeTempo;
+                                       tamanhoTabela = numIntervalosDeTempo;
+                                       break;                                                                                                                           
+      case "PARAMETROS":               tabela = cache_TabelaParametros;
+                                       tamanhoTabela = numParametros;
+                                       break;                                                    
+      default:                         throw( new Error( "idToNomeFE - Tabela Inválida" ) );    
+    }
+  
+  
+    // Converte o id para Integer
+    const idItem = parseInt(id);
+    if( !isIntegerValidFE(idItem) ) {
+      throw( new Error( "idToNomeFE - ID Inválido: " + idItem ) );      
+    }
+  
+    // Se id está fora dos limites inferior ou superior, lança uma exceção
+    if( idItem < 1  ||  idItem > tamanhoTabela ) {
+      throw( new Error( "idToNomeFE - ID fora do intervalo da tabela: " + idItem + " - " + tamanhoTabela ) );      
+    }
+  
+    // Retorna o nome referente ao ID
+    return tabela[idItem-1][COLUNA_NOME];  
+  
+  
+  } // Fim da função idToNomeFE
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </script>

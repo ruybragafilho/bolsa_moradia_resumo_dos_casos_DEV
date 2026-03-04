@@ -140,11 +140,11 @@ function obterTabelaCompleta( nomeTabela ) {
 function idToNome( id, nomeTabela ) {
   
   // Validação de parâmetros da função
-
-  if( !isIntegerValidBE(id) ) {
-    return "";
-  }
   
+  if( !isStringValidBE(id) ) {
+    return "";
+  } 
+
   if( !isStringValidBE(nomeTabela) ) {
     throw( new Error( "idToNome - Tabela Inválida" ) );    
   }
@@ -177,10 +177,13 @@ function idToNome( id, nomeTabela ) {
 
   // Converte o id para Integer
   const idItem = parseInt(id);
+  if( !isIntegerValidBE(idItem) ) {
+    throw( new Error( "idToNome - ID Inválido: " + idItem ) );      
+  }
 
   // Se id está fora dos limites inferior ou superior, lança uma exceção
   if( idItem < 1  ||  idItem > tamanhoTabela ) {
-    throw( new Error( "idToNome - ID Inválido: " + id + " - " + tamanhoTabela ) );      
+    throw( new Error( "idToNome - ID fora do intervalo da tabela: " + idItem + " - " + tamanhoTabela ) );      
   }
 
   // Retorna o nome referente ao ID

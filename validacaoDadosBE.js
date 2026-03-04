@@ -11,8 +11,8 @@ function isStringValidBE(str) {
 
 
 // Fumção Backend que verifica se o parâmetro passado é um inteiro válido
-function isIntegerValidBE( int ) {
-  return Number.isInteger( int );
+function isIntegerValidBE( i ) {
+  return Number.isInteger( i );
 }  
 
 

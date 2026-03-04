@@ -44,7 +44,7 @@
       document.getElementById( "cpf_referenciaFamiliarInput" ).value  = cache_CasoEmVisualizacao.cpf_rf;
   
       // Mostra os parâmetros do caso
-      //visualizarParametroCaso( cache_CasoEmVisualizacao );
+      visualizarParametroCaso( cache_CasoEmVisualizacao );
   
       // Mostra pontuação total do caso
       document.getElementById('totalizacaoParametrosDoCaso').innerHTML = `PONTUAÇÃO DO CASO: ${cache_CasoEmVisualizacao.pontuacao}`;
@@ -64,13 +64,18 @@
    */    
   function visualizarParametroCaso( caso ) {
 
-    // Parâmetros do caso
-    let nomes_parametros = caso.nomes_parametros;
-    let pesos_parametros = caso.pesos_parametros;
-    let pontuacoes_parametros = caso.pontuacoes_parametros;
-    let num_parametros = nomes_parametros.length;
+    if( caso.ids_parametros_caso == "" ) {
+      console.log( "visualizarParametroCaso - Parametro nulo" );
+      return "";
+    }
 
-    let pontuacoes_caso = caso.pontuacoes_caso;
+    // Parâmetros do caso
+    let nomes_parametros      = caso.ids_parametros_caso.map( id => cache_TabelaParametros[ parseInt(id)-1][COLUNA_NOME] );
+    let pesos_parametros      = caso.ids_parametros_caso.map( id => cache_TabelaParametros[ parseInt(id)-1][COLUNA_PESO_PARAMETRO] );
+    let pontuacoes_parametros = caso.ids_parametros_caso.map( id => cache_TabelaParametros[ parseInt(id)-1][COLUNA_PONTUACAO_PARAMETRO] );
+    let num_parametros        = caso.ids_parametros_caso.length;
+
+    let pontuacoes_caso = caso.pontuacoes_parametros_caso;
 
 
     // Seleciona o corpo da tabela onde os dados serão inseridos    
