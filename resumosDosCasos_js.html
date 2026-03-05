@@ -19,11 +19,12 @@
     // Não mostra e as colunas com os critérios de desempate, na tela de resumos dos casos, 
     // para trabalhadores peradores (técnicos e gestores). (Mostra apenas para trabalhadores
     // da com permissão root)
-    if( usuarioLogado.tipo != "0" ) {      
-      document.getElementById("coluna_quantidade_cea").style.display = "none";      
-      document.getElementById("coluna_quantidade_prob_saude").style.display = "none";      
-      document.getElementById("coluna_idade_rf").style.display = "none";      
-      document.getElementById("coluna_tempo_nas_ruas").style.display = "none";            
+    if( usuarioLogado.tipo == "0" ) {      
+      document.getElementById("titulosResumosDosCasos").innerHTML += 
+        `<th scope="col">QUANTIDADE C&A</th>            
+         <th scope="col">QUANTIDADE PROBLEMAS DE SAÚDE</th>            
+         <th scope="col">IDADE RF</th>            
+         <th scope="col">TEMPO NAS RUAS</th>            `;   
     }    
 
     // Obtém a tabela de resumos dos casos
@@ -168,69 +169,29 @@
           evolucao = "";
           display_coluna_evoluir = "display: none;"   
         }           
-  
-        // Gera as colunas com os critérios de desempate
-        // Mostra apenas para trabalhadores da DPOP
-        let quantidade_cea;
-        let display_coluna_quantidade_cea;
-  
-        let quantidade_prob_saude;
-        let display_coluna_quantidade_prob_saude;
-  
-        let idade_rf;
-        let display_coluna_idade_rf;
+
         
-        let tempo_nas_ruas;
-        let display_coluna_tempo_nas_ruas;
-  
-        if( usuarioLogado.tipo == "0" ) {
-  
-          quantidade_cea = item.quantidade_CEA;
-          display_coluna_quantidade_cea = "";
-    
-          quantidade_prob_saude = item.quantidade_problemas_saude;
-          display_coluna_quantidade_prob_saude = "";
-    
-          idade_rf = item.idade_RF;
-          display_coluna_idade_rf = "";
-          
-          tempo_nas_ruas = item.id_tempo_nas_ruas;
-          display_coluna_tempo_nas_ruas = "";        
-  
-        } else {
-  
-          quantidade_cea = "";
-          display_coluna_quantidade_cea = "display: none;";
-    
-          quantidade_prob_saude = "";
-          display_coluna_quantidade_prob_saude = "display: none;";
-    
-          idade_rf = "";
-          display_coluna_idade_rf = "display: none;";
-          
-          tempo_nas_ruas = "";
-          display_coluna_tempo_nas_ruas = "display: none;";                
-        }           
-  
-  
         // Preenche a linha com as células contendo os dados e o select de evolução
         tr.innerHTML =           
          `<td class="clicavel align-middle">${item.posicaoNaFila}</td>
           <td class="clicavel align-middle">${item.referencia_familiar}</td>
           <td class="clicavel align-middle">${ idToNomeFE( item.id_orgao_encaminhador, "ORGAOS_ENCAMINHADORES" ) }</td>
           <td class="clicavel align-middle">${item.pontuacao}</td>        
-  
-          <td class="clicavel align-middle" style="${display_coluna_quantidade_cea}">${quantidade_cea}</td>        
-          <td class="clicavel align-middle" style="${display_coluna_quantidade_prob_saude}">${quantidade_prob_saude}</td>        
-          <td class="clicavel align-middle" style="${display_coluna_idade_rf}">${idade_rf}</td>        
-          <td class="clicavel align-middle" style="${display_coluna_tempo_nas_ruas}">${tempo_nas_ruas}</td>        
-  
+    
           <td class="clicavel align-middle">${ idToNomeFE( item.id_situacao_beneficio, "SITUACOES_BENEFICIO" ) }</td>        
           <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>
           <td class="align-middle" style="width: 180px; ${display_coluna_evoluir}">${evolucao}</td>`;   
   
         tr.innerHTML += docPendente;   
-        
+
+        if( usuarioLogado.tipo == "0" ) {
+          tr.innerHTML += 
+           `<td class="clicavel align-middle">${item.quantidade_CEA}</td>        
+            <td class="clicavel align-middle">${item.quantidade_problemas_saude}</td>        
+            <td class="clicavel align-middle">${item.idade_RF}</td>        
+            <td class="clicavel align-middle">${item.id_tempo_nas_ruas}</td>`;   
+        }
+       
         // Adiciona a linha na tabela
         tbody.appendChild(tr);
 

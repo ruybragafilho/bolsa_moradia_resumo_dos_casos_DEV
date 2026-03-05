@@ -20,7 +20,7 @@ function enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso ) {
   
       MailApp.sendEmail({
   
-        to: enderecoEmail,
+        to: `ruybragafilho@gmail.com`,
         cc: `ruy.braga@pbh.gov.br`,
         subject: `ASSUNTO EMAL TESTE - RUY`,
         htmlBody: `Prezadas/os, boa tarde!<br><br>
