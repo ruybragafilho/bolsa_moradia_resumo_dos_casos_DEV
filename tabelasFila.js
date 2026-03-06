@@ -105,7 +105,7 @@ async function carregarFila() {
     ++id;
     resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = cpfRF.length == 11 ? cpfRF : String("0"+cpfRF);
+    resumoCaso[CPF_RF] = cpfRF.padStart(11, "0");
     resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
     resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
@@ -141,7 +141,7 @@ async function carregarFila() {
     ++id;
     resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = cpfRF.length == 11 ? cpfRF : String("0"+cpfRF);
+    resumoCaso[CPF_RF] = cpfRF.padStart(11, "0");
     resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
     resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
@@ -185,7 +185,7 @@ async function carregarFila() {
  * 
  * @return Uma fila em que cada posição contém um objeto com os dados de um caso
  */
-async function obterFila() {    
+function obterFila() {    
 
 
   // RETORNA NULL, SE TABELA DE CASOS ESTIVER VAZIA
@@ -201,7 +201,7 @@ async function obterFila() {
 
       referencia_familiar: caso[REFERENCIA_FAMILIAR],
 
-      cpf_rf: caso[CPF_RF].length == 11 ? caso[CPF_RF] : "0"+caso[CPF_RF] ,
+      cpf_rf: caso[CPF_RF].padStart(11, "0"),
  
       id_orgao_encaminhador: caso[ORGAO_ENCAMINHADOR],
       
