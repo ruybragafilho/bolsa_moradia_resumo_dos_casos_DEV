@@ -86,7 +86,7 @@ function limparFila() {
 /**
  * Função que carrega a fila a partir das tabelas de encaminhamentos
  */
-async function carregarFila() {
+function carregarFila() {
 
   let caso = [];
   let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA).fill("");

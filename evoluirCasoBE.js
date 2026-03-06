@@ -55,12 +55,7 @@ function evoluirCasoBE( idCaso, idEvolucao ) {
       const emails = [];
       if( isEmailValidBE(emailOrgaoEncaminhador) ) { emails.push(emailOrgaoEncaminhador) }
       if( isEmailValidBE(emailInstituicao) ) { emails.push(emailInstituicao) }
-  
-      console.log( "Emails: " + emails.join(",") );
-      console.log( "CPF RF: " + cpfRFCaso );
-      console.log( "NOME RF: " + nomeRFCaso );
-      console.log( "EVOLUÇÃO: " + evolucaoCaso );
-        
+          
       enviarEmailBE( emails.join(",")  , cpfRFCaso, nomeRFCaso, evolucaoCaso );        
       
       // SOLTA O LOCK

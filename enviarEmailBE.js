@@ -13,8 +13,6 @@
  * 
  */
 function enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso ) {
-
-  console.log( `Dados email: ${enderecoEmail} - ${cpfRFCaso} - ${nomeRFCaso} - ${evolucaoCaso}` );
   
   try {
   
@@ -23,7 +21,7 @@ function enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso ) {
       to: `${enderecoEmail}`,
       cc: `ruybragafilho@gmail.com`,
       subject: `Atualização benefício Bolsa Moradia`,
-      htmlBody:           
+      htmlBody:  
 `Prezado (a),<br><br>
 
 informamos que houve alteração no status do benefício de <b>${nomeRFCaso}</b>, CPF <b>${cpfRFCaso}</b>, para <b>${evolucaoCaso}</b>. Pedimos que verifique as informações no sistema e comunique ao beneficiado.<br><br>
