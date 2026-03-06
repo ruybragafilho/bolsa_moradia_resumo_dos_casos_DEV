@@ -220,6 +220,8 @@ async function obterFila() {
       quantidade_problemas_saude: caso[PROBLEMAS_SAUDE] != "" ? parseInt(caso[PROBLEMAS_SAUDE]) : 0,
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
+
+      data_nascimento_RF: caso[DATA_NASCIMENTO_RF],
       
       id_tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA] != "" ? parseInt(caso[TEMPO_SITUACAO_DE_RUA]) : 0,      
 
@@ -261,11 +263,12 @@ async function obterFila() {
     }         
 
     // Quarto critétio - Idade RF
-    if( b.idade_RF > a.idade_RF ) {
+    let diferencaIdade = compararDatas( b.data_nascimento_RF, a.data_nascimento_RF );
+    if( diferencaIdade > 0 ) {
       return 1;
-    } else if(b.idade_RF < a.idade_RF) {
+    } else if( diferencaIdade < 0 ) {
       return -1;
-    }             
+    }  
     
     // Quinto critétio - Tempo nas Ruas    
     if( b.id_tempo_nas_ruas > a.id_tempo_nas_ruas ) {
@@ -317,7 +320,7 @@ async function obterFila() {
  */
 function teste_obterFila() {
 
-  const fila = obterFila( "2" );
+  const fila = obterFila();
 
   console.log(fila);    
 
