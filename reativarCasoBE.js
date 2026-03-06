@@ -14,8 +14,11 @@
  */
 function reativarCasoBE( idCaso ) {
 
+  // Converte o id para Integer
+  const id = parseInt(idCaso);  
+
   // Se id inválido, retorna uma exceção
-  if( idCaso < 1  ||  idCaso > TAMANHO_FILA ) {
+  if( id < 1  ||  id > TAMANHO_FILA ) {
     throw( new Error( "reativarCasoBE - ID Inválido" ) );
   }  
 
@@ -28,10 +31,6 @@ function reativarCasoBE( idCaso ) {
 
     // Grava a reativação
     try {
-
-      // Converte o id para Integer
-      const id = parseInt(idCaso);
-          
 
       // Grava null na data de designação do caso    
       const dataNula = "";
