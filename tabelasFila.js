@@ -86,7 +86,7 @@ function limparFila() {
 /**
  * Função que carrega a fila a partir das tabelas de encaminhamentos
  */
-async function carregarFila() {
+function carregarFila() {
 
   let caso = [];
   let resumoCaso = new Array(NUM_COLUNAS_TABELA_FILA).fill("");
@@ -105,7 +105,7 @@ async function carregarFila() {
     ++id;
     resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = cpfRF.length == 11 ? cpfRF : String("0"+cpfRF);
+    resumoCaso[CPF_RF] = cpfRF.padStart(11, "0");
     resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
     resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
@@ -141,7 +141,7 @@ async function carregarFila() {
     ++id;
     resumoCaso[ID] = String( id );
     resumoCaso[REFERENCIA_FAMILIAR] = (caso[0][UNI_NOME]).trim().toUpperCase();
-    resumoCaso[CPF_RF] = cpfRF.length == 11 ? cpfRF : String("0"+cpfRF);
+    resumoCaso[CPF_RF] = cpfRF.padStart(11, "0");
     resumoCaso[ORGAO_ENCAMINHADOR] = String( caso[0][UNI_ORGAO_ENCAMINHADOR] );
     
     resumoCaso[DATA_ENCAMINHAMENTO] = String( caso[0][UNI_DATA_REGISTRO_ENCAMINHAMENTO] );
@@ -185,7 +185,7 @@ async function carregarFila() {
  * 
  * @return Uma fila em que cada posição contém um objeto com os dados de um caso
  */
-async function obterFila() {    
+function obterFila() {    
 
 
   // RETORNA NULL, SE TABELA DE CASOS ESTIVER VAZIA
@@ -201,7 +201,7 @@ async function obterFila() {
 
       referencia_familiar: caso[REFERENCIA_FAMILIAR],
 
-      cpf_rf: caso[CPF_RF].length == 11 ? caso[CPF_RF] : "0"+caso[CPF_RF] ,
+      cpf_rf: caso[CPF_RF].padStart(11, "0"),
  
       id_orgao_encaminhador: caso[ORGAO_ENCAMINHADOR],
       
@@ -220,6 +220,8 @@ async function obterFila() {
       quantidade_problemas_saude: caso[PROBLEMAS_SAUDE] != "" ? parseInt(caso[PROBLEMAS_SAUDE]) : 0,
 
       idade_RF: calcularIdade( caso[DATA_NASCIMENTO_RF] ),
+
+      data_nascimento_RF: caso[DATA_NASCIMENTO_RF],
       
       id_tempo_nas_ruas: caso[TEMPO_SITUACAO_DE_RUA] != "" ? parseInt(caso[TEMPO_SITUACAO_DE_RUA]) : 0,      
 
@@ -261,11 +263,12 @@ async function obterFila() {
     }         
 
     // Quarto critétio - Idade RF
-    if( b.idade_RF > a.idade_RF ) {
+    let diferencaIdade = compararDatas( b.data_nascimento_RF, a.data_nascimento_RF );
+    if( diferencaIdade > 0 ) {
       return 1;
-    } else if(b.idade_RF < a.idade_RF) {
+    } else if( diferencaIdade < 0 ) {
       return -1;
-    }             
+    }  
     
     // Quinto critétio - Tempo nas Ruas    
     if( b.id_tempo_nas_ruas > a.id_tempo_nas_ruas ) {
@@ -317,7 +320,7 @@ async function obterFila() {
  */
 function teste_obterFila() {
 
-  const fila = obterFila( "2" );
+  const fila = obterFila();
 
   console.log(fila);    
 

@@ -14,35 +14,29 @@
  */
 function enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso ) {
   
-  if( isEmailValidBE( enderecoEmail ) ) {
+  try {
+  
+    MailApp.sendEmail({
+  
+      to: `${enderecoEmail}`,
+      cc: `ruybragafilho@gmail.com`,
+      subject: `Atualização benefício Bolsa Moradia`,
+      htmlBody:  
+`Prezado (a),<br><br>
 
-    try {
-  
-      MailApp.sendEmail({
-  
-        to: enderecoEmail,
-        cc: `ruy.braga@pbh.gov.br`,
-        subject: `ASSUNTO EMAL TESTE - RUY`,
-        htmlBody: `Prezadas/os, boa tarde!<br><br>
-  
-          CORPO EMAL TESTE - RUY<br><br>
-      
-          Informamos que a família da RF ${nomeRFCaso}, CPF ${cpfRFCaso}, teve a seguinte evolução: ${evolucaoCaso}<br><br>
+informamos que houve alteração no status do benefício de <b>${nomeRFCaso}</b>, CPF <b>${cpfRFCaso}</b>, para <b>${evolucaoCaso}</b>. Pedimos que verifique as informações no sistema e comunique ao beneficiado.<br><br>
 
-          Atenciosamente,<br>
-                
-          Subsecretaria de Assistência Social | SUASS<br>`
-  
-      });
-  
-      return true;
-  
-    } catch( error ) {
-      throw( "enviarEmailBE - " + error.message );
-    }
+Qualquer dúvida, procure a equipe da DPOP.<br><br>
 
-  }  else {
-    throw( "enviarEmailBE - Email inválido" );
+Equipe Bolsa Moradia | Diretoria de Políticas para População em Situação de Rua, Migrantes e Refugiados | DPOP<br>
+Secretaria Municipal de Assistência Social e Direitos Humanos | SMASDH<br>
+Av. Afonso Pena, 342, 6º andar - Centro | Belo Horizonte/MG | CEP: 30130-001<br>
+Telefone: (31) 3277-6373 / 3277-9994 | pbh.gov.br      <br><br> `
+  
+    });     
+  
+  } catch( error ) {
+    throw( "enviarEmailBE - " + error.message );
   }
 
 } // Fim da função enviarEmailBE

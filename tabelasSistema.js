@@ -62,6 +62,7 @@ const NOME  = 1;
 const ATIVO = 2;
 const PESO_PARAMETRO = 3;
 const PONTUACAO_PARAMETRO = 4;
+const EMAIL_INSTITUICAO = 3;
 
 
 // Posições das colunas da planilha USUARIOS
