@@ -15,7 +15,16 @@
  */
 function evoluirMultiplosCasosBE( idsCasos, idEvolucao ) {
 
-  console.log( "evoluirMultiplosCasosBE" );
+  // Evolui todos os casos do array idsCasos com a evolução idEvolucao
+  idsCasos.forEach( idCaso => {
+
+    try {
+      evoluirCasoBE( idCaso, idEvolucao );
+    } catch( error ) {
+      throw( "evoluirMultiplosCasosBE - " + error.message );
+    } 
+
+  }); // Fim do forEach
 
 } // Fim da função evoluirMultiplosCasosBE
 
