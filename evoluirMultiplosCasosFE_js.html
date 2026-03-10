@@ -4,12 +4,14 @@
   
   /**
    * Função frontend que evolui múltiplos casos da tabela CASOS,
-   * com o mesmo tipo de evolução
-   *  
-   * @param {String} idsCasos: ids dos casos que serão evoluidos 
-   * @param {String} idEvolucao: id da evolução
+   * com o mesmo tipo de evolução.  
    */  
-  function evoluirMultiplosCasosFE( idsCasos, idEvolucao ) {
+  function evoluirMultiplosCasosFE() {
+
+    console.log( "evoluirMultiplosCasosFE" );
+
+/**
+ * 
 
     // Chama função do Apps Script para designar um caso
     google.script.run
@@ -30,7 +32,11 @@
                  // Chama a função backend que designa o caso
                  .evoluirMultiplosCasosBE( idsCasos, idEvolucao );  
 
+*/
+
   } // Fim da função evoluirMultiplosCasosFE
+
+
 
 
 </script>

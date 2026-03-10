@@ -58,24 +58,29 @@
       <h3 class="text-center mt-5 mb-4" id="headerResumosDosCasos">RESUMOS DOS CASOS</h3>    
 
       <hr><h5 class="text-center mt-1 mb-1" id="totalizacaoResumosDosCasos"></h5><hr><br>   
+      
+      <div class="d-flex align-items-center justify-content-center" style="gap: 4px;"> 
+        <select class="form-select form-select-sm py-0" style="width: 200px; height: 28px;">               
+          <?!= gerarSelectBackend( BUFFER_SITUACOES_BENEFICIO ); ?>
+        </select>
+        <button class="btn btn-sm btn-primary bt-evoluir" onclick="evoluirMultiplosCasosFE()">Evoluir</button>
+      </div>  <br><hr><br>   
 
       <table id="resumosDosCasos" class="table table-striped table-hover text-center">    
 
         <thead>
           <tr id="titulosResumosDosCasos">                            
-            <th scope="col">SELECIONAR</th>
+            <th scope="col" class="align-middle">SELECIONAR</th>
 
-            <th scope="col">POSIÇÃO NA FILA</th>
-            <th scope="col">REFERÊNCIA FAMILIAR</th>
-            <th scope="col">SERVIÇO / INSTITUIÇÃO</th>
-            <th scope="col">PONTUAÇÃO</th>            
+            <th scope="col" class="align-middle">POSIÇÃO NA FILA</th>
+            <th scope="col" class="align-middle">REFERÊNCIA FAMILIAR</th>
+            <th scope="col" class="align-middle">SERVIÇO / INSTITUIÇÃO</th>
+            <th scope="col" class="align-middle">PONTUAÇÃO</th>            
 
-            <th scope="col">SITUAÇÃO DO BENEFÍCIO</th>  
-            <th scope="col">DATA ÚLTIMA EVOLUÇÃO</th>   
-
-            <th scope="col" id="coluna_evoluir">EVOLUIR</th>            
+            <th scope="col" class="align-middle">SITUAÇÃO DO BENEFÍCIO</th>  
+            <th scope="col" class="align-middle">DATA ÚLTIMA EVOLUÇÃO</th>                  
             
-            <th scope="col">DOCUMENTO PESSOAL COM FOTO PENDENTE</th>
+            <th scope="col" class="align-middle">DOCUMENTO PESSOAL COM FOTO PENDENTE</th>
           </tr>
         </thead>
       

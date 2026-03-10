@@ -154,29 +154,13 @@
   
           let statusColor = item.id_doc_pendente == "2" ? "text-danger" : "text-primary";        
           docPendente = `<td class="clicavel align-middle ${statusColor}">${ idToNomeFE( item.id_doc_pendente, "RESPOSTAS_SIMPLES" ) }</td>`;        
-        }     
-
-
-        // Gera o select de evolução ou o botão de reativação dessa linha
-        // Não mostra para trabalhadores da ponta
-        let evolucao;
-        let display_coluna_evoluir;
-        if( usuarioLogado.instituicao == "0" ) {
-          evolucao = item.id_situacao_beneficio != "1" ? gerarSelectEvolucao( cache_TabelaSituacoesBeneficio, item.id ) 
-                                                       : gerarBotaoReativar( item.id );  
-          display_coluna_evoluir = "";                                                                     
-        } else {
-          evolucao = "";
-          display_coluna_evoluir = "display: none;"   
         }           
 
         
         // Preenche a linha com as células contendo os dados e o select de evolução
         tr.innerHTML =           
-         `<td class="selecao_multipla align-middle">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="selecao_multipla" value="${item.id}">              
-            </div>            
+         `<td class="align-middle">
+            <input class="form-check-input border border-secondary rounded-1 me-1" type="checkbox" name="evolucao_multipla" value="${item.id}">
           </td>`;
 
         tr.innerHTML +=           
@@ -186,8 +170,7 @@
           <td class="clicavel align-middle">${item.pontuacao}</td>        
     
           <td class="clicavel align-middle">${ idToNomeFE( item.id_situacao_beneficio, "SITUACOES_BENEFICIO" ) }</td>        
-          <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>
-          <td class="align-middle" style="width: 180px; ${display_coluna_evoluir}">${evolucao}</td>`;   
+          <td class="clicavel align-middle">${item.data_ultima_evolucao}</td>`;   
   
         tr.innerHTML += docPendente;   
 
