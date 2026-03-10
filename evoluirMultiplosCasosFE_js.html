@@ -1,0 +1,36 @@
+<script>
+
+  "use strict";
+  
+  /**
+   * Função frontend que evolui múltiplos casos da tabela CASOS,
+   * com o mesmo tipo de evolução
+   *  
+   * @param {String} idsCasos: ids dos casos que serão evoluidos 
+   * @param {String} idEvolucao: id da evolução
+   */  
+  function evoluirMultiplosCasosFE( idsCasos, idEvolucao ) {
+
+    // Chama função do Apps Script para designar um caso
+    google.script.run
+                 .withSuccessHandler( () => {
+
+                   // Volta para a tela de resumos de casos
+                   console.log( "evoluirMultiplosCasosFE_js - INÍCIO" ); 
+                   redirecionarParaTelaResumosDosCasos( 1 );
+                   console.log( "evoluirMultiplosCasosFE_js - FIM" ); 
+
+                 })
+                 .withFailureHandler( erro => {
+
+                   // mostra modal com mensagem de erro
+                   mostrarModalErro( "evoluirMultiplosCasosFE_js - " + erro.message );
+
+                 })
+                 // Chama a função backend que designa o caso
+                 .evoluirMultiplosCasosBE( idsCasos, idEvolucao );  
+
+  } // Fim da função evoluirMultiplosCasosFE
+
+
+</script>
