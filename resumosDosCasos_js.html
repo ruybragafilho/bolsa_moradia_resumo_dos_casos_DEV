@@ -8,24 +8,31 @@
    */
   function configurarPaginaResumosDosCasos() {
 
+    // Título da tabela de resumos dos casos
+    let cabecalhoTabela = document.getElementById("titulosResumosDosCasos");
 
-    // Não mostra o filtro por órgãos Encaminhadores, na tela de resumos dos casos, 
-    // para trabalhadores dos órgão encaminhadores. (Mostra apenas para trabalhadores
-    // da DPOP)
-    if( usuarioLogado.instituicao != "0" ) {     
-      document.getElementById("coluna_evoluir").style.display = "none";   
+    // Configura a página para trabalhador da ponta ou DPOP
+    if( usuarioLogado.instituicao != "0" ) {           
+
+      document.getElementById("evolucao_multipla").style.display = "none";   
+      document.getElementById("select_evolucao_multipla").style.display = "none";   
+      document.getElementById("bt_evolucao_multipla").style.display = "none";   
+
+    } else {
+      cabecalhoTabela.innerHTML = `<th scope="col" class="align-middle">SELECIONAR</th>` + cabecalhoTabela.innerHTML;
     }
 
-    // Não mostra e as colunas com os critérios de desempate, na tela de resumos dos casos, 
-    // para trabalhadores peradores (técnicos e gestores). (Mostra apenas para trabalhadores
-    // da com permissão root)
-    if( usuarioLogado.tipo == "0" ) {      
-      document.getElementById("titulosResumosDosCasos").innerHTML += 
+
+    // Configura a página para trabalhador da root
+    if( usuarioLogado.tipo == "0" ) {            
+
+      cabecalhoTabela.innerHTML += 
         `<th scope="col">QUANTIDADE C&A</th>            
          <th scope="col">QUANTIDADE PROBLEMAS DE SAÚDE</th>            
          <th scope="col">IDADE RF</th>            
-         <th scope="col">TEMPO NAS RUAS</th>            `;   
+         <th scope="col">TEMPO NAS RUAS</th>`;   
     }    
+
 
     // Obtém a tabela de resumos dos casos
     let tabelaResumoDosCasos = document.getElementById('resumosDosCasos');
@@ -101,9 +108,9 @@
         // Seta o id da linha com o id do caso
         tr.id = item.id;
   
-        // Gera a informação sobre o status da documentação pendente
-        // Para gestores da DPOP, mostra checkbox para alterar o status
-        // Para trabalhadores da ponta, mostra apenas a informação ( Sim / Não )
+        // Gera a informação sobre o status da documentação pendente.
+        // Para gestores da DPOP, mostra checkbox para alterar o status.
+        // Para trabalhadores da ponta, mostra apenas a informação ( Sim / Não ).
         let docPendente;      
                 
         if( usuarioLogado.instituicao == "0" ) {
@@ -119,11 +126,19 @@
         }           
 
         
-        // Preenche a linha com as células contendo os dados e o select de evolução
-        tr.innerHTML =           
-         `<td class="align-middle">
-            <input class="form-check-input border border-secondary rounded-1 me-1" type="checkbox" name="checkbox_evolucao_multipla" value="${item.id}">
-          </td>`;
+        // insere a célula contendo o checkbox de seleção para evolução múltipla
+        // se o trabalhador logado for um trabalhador da DPOP
+        if( usuarioLogado.instituicao == "0" ) {      
+ 
+          tr.innerHTML =           
+           `<td class="align-middle">
+              <input class="form-check-input border border-secondary rounded-1 me-1" type="checkbox" name="checkbox_evolucao_multipla" value="${item.id}">
+            </td>`;          
+
+        } else {
+          tr.innerHTML = "";
+        }
+
 
         tr.innerHTML +=           
          `<td class="clicavel align-middle">${item.posicaoNaFila}</td>
@@ -136,6 +151,7 @@
   
         tr.innerHTML += docPendente;   
 
+        // Mostra critérios de desempate, apenas para usuários root       
         if( usuarioLogado.tipo == "0" ) {
           tr.innerHTML += 
            `<td class="clicavel align-middle">${item.quantidade_CEA}</td>        
