@@ -8,7 +8,35 @@
    */  
   function evoluirMultiplosCasosFE() {
 
-    console.log( "evoluirMultiplosCasosFE" );
+    console.log( "evoluirMultiplosCasosFE_js - INÍCIO" );
+
+    const idEvolucao = document.getElementById("select_evolucao_multipla").value;         
+    console.log( "Id Evolucao: " + idEvolucao );
+
+    const idsCasos = Array.from(document.getElementsByName("checkbox_evolucao_multipla")).filter(c => c.checked).map(c => c.value);
+    console.log( "Ids Casos: " + idsCasos );    
+
+
+    if( !idEvolucao ) {
+
+      // Exibe modal de erro caso o tipo de evolução não tenha sido selecionado
+      mostrarModalErro( "O campo TIPO DE EVOLUÇÃO é obrigatório!" );                            
+
+    } else if( !idsCasos ) {
+
+      // Exibe modal de erro caso nenhum caso tenha sido selecionado
+      mostrarModalErro( "Selecione pelo menos um caso para evolução!" );                  
+
+    } else {
+
+      // Se tipo de evolução e pelo menos um caso tiver sido informado, prossegue com a evolução
+
+      // mostra modal com mensagem de evolução de caso
+      mostrarModalMensagem( "Evoluindo o caso, por favor aguarde..." );                               
+
+      // Chama a função front end para evoluir o caso
+
+    }    
 
 /**
  * 
@@ -33,6 +61,8 @@
                  .evoluirMultiplosCasosBE( idsCasos, idEvolucao );  
 
 */
+
+    console.log( "evoluirMultiplosCasosFE_js - FIM" );
 
   } // Fim da função evoluirMultiplosCasosFE
 
