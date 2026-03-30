@@ -15,6 +15,12 @@
  */
 function evoluirMultiplosCasosBE( idsCasos, idEvolucao ) {
 
+  // Verifica se o usuário do app tem permissão para evoluir casos
+  const usuarioLogado = JSON.parse( autenticarUsuario() );
+  if( usuarioLogado.instituicao != "0" || usuarioLogado.tipo != "1" ) {
+    throw( new Error( "Usuário sem permissão para evoluir casos" ) );
+  }    
+
   // Evolui todos os casos do array idsCasos com a evolução idEvolucao
   idsCasos.forEach( idCaso => {
 

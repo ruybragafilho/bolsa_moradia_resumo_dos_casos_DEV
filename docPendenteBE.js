@@ -22,6 +22,11 @@ function docPendenteBE( idCaso ) {
     throw( new Error( "docPendenteBE - ID Inválido (Teste Limite): " + id ) );
   }  
 
+  // Verifica se o usuário do app tem permissão para registrar Documentação Pendente
+  const usuarioLogado = JSON.parse( autenticarUsuario() );
+  if( usuarioLogado.instituicao != "0" || usuarioLogado.tipo != "1" ) {
+    throw( new Error( "Usuário sem permissão para registrar Documentação Pendente" ) );
+  }    
   
   // TENTA PEGAR O LOCK
   const lock = LockService.getScriptLock();
