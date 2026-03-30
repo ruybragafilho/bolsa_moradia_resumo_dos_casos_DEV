@@ -20,7 +20,7 @@ function enviarEmailBE( enderecoEmail, cpfRFCaso, nomeRFCaso, evolucaoCaso ) {
   
       to: `${enderecoEmail}`,
       cc: `ruybragafilho@gmail.com`,
-      subject: `Atualização benefício Bolsa Moradia`,
+      subject: `Atualização benefício Bolsa Moradia - ${nomeRFCaso} - ${(new Date()).toLocaleString("pt-BR")}`,
       htmlBody:  
 `Prezado (a),<br><br>
 
