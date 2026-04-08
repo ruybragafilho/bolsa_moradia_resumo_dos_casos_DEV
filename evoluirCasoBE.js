@@ -43,20 +43,26 @@ function evoluirCasoBE( idCaso, idEvolucao ) {
       campo_SituacaoBeneficio.setValue( idEvolucao );      
         
   
-      // Envia email para o órgão encaminhador e para a instituição
-      const emailOrgaoEncaminhador = BUFFER_FILA[id-1][EMAIL_ORGAO_ENCAMINHADOR];
-      const cpfRFCaso = (BUFFER_FILA[id-1][CPF_RF]).padStart(11, "0");
-      const nomeRFCaso = BUFFER_FILA[id-1][REFERENCIA_FAMILIAR];
-      const evolucaoCaso = idToNome( idEvolucao,  "SITUACOES_BENEFICIO" );
-  
-      const idInstituicao = parseInt(BUFFER_FILA[id-1][ORGAO_ENCAMINHADOR]);
-      const emailInstituicao = BUFFER_ORGAOS_ENCAMINHADORES[idInstituicao-1][EMAIL_INSTITUICAO];
-  
-      const emails = [];
-      if( isEmailValidBE(emailOrgaoEncaminhador) ) { emails.push(emailOrgaoEncaminhador) }
-      if( isEmailValidBE(emailInstituicao) ) { emails.push(emailInstituicao) }
-          
-      enviarEmailBE( emails.join(",")  , cpfRFCaso, nomeRFCaso, evolucaoCaso );        
+      // Envia email para o órgão encaminhador e para a instituição,
+      // caso a evolução seja diferente de INATIVAÇÃO
+      if( idEvolucao != "1" ) {
+
+        const emailOrgaoEncaminhador = BUFFER_FILA[id-1][EMAIL_ORGAO_ENCAMINHADOR];
+        const cpfRFCaso = (BUFFER_FILA[id-1][CPF_RF]).padStart(11, "0");
+        const nomeRFCaso = BUFFER_FILA[id-1][REFERENCIA_FAMILIAR];
+        const evolucaoCaso = idToNome( idEvolucao,  "SITUACOES_BENEFICIO" );
+    
+        const idInstituicao = parseInt(BUFFER_FILA[id-1][ORGAO_ENCAMINHADOR]);
+        const emailInstituicao = BUFFER_ORGAOS_ENCAMINHADORES[idInstituicao-1][EMAIL_INSTITUICAO];
+    
+        const emails = [];
+        if( isEmailValidBE(emailOrgaoEncaminhador) ) { emails.push(emailOrgaoEncaminhador) }
+        if( isEmailValidBE(emailInstituicao) ) { emails.push(emailInstituicao) }
+            
+        enviarEmailBE( emails.join(",")  , cpfRFCaso, nomeRFCaso, evolucaoCaso );                
+
+      }
+
       
       // SOLTA O LOCK
       lock.releaseLock();
