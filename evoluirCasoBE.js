@@ -61,7 +61,7 @@ function evoluirCasoBE( idCaso, idEvolucao ) {
             
         enviarEmailBE( emails.join(",")  , cpfRFCaso, nomeRFCaso, evolucaoCaso );                
 
-      }
+      } // Fim if 
 
       
       // SOLTA O LOCK
