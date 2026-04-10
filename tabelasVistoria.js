@@ -12,7 +12,7 @@
 const PLANILHA_VISTORIAS_ID  =  "1FQkpBwnX181zPd2bZl1NyEsL01MGdvdAKT_uGzLMLSQ";
 const PLANILHA_VISTORIAS     =  SpreadsheetApp.openById(PLANILHA_VISTORIAS_ID);
 const TABELA_VISTORIAS       =  PLANILHA_VISTORIAS.getSheetByName('VISTORIAS');
-const BUFFER_VISTORIAS       =  TABELA__VISTORIAS.getDataRange().getDisplayValues().splice(1);
+const BUFFER_VISTORIAS       =  TABELA_VISTORIAS.getDataRange().getDisplayValues().splice(1);
 const TAMANHO_VISTORIAS      =  BUFFER_VISTORIAS.length;
 
 
