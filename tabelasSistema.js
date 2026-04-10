@@ -8,12 +8,6 @@
 
 /**
  * Planilha CODIGOS contendo as tabelas 
- *     . RESPOSTAS_SIMPLES 
- *     . ORGAOS_ENCAMINHADORES 
- *     . SITUACOES_BENEFICIO  
- *     . EVOLUCOES
- *     . INTERVALOS_DE_TEMPO
- *     . PARAMETROS
  */
 const PLANILHA_CODIGOS_ID  =  "1kiunfkV_113EpaCKopb8NI75RneypnmvfwbcK1hyjt0";
 const PLANILHA_CODIGOS     =  SpreadsheetApp.openById(PLANILHA_CODIGOS_ID);
