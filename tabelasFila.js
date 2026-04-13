@@ -230,6 +230,8 @@ function obterFila() {
       data_ultima_evolucao: caso[DATA_ULTIMA_EVOLUCAO],
 
       id_doc_pendente: caso[DOC_PENDENTE],
+
+      vistorias: pesquisarVistoriasPorCPF( caso[CPF_RF].padStart(11, "0") ),
            
       posicaoNaFila: 0
 
