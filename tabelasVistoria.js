@@ -26,17 +26,56 @@ const DESCRICAO_LAUDO              = 10;
 const INFORMACAO_COMPLEMENTAR      = 12;
 
 
-function mostrarVistorias() {
 
-  let cpf;
 
+/**
+ * Função que pesquisa por todas as vistorias relacionadas a um CPF de RF
+ * @param {String} cpf - CPF da RF
+ * @returns Um array de objetos, onde cada objeto representa uma vistoria relacionada ao CPF da RF, contendo as seguintes propriedades: dataSolicitacao, dataVistoria, dataLaudo, descricaoLaudo e informacaoComplementar
+ */
+function pesquisarVistoriasPorCPF( cpf ) {
+
+  let vistorias = [];
+  
   BUFFER_VISTORIAS.forEach( vistoria => {
 
-    console.log( ` ${vistoria[CPF_VISTORIA]} - ${vistoria[DATA_SOLICITACAO_VISTORIA]} - ${vistoria[DATA_VISTORIA]} - ${vistoria[DATA_LAUDO]} - ${vistoria[DESCRICAO_LAUDO]}` );
+    if( vistoria[CPF_VISTORIA].padStart(11, "0") == cpf.padStart(11, "0") ) {
+
+      let v = {  
+        dataSolicitacao: vistoria[DATA_SOLICITACAO_VISTORIA],
+        dataVistoria: vistoria[DATA_VISTORIA],
+        dataLaudo: vistoria[DATA_LAUDO],
+        descricaoLaudo: vistoria[DESCRICAO_LAUDO],
+        informacaoComplementar: vistoria[INFORMACAO_COMPLEMENTAR]
+      };
+
+      vistorias.push( v );
+    }
 
   });
 
-}
+  return vistorias;
+
+} // Fim da função pesquisarVistoriasPorCPF()
+
+
+
+/**
+ * Função para testar a função pesquisarVistoriasPorCPF() 
+ * do módulo tabelasVistoria.gs
+ */
+function testePesquisarVistoriasPorCPF() {
+
+  let cpf = "22707190349";
+
+  let vistorias = pesquisarVistoriasPorCPF( cpf );
+
+  console.log( `Vistorias encontradas para o CPF ${cpf}:` );
+  console.log( vistorias );
+
+} // Fim da função testePesquisarVistoriasPorCPF()
+
+
 
 /**
  * ##### FIM DO MÓDULO tabelasVistoria.gs #####
