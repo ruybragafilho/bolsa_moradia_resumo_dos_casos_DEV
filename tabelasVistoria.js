@@ -28,6 +28,8 @@ const INFORMACAO_COMPLEMENTAR      = 12;
 
 function mostrarVistorias() {
 
+  let cpf;
+
   BUFFER_VISTORIAS.forEach( vistoria => {
 
     console.log( ` ${vistoria[CPF_VISTORIA]} - ${vistoria[DATA_SOLICITACAO_VISTORIA]} - ${vistoria[DATA_VISTORIA]} - ${vistoria[DATA_LAUDO]} - ${vistoria[DESCRICAO_LAUDO]}` );
