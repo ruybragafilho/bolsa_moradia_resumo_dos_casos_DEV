@@ -49,6 +49,9 @@
       // Mostra pontuação total do caso
       document.getElementById('totalizacaoParametrosDoCaso').innerHTML = `PONTUAÇÃO DO CASO: ${cache_CasoEmVisualizacao.pontuacao}`;
 
+      // Mostra as vistorias do caso
+      visualizarVistoriasCaso( cache_CasoEmVisualizacao )
+
     } else {
       // Exibe modal de erro caso o tipo de evolução não tenha sido selecionado
       mostrarModalErro( "Informações disponíveis apenas para a entidade que encaminhou esse cidadão!" );   
@@ -104,6 +107,45 @@
     } // Fim do for
     
   } // Fim da função visualizarParametroCaso
+
+
+
+  /**
+   * Função que renderiza uma tabela com as vistorias do caso
+   */    
+  function visualizarVistoriasCaso( caso ) {
+
+    if( caso.vistorias.length < 1 ) {
+      console.log( "visualizarVistoriasCaso - Sem Vistorias" );
+      return "";
+    }
+
+    // Seleciona o corpo da tabela onde os dados serão inseridos    
+    const tbody = document.getElementById("conteudoVistoriasDoCaso");
+
+    // Limpa o conteúdo da tabela
+    tbody.innerHTML = ''; 
+  
+    // Para cada vistoria do caso, cria uma linha na tabela    
+    caso.vistorias.forEach( v => {
+
+      // Cria uma linha da tabela
+      const tr = document.createElement('tr');
+
+      // Preenche a linha com as células contendo os dados e o select de desiginação
+      tr.innerHTML =           
+       `<td class="align-middle">${v.dataSolicitacao}</td>
+        <td class="align-middle">${v.dataVistoria}</td>
+        <td class="align-middle">${v.dataLaudo}</td>
+        <td class="align-middle">${v.descricaoLaudo}</td>
+        <td class="align-middle">${v.informacaoComplementar}</td>`;   
+      
+      // Adiciona a linha na tabela
+      tbody.appendChild(tr);
+
+    }); // Fim do forEach
+
+  } // Fim da função visualizarVistoriasCaso
 
 
 
