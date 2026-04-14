@@ -1,4 +1,4 @@
-<!-- Tela Edição de Caso - Início -->
+<!-- Tela Visualização de Caso - Início -->
 
 
   <!-- Nav - Botão Superior Fechar - Início -->
@@ -66,12 +66,41 @@
     <!-- Tabela com Parâmetros + Pontuação do caso - Fim -->    
 
 
+    <br><hr><br>        
+    
+
+    <!-- Tabela com dados das vistorias do caso - Início -->    
+    <section class="mt-4 mb-4">
+
+      <h5 class="text-center mt-5 mb-5" id="headerVistoriasDoCaso">VISTORIAS</h5>    
+
+      <table class="table table-striped table-hover text-center" id="vistoriasDoCaso">    
+
+        <thead>
+          <tr>                            
+            <th scope="col">DATA SOLICITAÇÃO VISTORIA</th>
+            <th scope="col">DATA VISTORIA</th>
+            <th scope="col">DATA DO LAUDO</th>
+            <th scope="col">DESCRIÇÃO DO LAUDO</th>
+            <th scope="col">INFORMAÇÃO COMPLEMENTAR</th>
+          </tr>
+        </thead>
+      
+        <tbody class="table-group-divider" id="conteudoVistoriasDoCaso">                
+        </tbody>    
+
+      </table>
+
+    </section>  
+    <!-- Tabela com dados das vistorias do caso - Fim -->    
+
+
   </main> 
   <!-- Main - Parte principal da tela Visualização de Caso - Fim -->
 
 
   <!-- Nav - Botão Inferior Fechar - Início -->
-  <nav class="navbar bg-body-tertiary mt-5 mb-4">
+  <nav class="navbar bg-body-tertiary mt-5 mb-2">
     <div class="container-fluid justify-content-start">         
       <button id="botaoFecharCasoInferior" class="btn btn-sm btn-outline-secondary me-4" type="button" onclick="redirecionarParaTelaResumosDosCasos( 0 )">FECHAR</button>
     </div>
@@ -79,7 +108,7 @@
   <!-- Nav - Botão Inferior Fechar - Fim -->
 
 
-<!-- Tela Edição de Caso - Fim -->
+<!-- Tela Visualização de Caso - Fim -->
 
 
   
