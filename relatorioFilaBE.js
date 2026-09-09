@@ -126,7 +126,10 @@ function gerarRelatorio() {
       let bufferRelatorioCaso = [];      
       const bufferRelatorios  = [];      
 
-      let nomeSituacaoVistoria
+      let nomeSituacaoVistoria;
+      let nomeSituacaoQuestionario;
+      let idSituacaoAcompanhamento;
+
       let idsRespostasQuestionarios;
 
       let filaOrdenada = obterFila();      
